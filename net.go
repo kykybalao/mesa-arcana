@@ -50,6 +50,7 @@ type PubState struct {
 	CW      float64          `json:"cw"`
 	Customs map[string]*Card `json:"customs,omitempty"`
 	Shown   []PubInst        `json:"shown,omitempty"` // mão revelada para a mesa
+	Arrows  []Arrow          `json:"setas,omitempty"`
 }
 type Msg struct {
 	T     string    `json:"t"` // hello, state, log, bye, full
@@ -430,6 +431,7 @@ func (g *Game) pubState() *PubState {
 	if g.showHand {
 		p.Shown = conv("hand", false)
 	}
+	p.Arrows = g.arrows
 	return p
 }
 
@@ -599,8 +601,10 @@ func (g *Game) drawPlayers(x, y, w float64) {
 	rect(g.dst, x, y, w, 28, cPanel)
 	rect(g.dst, x, y+27, w, 1, cLine)
 	px := x + 8
+	chipName := ""
 	chip := func(label string, on bool, fn func()) {
 		cw := tw(label, fReg, 12.5) + 20
+		g.au.chips[chipName] = [2]float64{px + cw/2, y + 24}
 		if on {
 			rrect(g.dst, px, y+3, cw, 21, 10, cAcc2)
 			txtC(g.dst, label, px+cw/2, y+6, fBold, 12.5, color.RGBA{0x08, 0x1b, 0x16, 0xff})
@@ -618,6 +622,7 @@ func (g *Game) drawPlayers(x, y, w float64) {
 			lab = fmt.Sprintf("%s · vida %d · mão %d · turno %d", p.Name, p.State.Life, p.State.Hand, p.State.Turn)
 		}
 		id := p.ID
+		chipName = p.Name
 		chip(lab, g.viewPeer == id, func() { g.viewPeer = id })
 	}
 }
@@ -649,6 +654,11 @@ func (g *Game) drawPubInst(p *Peer, pi PubInst, x, y, w float64, flat bool) {
 	}
 	if i.Tapped {
 		r.x, r.y, r.w, r.h = x+w/2-h/2, y+h/2-w/2, h, w
+	}
+	if !flat { // carta no campo do outro jogador: pode ser alvo de seta
+		g.au.pub[pi.ID] = [4]float64{r.x, r.y, r.w, r.h}
+		r.click = func() { g.pubClick(p, pi, false) }
+		r.rclick = func() { g.pubClick(p, pi, true) }
 	}
 	g.add(r)
 	if pi.Cmdr && p.State.Tax[pi.Cid] > 0 {

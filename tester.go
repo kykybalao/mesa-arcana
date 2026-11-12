@@ -252,10 +252,28 @@ func (t *tester) step(g *Game) error {
 				chk(!strings.Contains(l, "comprou ") || !strings.Contains(l, ":"), "rede: registro não revela compra")
 			}
 			fmt.Println("rede: mão revelada", len(ps[0].State.Shown), "| chat", g.chat)
+			g.startArrow(g.S.Z["battlefield"][0])
+			g.pubClick(ps[0], ps[0].State.BF[0], false)
+			chk(len(g.arrows) == 1 && g.arrows[0].Peer == ps[0].Name && !g.au.pick, "seta para outra mesa")
 			g.viewPeer = ps[0].ID
 			shot("7b-rede")
 		}
 	case 48:
+		if bf := g.S.Z["battlefield"]; len(bf) >= 3 {
+			id := bf[len(bf)-1]
+			g.S.Cards[id].Counters["+1/+1"] = 1
+			g.bump(id, "+1/+1", 1)
+			g.bump(id, "+1/+1", 1)
+			g.bump(id, "+1/+1", -1)
+			chk(g.S.Cards[id].Counters["+1/+1"] == 2, "contador com um clique")
+			g.S.Cards[bf[1]].Counters["carga"] = 1
+			g.bump(bf[1], "carga", -1)
+			chk(len(g.S.Cards[bf[1]].Counters) == 0, "contador some no zero")
+			n := len(g.arrows)
+			g.startArrow(id)
+			g.clickCard(bf[0])
+			chk(len(g.arrows) == n+1 && !g.au.pick, "seta na própria mesa")
+		}
 		if os.Getenv("MESA_ARTE") != "" {
 			g.artModal(findCard("Sol Ring"))
 			t.cnt = 0
@@ -276,6 +294,7 @@ func (t *tester) step(g *Game) error {
 		g.viewPeer = 0
 	case 50: // daqui em diante, mouse simulado: arrastar da mão para o campo
 		g.ctx = nil
+		shot("7d-setas")
 		t.fake = true
 		t.mx, t.my = 5, 300
 	case 51:

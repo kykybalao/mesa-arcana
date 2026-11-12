@@ -301,6 +301,8 @@ func (g *Game) drawGame() {
 		}
 	}
 	bx, by, bw, bh := leftW, top+strip, W-leftW-rightW, H-top-strip-handH
+	g.arrowReset()
+	g.pruneArrows()
 	g.bf = image.Rect(int(bx), int(by), int(bx+bw), int(by+bh))
 
 	if peer == nil {
@@ -328,12 +330,18 @@ func (g *Game) drawGame() {
 			if g.drag.on && g.drag.moved && g.drag.id == id {
 				a = 0.25
 			}
+			g.au.cnt, g.au.btns = s.Phase == "play", nil
 			g.drawInst(i, x, y, cw, false, false, a)
+			g.au.cnt = false
 			r := region{x: x, y: y, w: cw, h: ch, inst: id, pv: g.card(i), pvFace: i.Face, rclick: func() { g.cardMenu(id) }}
 			if i.Tapped {
 				r.x, r.y, r.w, r.h = x+cw/2-ch/2, y+ch/2-cw/2, ch, cw
 			}
 			g.add(r)
+			g.au.inst[id] = [4]float64{r.x, r.y, r.w, r.h}
+			for _, b := range g.au.btns {
+				g.add(b)
+			}
 		}
 		g.dst = whole
 
@@ -453,6 +461,10 @@ func (g *Game) drawGame() {
 	}
 	if netOn {
 		g.drawPlayers(bx, top+30, bw)
+	}
+	if s.Phase == "play" {
+		g.drawArrows(peer)
+		g.arrowBanner(bx, by, bw, bh)
 	}
 
 	// painel esquerdo: prévia, texto e registro

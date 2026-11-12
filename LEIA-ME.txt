@@ -113,6 +113,18 @@ ESCOLHER A ARTE
   imagem atual. Vale para todos os decks. So funciona com o Scryfall liberado
   (em casa).
 
+CONTADORES E SETAS
+- Contador ja colocado: clique no "-" ou no "+" do proprio contador, em cima
+  da carta, para diminuir ou aumentar. No zero ele some.
+- Seta: botao direito na sua carta, "Apontar seta para...", e clique na
+  carta alvo. Para apontar para a mesa de outro jogador, abra a mesa dele
+  na faixa de jogadores e clique na carta. Tambem da para clicar com o
+  botao direito numa carta de outro jogador e apontar direto.
+- Suas setas aparecem em amarelo e as dos outros em vermelho, com o nome de
+  quem apontou. Para apagar: botao direito na carta, "Apagar as setas desta
+  carta", ou botao direito no campo, "Apagar minhas setas". A seta some
+  sozinha se a carta sair do campo.
+
 CRIAR CARTAS
 - Botao "Criar carta" na tela inicial (ou botao direito no campo, "Minhas
   cartas"). Preencha nome, custo, tipo, texto e P/R e clique em Salvar. No

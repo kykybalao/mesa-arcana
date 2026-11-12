@@ -99,6 +99,8 @@ type Game struct {
 	ed       *Editor
 	showHand bool     // minha mão está revelada para a mesa
 	chat     []string // mensagens do chat da mesa
+	arrows   []Arrow
+	au       arrowUI
 	viewPeer int      // 0 = minha mesa; senão, o jogador cuja mesa está na tela
 	anKey    string
 	anRes    *Analysis
@@ -231,7 +233,9 @@ func (g *Game) Update() error {
 func (g *Game) keys() {
 	jp := inpututil.IsKeyJustPressed
 	if jp(ebiten.KeyEscape) {
-		if g.equip != 0 {
+		if g.au.pick {
+			g.au.pick = false
+		} else if g.equip != 0 {
 			g.equip = 0
 		} else if g.ctx != nil {
 			g.ctx = nil
@@ -325,6 +329,13 @@ func (g *Game) clickCard(id int) {
 		return
 	}
 	if s.Phase != "play" {
+		return
+	}
+	if g.au.pick { // escolhendo o alvo de uma seta
+		if i.Zone == "battlefield" && id != g.au.src {
+			g.au.pick = false
+			g.addArrow(Arrow{From: g.au.src, To: id}, g.card(i).N)
+		}
 		return
 	}
 	if g.equip != 0 { // escolhendo o alvo de "equipar/anexar"
@@ -499,9 +510,23 @@ func (g *Game) drawInst(i *Inst, x, y, w float64, forceDown, forceUp bool, alpha
 			s = strconv.Itoa(i.Counters[k])
 		}
 		bw := tw(s, fBold, 12) + 12
+		btn := g.au.cnt && i.ID != 0 // no meu campo: − e + para mudar o contador com um clique
+		tx := bx + 9
+		if btn {
+			bw += 36
+			tx += 18
+		}
 		rrect(g.dst, bx+3, cy, bw, 19, 9, cAcc)
 		rrect(g.dst, bx+4, cy+1, bw-2, 17, 8, color.RGBA{0, 0, 0, 0xe6})
-		txt(g.dst, s, bx+9, cy+2, fBold, 12, color.White)
+		txt(g.dst, s, tx, cy+2, fBold, 12, color.White)
+		if btn {
+			txtC(g.dst, "−", bx+13, cy+1.5, fBold, 13, cAcc)
+			txtC(g.dst, "+", bx+bw-7, cy+1.5, fBold, 13, cAcc)
+			id := i.ID
+			g.au.btns = append(g.au.btns,
+				region{x: bx + 3, y: cy, w: 20, h: 19, click: func() { g.bump(id, k, -1) }},
+				region{x: bx + 3 + bw - 20, y: cy, w: 20, h: 19, click: func() { g.bump(id, k, 1) }})
+		}
 		cy += 21
 	}
 	if i.Token && !tapped {
@@ -924,6 +949,7 @@ func (g *Game) tableMenu() []item {
 		{label: "Próxima fase", key: "F", fn: g.nextStep},
 		{label: "Próximo turno", key: "N", fn: g.nextTurn},
 		{label: "Arrumar o campo", fn: g.tidy},
+		{label: "Apagar minhas setas", fn: func() { g.clearArrows(0) }},
 		{label: "Minhas cartas (criar ou pôr na mão)…", fn: g.myModal},
 		{label: "Fazer proxies (PNG para imprimir)…", fn: g.proxyModal},
 		{label: "Revelar / esconder a mão (rede)", fn: func() {
@@ -968,7 +994,14 @@ func (g *Game) cardMenu(id int) {
 			lab = "Virar a face para cima"
 		}
 		items = append(items, item{label: lab, fn: func() { g.snap(); get().Down = !get().Down }},
-			item{label: "Equipar / anexar em…", fn: func() { g.equip = id }})
+			item{label: "Equipar / anexar em…", fn: func() { g.equip = id }},
+			item{label: "Apontar seta para…", fn: func() { g.startArrow(id) }})
+		for _, a := range g.arrows {
+			if a.From == id || (a.Peer == "" && a.To == id) {
+				items = append(items, item{label: "Apagar as setas desta carta", fn: func() { g.clearArrows(id) }})
+				break
+			}
+		}
 		if i.Att != 0 {
 			items = append(items, item{label: "Desanexar", fn: func() {
 				g.snap()
@@ -1099,4 +1132,17 @@ func exeDir() string {
 		p = r
 	}
 	return filepath.Dir(p)
+}
+
+// bump muda um contador já colocado (clique no − ou no + do próprio contador)
+func (g *Game) bump(id int, k string, d int) {
+	if g.S == nil || g.S.Cards[id] == nil || g.S.Phase != "play" {
+		return
+	}
+	g.snap()
+	o := g.S.Cards[id]
+	o.Counters[k] = max(0, o.Counters[k]+d)
+	if o.Counters[k] == 0 {
+		delete(o.Counters, k)
+	}
 }
