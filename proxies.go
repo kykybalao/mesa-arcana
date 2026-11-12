@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -65,7 +66,107 @@ func specOf(c *Card, fi int, style string) cardSpec {
 		}
 	}
 	sp.adj = looks.Adj[key]
+	sp.mark, sp.hint = markOf(c, fi)
+	if sp.kind == "A" && c.Cor == "" {
+		if m := meldOf(c); m != nil && m.result == c { // a carta fundida não tem custo: usa as cores das metades
+			cs := ""
+			for _, p := range m.parts {
+				cs += p.C
+			}
+			sp.kind = frameKind(cs, f.T, "")
+		}
+	}
 	return sp
+}
+
+type meld struct {
+	result *Card
+	parts  []*Card
+}
+
+var (
+	meldRe   = regexp.MustCompile(`meld them into ([^.]+)\.`)
+	meldByID map[string]*meld
+)
+
+// meldOf: fusão de que a carta participa (como metade ou como resultado); descoberta pelo texto das cartas
+func meldOf(c *Card) *meld {
+	if meldByID == nil {
+		meldByID = map[string]*meld{}
+		byRes := map[string]*meld{}
+		for _, x := range allCards {
+			if m := meldRe.FindStringSubmatch(x.X); m != nil {
+				r := findCard(m[1])
+				if r == nil {
+					continue
+				}
+				if byRes[r.ID] == nil {
+					byRes[r.ID] = &meld{result: r}
+					meldByID[r.ID] = byRes[r.ID]
+				}
+				byRes[r.ID].parts = append(byRes[r.ID].parts, x)
+				meldByID[x.ID] = byRes[r.ID]
+			}
+		}
+	}
+	return meldByID[c.ID]
+}
+
+// markOf escolhe o símbolo e a linha de aviso da carta
+func markOf(c *Card, fi int) (string, string) {
+	if c.Mine {
+		return c.Mar, c.Dica
+	}
+	name := func(k int) string { f, _ := loc(c, k); return f.N }
+	if len(c.F) == 2 {
+		o := c.F[1-fi]
+		back := c.F[1]
+		modal := back.C != "" || strings.Contains(back.T, "Land")
+		pt := ""
+		if o.P != "" || o.O != "" {
+			pt = " (" + o.P + "/" + o.O + ")"
+		}
+		side := "Verso: "
+		if fi == 1 {
+			side = "Frente: "
+		}
+		switch {
+		case modal && fi == 0:
+			return "modal1", side + name(1)
+		case modal:
+			return "modal2", side + name(0)
+		case fi == 0:
+			return "sol", side + name(1) + pt
+		}
+		return "lua", side + name(0) + pt
+	}
+	if m := meldOf(c); m != nil {
+		rf, _ := loc(m.result, 0)
+		if m.result == c {
+			return "fusao", ""
+		}
+		for _, p := range m.parts {
+			if p != c {
+				pf, _ := loc(p, 0)
+				return "fusao", "Funde-se com " + pf.N + " em " + rf.N
+			}
+		}
+		return "fusao", "Funde-se em " + rf.N
+	}
+	t := strings.ToLower(c.T)
+	if strings.Contains(t, "lesson") {
+		return "licao", ""
+	}
+	return "", ""
+}
+
+// isTall: carta que é impressa com o dobro da altura (resultado de fusão)
+func isTall(c *Card) bool {
+	if c.Mine {
+		return c.Alta
+	}
+	m := meldOf(c)
+	return m != nil && m.result == c
 }
 
 func safeName(s string) string {
@@ -171,18 +272,32 @@ func (e *pxExport) step(g *Game) bool {
 	im := g.printable(j.c, j.fi, e.style)
 	raw := grab(im)
 	im.Deallocate()
-	if j.path != "" {
-		if writePNG(j.path, raw) != nil {
-			e.fail.Add(1)
-		} else {
-			e.saved++
+	parts, names := []*image.RGBA{raw}, []string{j.path}
+	if raw.Bounds().Dy() > int(cdH)+2 { // carta alta: metade de cima e metade de baixo
+		h := int(cdH)
+		parts = nil
+		for k := 0; k < 2; k++ {
+			half := image.NewRGBA(image.Rect(0, 0, int(cdW), h))
+			draw.Draw(half, half.Bounds(), raw, image.Point{0, k * h}, draw.Src)
+			parts = append(parts, half)
 		}
+		base := strings.TrimSuffix(j.path, ".png")
+		names = []string{base + " (cima).png", base + " (baixo).png"}
 	}
-	if e.sheets {
-		for k := 0; k < j.n; k++ {
-			e.page = append(e.page, raw)
-			if len(e.page) == 9 {
-				e.flush()
+	for k, part := range parts {
+		if j.path != "" {
+			if writePNG(names[k], part) != nil {
+				e.fail.Add(1)
+			} else {
+				e.saved++
+			}
+		}
+		if e.sheets {
+			for q := 0; q < j.n; q++ {
+				e.page = append(e.page, part)
+				if len(e.page) == 9 {
+					e.flush()
+				}
 			}
 		}
 	}
@@ -195,7 +310,9 @@ func (e *pxExport) step(g *Game) bool {
 // printable desenha a carta no tamanho de impressão; no estilo playtest amplia o proxy bege
 func (g *Game) printable(c *Card, fi int, style string) *ebiten.Image {
 	if style != "" {
-		return renderCard(specOf(c, fi, style), 1)
+		sp := specOf(c, fi, style)
+		sp.tall = isTall(c)
+		return renderCard(sp, 1)
 	}
 	saveProxy, saveEst := cfg.Proxy, c.Est
 	cfg.Proxy, c.Est = "", ""
@@ -687,7 +804,7 @@ func (g *Game) proxyModal() {
 				}
 				pv, pvKey = g.printable(cur, fi, style), key
 			}
-			drawTex(g.dst, pv, px, y, pvW, false, 1)
+			drawFitted(g.dst, pv, px, y, pvW)
 		} else {
 			txt(g.dst, "Escolha uma carta.", px, y, fReg, 13.5, cMut)
 		}
@@ -779,4 +896,19 @@ func (g *Game) proxyModal() {
 		}
 	}
 	g.openModal(m)
+}
+
+// drawFitted desenha a prévia; a carta alta (fusão) aparece inteira, mais estreita, no mesmo espaço
+func drawFitted(dst, tex *ebiten.Image, x, y, w float64) {
+	b := tex.Bounds()
+	if float64(b.Dy())/float64(b.Dx()) < ratio*1.2 {
+		drawTex(dst, tex, x, y, w, false, 1)
+		return
+	}
+	h := w * ratio
+	s := h * uiS / float64(b.Dy())
+	op := &ebiten.DrawImageOptions{Filter: ebiten.FilterLinear}
+	op.GeoM.Scale(s, s)
+	op.GeoM.Translate((x+w/2)*uiS-float64(b.Dx())*s/2, y*uiS)
+	dst.DrawImage(tex, op)
 }

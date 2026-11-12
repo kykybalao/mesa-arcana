@@ -52,6 +52,9 @@ type Card struct {
 	Est    string   `json:"est,omitempty"`   // estilo da carta criada: "" playtest, moldura, estendida, cena
 	Sub    string   `json:"sub,omitempty"`   // segunda linha de nome (estilo cena)
 	Cor    string   `json:"cor,omitempty"`   // cor da moldura ("" = automática)
+	Mar    string   `json:"mar,omitempty"`   // símbolo da carta criada (licao, sol, lua, modal1, modal2, fusao)
+	Dica   string   `json:"dica,omitempty"`  // linha pequena no pé do texto (ex.: "Verso: 4/4")
+	Alta   bool     `json:"alta,omitempty"`  // carta alta de fusão: o PNG sai dividido em duas metades
 }
 
 func (c *Card) Faces() []Face {

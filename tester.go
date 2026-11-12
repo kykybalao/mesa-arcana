@@ -412,6 +412,23 @@ func (t *tester) px(g *Game) {
 		dump("apelido-zoom-menor", c, "moldura")
 		setAdj(c.ID+":0", [3]float64{1, 0, 0})
 	}
+	for _, n := range []string{"Aang's Journey", "Delver of Secrets // Insectile Aberration", "Valakut Awakening // Valakut Stoneforge", "Gisela, the Broken Blade", "Brisela, Voice of Nightmares"} {
+		c := findCard(n)
+		if c == nil {
+			fmt.Println("px: sem", n)
+			continue
+		}
+		if art != "" {
+			b, _ := os.ReadFile(art)
+			os.WriteFile(artPath(c.ID+":0"), b, 0o644)
+		}
+		for fi := range c.Faces() {
+			st := []string{"moldura", "cena", "estendida"}[(fi+len(n))%3]
+			im := g.printable(c, fi, st)
+			writePNG(filepath.Join(t.dir, fmt.Sprintf("esp-%s-%d.png", safeName(c.FaceAt(0).N), fi)), grab(im))
+			im.Deallocate()
+		}
+	}
 	mine := findCard("gabranth, juiz sombrio")
 	mine.Est, mine.Sub = "cena", "Judge Magister Gabranth"
 	dump("minha-cena", mine, "cena")
@@ -420,7 +437,10 @@ func (t *tester) px(g *Game) {
 	if p := os.Getenv("MESA_PICK"); p != "" {
 		picked.Store(p)
 	} else {
-		pxTest("folhas")
+		if c := findCard("Brisela, Voice of Nightmares"); c != nil {
+			g.fields["pxq"] = "Brisela"
+		}
+		pxTest("carta")
 	}
 	t.pxWait = 1
 }

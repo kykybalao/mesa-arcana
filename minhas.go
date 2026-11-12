@@ -73,19 +73,21 @@ func (g *Game) forgetProxy(id string) {
 	imgMu.Unlock()
 }
 
-var myFields = []string{"mcn", "mcc", "mct", "mcx", "mcp", "mcl", "mcs"}
+var myFields = []string{"mcn", "mcc", "mct", "mcx", "mcp", "mcl", "mcs", "mcd"}
 
 // myModal: lista das cartas criadas à esquerda, formulário e prévia à direita
 func (g *Game) myModal() {
 	var cur *Card // carta sendo editada (nil = nova)
 	msg := ""
 	est, cor := "", "" // estilo e cor da moldura da carta aberta
+	mar, alta := "", false
 	var pv *ebiten.Image
 	pvKey := ""
 	var saving *pxExport
 	fill := func(c *Card) {
 		cur = c
 		est, cor = "", ""
+		mar, alta = "", false
 		for _, k := range myFields {
 			g.fields[k] = ""
 		}
@@ -97,7 +99,8 @@ func (g *Game) myModal() {
 			}
 			g.fields["mcl"] = c.L
 			g.fields["mcs"] = c.Sub
-			est, cor = c.Est, c.Cor
+			g.fields["mcd"] = c.Dica
+			est, cor, mar, alta = c.Est, c.Cor, c.Mar, c.Alta
 		}
 	}
 	fill(nil)
@@ -106,6 +109,7 @@ func (g *Game) myModal() {
 		c := &Card{ID: "rascunho", Custom: true, Mine: true, Face: Face{N: strings.TrimSpace(g.fields["mcn"]), C: strings.ToUpper(strings.TrimSpace(g.fields["mcc"])),
 			T: strings.TrimSpace(g.fields["mct"]), X: strings.ReplaceAll(strings.TrimSpace(g.fields["mcx"]), " / ", "\n"), P: strings.TrimSpace(p), O: strings.TrimSpace(o), L: strings.TrimSpace(g.fields["mcl"])}}
 		c.Est, c.Cor, c.Sub = est, cor, strings.TrimSpace(g.fields["mcs"])
+		c.Mar, c.Alta, c.Dica = mar, alta, strings.TrimSpace(g.fields["mcd"])
 		if cur != nil {
 			c.ID = cur.ID
 		}
@@ -142,6 +146,7 @@ func (g *Game) myModal() {
 			cur.Face = d.Face
 		}
 		cur.Est, cur.Cor, cur.Sub = d.Est, d.Cor, d.Sub
+		cur.Mar, cur.Alta, cur.Dica = d.Mar, d.Alta, d.Dica
 		registerMine(cur)
 		g.forgetProxy(cur.ID)
 		reindex()
@@ -244,8 +249,16 @@ func (g *Game) myModal() {
 			sx += 6 + g.button(sx, y+300, 0, 30, s[1], st, func() { est = s[0] })
 		}
 		txt(g.dst, "Moldura", fx, y+345, fReg, 13, cMut)
-		g.button(fx+92, y+338, 0, 30, "Cor: "+frameLabel(cor)+" (trocar)", 0, func() { cor = nextFrame(cor) })
-		hy := y + 384
+		mx := fx + 92
+		mx += 6 + g.button(mx, y+338, 0, 30, "Cor: "+frameLabel(cor), 0, func() { cor = nextFrame(cor) })
+		mx += 6 + g.button(mx, y+338, 0, 30, "Símbolo: "+markLabel(mar), 0, func() { mar = nextMark(mar) })
+		altaLab := "Carta alta (fusão): não"
+		if alta {
+			altaLab = "Carta alta (fusão): sim"
+		}
+		g.button(mx, y+338, 0, 30, altaLab, 0, func() { alta = !alta })
+		row("Aviso", "mcd", "Linha pequena no pé do texto. Ex.: Verso: Lobisomem (4/4)", y+376)
+		hy := y + 422
 		imgHint := "Imagem (opcional): salve a carta e arraste um arquivo PNG ou JPG para dentro desta janela. No estilo Playtest a imagem é a carta inteira; nos outros ela é só a arte, e o programa desenha a moldura, o custo, o texto e a P/R."
 		for _, l := range wrap(imgHint, fReg, 12.5, fw) {
 			txt(g.dst, l, fx, hy, fReg, 12.5, cMut)
@@ -266,14 +279,16 @@ func (g *Game) myModal() {
 		d := draft()
 		g.forgetProxyDraft()
 		if est != "" {
-			key := fmt.Sprint(d.Face, d.Est, d.Cor, d.Sub, d.ID, looks.Adj[d.ID+":0"])
+			key := fmt.Sprint(d.Face, d.Est, d.Cor, d.Sub, d.ID, looks.Adj[d.ID+":0"], d.Mar, d.Dica, d.Alta)
 			if key != pvKey {
 				if pv != nil {
 					pv.Deallocate()
 				}
-				pv, pvKey = renderCard(specOf(d, 0, est), 1), key
+				sp := specOf(d, 0, est)
+				sp.tall = d.Alta
+				pv, pvKey = renderCard(sp, 1), key
 			}
-			drawTex(g.dst, pv, px, y, pvW, false, 1)
+			drawFitted(g.dst, pv, px, y, pvW)
 			if cur != nil {
 				c := cur
 				if _, n := g.artTools(c.ID+":0", imgPath(c.ID+":0"), px, y+pvW*ratio+12, pvW, px, y, pvW, func() { g.forgetProxy(c.ID); pvKey = "" }); n != "" {
