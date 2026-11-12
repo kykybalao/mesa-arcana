@@ -18,6 +18,9 @@ Simulador offline de Commander (Magic: The Gathering) para testar decks sozinho 
 - **Multijogador em rede local**: um cria a mesa, os outros entram pelo endereço. Tem chat e dá para revelar a mão.
 - **Aparência**: playmats e sleeves prontos, e os seus próprios (pastas `playmats` e `sleeves`).
 - **Criador de cartas** próprias, que entram nos decks pelo nome.
+- **Fazedor de proxies**: qualquer carta (ou as suas) no formato de carta de Magic, em três estilos (moldura, arte estendida e arte inteira), baixando só a ilustração. Grava PNG no tamanho de impressão ou folhas A4 com 9 cartas. Moldura e símbolos são desenhados pelo programa e toda carta sai marcada como proxy.
+
+![Proxies](docs/proxies.png)
 
 | Aparência | Criar carta | Bracket e combos |
 |---|---|---|
@@ -47,7 +50,7 @@ Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go
 
 ### Versão HTML
 
-A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`), sem multijogador e sem o criador de cartas. Baixe a pasta inteira, porque ela precisa dos arquivos de `html/dados`.
+A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`), sem multijogador, sem o criador de cartas e sem o fazedor de proxies. Baixe a pasta inteira, porque ela precisa dos arquivos de `html/dados`.
 
 ## Organização
 
@@ -65,6 +68,7 @@ Os scripts de `build/` foram escritos para a máquina onde o projeto nasceu e t�
 
 - Dados e imagens das cartas: [Scryfall](https://scryfall.com/). O programa não acompanha nenhuma imagem; elas são baixadas do Scryfall pelo próprio usuário.
 - Combos, passo a passo e classificação de bracket: [Commander Spellbook](https://commanderspellbook.com/). A popularidade usada para ordenar vem do [EDHREC](https://edhrec.com/).
+- Fonte das cartas: [Caladea](https://github.com/huertatipografica/Caladea), de Carolina Giovagnoli e Andrés Torresi (SIL Open Font License 1.1).
 - Motor gráfico: [Ebitengine](https://ebitengine.org/), de Hajime Hoshi.
 - Código escrito com o [Claude](https://claude.ai/), da Anthropic, a partir das ideias e dos testes do Kyky.
 

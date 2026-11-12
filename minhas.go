@@ -73,14 +73,19 @@ func (g *Game) forgetProxy(id string) {
 	imgMu.Unlock()
 }
 
-var myFields = []string{"mcn", "mcc", "mct", "mcx", "mcp", "mcl"}
+var myFields = []string{"mcn", "mcc", "mct", "mcx", "mcp", "mcl", "mcs"}
 
 // myModal: lista das cartas criadas à esquerda, formulário e prévia à direita
 func (g *Game) myModal() {
 	var cur *Card // carta sendo editada (nil = nova)
 	msg := ""
+	est, cor := "", "" // estilo e cor da moldura da carta aberta
+	var pv *ebiten.Image
+	pvKey := ""
+	var saving *pxExport
 	fill := func(c *Card) {
 		cur = c
+		est, cor = "", ""
 		for _, k := range myFields {
 			g.fields[k] = ""
 		}
@@ -91,6 +96,8 @@ func (g *Game) myModal() {
 				g.fields["mcp"] = c.P + "/" + c.O
 			}
 			g.fields["mcl"] = c.L
+			g.fields["mcs"] = c.Sub
+			est, cor = c.Est, c.Cor
 		}
 	}
 	fill(nil)
@@ -98,6 +105,7 @@ func (g *Game) myModal() {
 		p, o, _ := strings.Cut(strings.TrimSpace(g.fields["mcp"]), "/")
 		c := &Card{ID: "rascunho", Custom: true, Mine: true, Face: Face{N: strings.TrimSpace(g.fields["mcn"]), C: strings.ToUpper(strings.TrimSpace(g.fields["mcc"])),
 			T: strings.TrimSpace(g.fields["mct"]), X: strings.ReplaceAll(strings.TrimSpace(g.fields["mcx"]), " / ", "\n"), P: strings.TrimSpace(p), O: strings.TrimSpace(o), L: strings.TrimSpace(g.fields["mcl"])}}
+		c.Est, c.Cor, c.Sub = est, cor, strings.TrimSpace(g.fields["mcs"])
 		if cur != nil {
 			c.ID = cur.ID
 		}
@@ -133,6 +141,7 @@ func (g *Game) myModal() {
 			delete(cardByName, strings.ToLower(cur.N))
 			cur.Face = d.Face
 		}
+		cur.Est, cur.Cor, cur.Sub = d.Est, d.Cor, d.Sub
 		registerMine(cur)
 		g.forgetProxy(cur.ID)
 		reindex()
@@ -144,8 +153,21 @@ func (g *Game) myModal() {
 		return cur
 	}
 	mySave = func() { save() }
-	m := &Modal{title: "Minhas cartas", w: 1080, h: 700}
+	m := &Modal{title: "Minhas cartas", w: 1120, h: 720}
+	m.onClose = func() {
+		if pv != nil {
+			pv.Deallocate()
+		}
+	}
 	m.draw = func(x, y, w, h float64) {
+		if saving != nil && !saving.step(g) {
+			if saving.fail.Load() > 0 {
+				msg = "Não consegui gravar o PNG na pasta proxies."
+			} else {
+				msg = "PNG gravado na pasta proxies, pronto para imprimir."
+			}
+			saving = nil
+		}
 		// imagem arrastada para a janela vira a arte da carta que está aberta
 		if fsys := ebiten.DroppedFiles(); fsys != nil {
 			if cur == nil {
@@ -158,6 +180,7 @@ func (g *Game) myModal() {
 						os.MkdirAll(filepath.Dir(imgPath(cur.ID+":0")), 0o755)
 						os.WriteFile(imgPath(cur.ID+":0"), b, 0o644)
 						g.forgetProxy(cur.ID)
+						pvKey = ""
 						msg = "Imagem colocada em “" + cur.N + "”."
 					}
 				}
@@ -193,7 +216,7 @@ func (g *Game) myModal() {
 		}
 		// formulário
 		fx := x + lw + 24
-		pvW := 250.0
+		pvW := 290.0
 		fw := w - lw - 24 - pvW - 24
 		title := "Nova carta"
 		if cur != nil {
@@ -210,8 +233,21 @@ func (g *Game) myModal() {
 		row("Texto", "mcx", "Use  /  (com espaços) para pular linha", y+148)
 		row("P/R", "mcp", "Ex.: 3/3 (deixe vazio se não for criatura)", y+186)
 		row("Lealdade", "mcl", "Só para planeswalker", y+224)
-		hy := y + 270
-		for _, l := range wrap("Imagem (opcional): salve a carta e arraste um arquivo PNG ou JPG para dentro desta janela. Sem imagem, ela aparece como proxy.", fReg, 12.5, fw) {
+		row("Subtítulo", "mcs", "Segunda linha de nome (só no estilo Arte inteira)", y+262)
+		txt(g.dst, "Estilo", fx, y+307, fReg, 13, cMut)
+		sx := fx + 92
+		for _, s := range styleNames {
+			st := 0
+			if s[0] == est {
+				st = 1
+			}
+			sx += 6 + g.button(sx, y+300, 0, 30, s[1], st, func() { est = s[0] })
+		}
+		txt(g.dst, "Moldura", fx, y+345, fReg, 13, cMut)
+		g.button(fx+92, y+338, 0, 30, "Cor: "+frameLabel(cor)+" (trocar)", 0, func() { cor = nextFrame(cor) })
+		hy := y + 384
+		imgHint := "Imagem (opcional): salve a carta e arraste um arquivo PNG ou JPG para dentro desta janela. No estilo Playtest a imagem é a carta inteira; nos outros ela é só a arte, e o programa desenha a moldura, o custo, o texto e a P/R."
+		for _, l := range wrap(imgHint, fReg, 12.5, fw) {
 			txt(g.dst, l, fx, hy, fReg, 12.5, cMut)
 			hy += 16
 		}
@@ -229,7 +265,16 @@ func (g *Game) myModal() {
 		px := x + w - pvW
 		d := draft()
 		g.forgetProxyDraft()
-		if cur != nil && hasImg(cur.ID+":0") {
+		if est != "" {
+			key := fmt.Sprint(d.Face, d.Est, d.Cor, d.Sub, d.ID)
+			if key != pvKey {
+				if pv != nil {
+					pv.Deallocate()
+				}
+				pv, pvKey = renderCard(specOf(d, 0, est), 1), key
+			}
+			drawTex(g.dst, pv, px, y, pvW, false, 1)
+		} else if cur != nil && hasImg(cur.ID+":0") {
 			drawTex(g.dst, g.cardTex(cur, 0), px, y, pvW, false, 1)
 		} else {
 			d.ID = "rascunho"
@@ -249,9 +294,15 @@ func (g *Game) myModal() {
 					}
 				})
 			}
+			bx += 8 + g.button(bx, y+h-32, 0, 30, "Gravar PNG", 0, func() {
+				if c := save(); c != nil && saving == nil {
+					saving = &pxExport{style: c.Est, dir: proxyDir(), total: 1, jobs: []pxJob{{c: c, path: filepath.Join(proxyDir(), safeName(c.N)+".png")}}}
+				}
+			})
 			if hasImg(cur.ID + ":0") {
 				bx += 8 + g.button(bx, y+h-32, 0, 30, "Tirar imagem", 0, func() {
 					os.Remove(imgPath(cur.ID + ":0"))
+					pvKey = ""
 					g.forgetProxy(cur.ID)
 					msg = "Imagem removida."
 				})

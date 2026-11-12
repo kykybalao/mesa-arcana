@@ -122,6 +122,26 @@ CRIAR CARTAS
   botao "Por na minha mao" coloca uma copia direto na mao.
 - Imagem (opcional): com a carta salva e aberta nessa janela, arraste um
   arquivo PNG ou JPG para dentro do programa.
+- Estilo: Playtest (o proxy bege), Moldura (formato de carta de Magic, com a
+  cor da moldura tirada do custo), Arte estendida (a arte vai ate a borda dos
+  lados) e Arte inteira (a arte ocupa a carta toda e o texto vai por cima,
+  com um subtitulo opcional embaixo do nome). Nesses tres estilos a imagem
+  arrastada e so a arte: o programa desenha moldura, custo, tipo, texto e P/R.
+- "Gravar PNG" salva a carta na pasta proxies, no tamanho de impressao.
+
+FAZER PROXIES
+- Botao "Proxies" na tela inicial (ou botao direito no campo, "Fazer
+  proxies"). Escolha um deck ou procure qualquer carta, escolha o estilo e
+  veja a previa.
+- Arte: "Baixar a arte desta carta" ou "Baixar as artes do deck" baixa so a
+  ilustracao do Scryfall (precisa de internet) e guarda em dados/artes. Voce
+  tambem pode arrastar uma imagem sua para a janela.
+- Gravar: uma carta em PNG, o deck inteiro em PNGs, ou folhas A4 com 9 cartas
+  (63 x 88 mm; imprima em tamanho real, 100%). Tudo vai para a pasta proxies.
+- "Na mesa": escolhe como aparecem, durante o jogo, as cartas que nao tem a
+  imagem baixada (Playtest ou um dos estilos de moldura).
+- Os simbolos e a moldura sao desenhados pelo programa e toda carta leva a
+  marca "PROXY - nao e carta oficial" no rodape. E para jogo casual e teste.
 
 Projeto pessoal, nao oficial. Dados de cartas: Scryfall.
 Magic: The Gathering e marca da Wizards of the Coast.

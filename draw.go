@@ -161,8 +161,14 @@ const pw, ph = 330.0, 460.0 // tamanho em que os proxies são desenhados
 
 // proxy desenha a carta no estilo de proxy de playtest: nome, custo, tipo, texto e P/R
 func (g *Game) proxy(c *Card, fi int) *ebiten.Image {
-	key := c.ID + ":" + string(rune('0'+fi)) + cfg.Lang
+	st := styleOf(c)
+	key := c.ID + ":" + string(rune('0'+fi)) + cfg.Lang + st
 	if im := g.proxies[key]; im != nil {
+		return im
+	}
+	if st != "" {
+		im := renderCard(specOf(c, fi, st), 0.5)
+		g.proxies[key] = im
 		return im
 	}
 	f, _ := loc(c, fi)
@@ -276,7 +282,7 @@ func (g *Game) backTex() *ebiten.Image {
 
 // cardTex escolhe a imagem real (se já estiver no pendrive) ou o proxy de texto
 func (g *Game) cardTex(c *Card, fi int) *ebiten.Image {
-	if !c.Custom || c.Mine {
+	if !c.Custom || (c.Mine && c.Est == "") {
 		if im := photo(c.ID + ":" + string(rune('0'+fi))); im != nil {
 			return im
 		}

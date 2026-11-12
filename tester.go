@@ -17,6 +17,7 @@ type tester struct {
 	mx, my      int
 	ld, pld, rp bool
 	id, cnt     int
+	pxWait      int
 }
 
 // centro da região de uma carta em jogo
@@ -34,6 +35,23 @@ func (t *tester) step(g *Game) error {
 		return nil
 	}
 	g.drawn = false
+	if t.pxWait > 0 {
+		t.pxWait++
+		switch t.pxWait {
+		case 60:
+			g.shot = filepath.Join(t.dir, "px-janela.png")
+		case 64:
+			g.closeModal()
+			g.myModal()
+			pxTest = nil
+		case 70:
+			g.shot = filepath.Join(t.dir, "px-criador.png")
+		case 74:
+			fmt.Println("TESTE PX OK")
+			return ebiten.Termination
+		}
+		return nil
+	}
 	t.n++
 	shot := func(name string) { g.shot = filepath.Join(t.dir, name+".png") }
 	chk := func(ok bool, what string) {
@@ -195,6 +213,10 @@ func (t *tester) step(g *Game) error {
 			d := parseDeck("x", "1 Gabranth, Juiz Sombrio\n2 Sol Ring\n")
 			chk(d.Total == 3, "carta criada entra no deck")
 		}
+		if os.Getenv("MESA_PX") != "" {
+			t.px(g)
+			return nil
+		}
 		g.closeModal()
 		cfg.Mat, cfg.Sleeve = "b:Nebulosa", "b:Rubi"
 		g.back = nil
@@ -354,4 +376,37 @@ func (t *tester) step(g *Game) error {
 		return ebiten.Termination
 	}
 	return nil
+}
+
+// px: roteiro só do fazedor de proxies (MESA_PX=1); grava as cartas em tamanho real na pasta de capturas
+func (t *tester) px(g *Game) {
+	g.closeModal()
+	dump := func(name string, c *Card, st string) {
+		im := g.printable(c, 0, st)
+		writePNG(filepath.Join(t.dir, name+".png"), grab(im))
+		im.Deallocate()
+	}
+	art := os.Getenv("MESA_PXART")
+	for _, n := range []string{"Judge Magister Gabranth", "Sol Ring", "Blood Artist", "Counterspell", "Atraxa, Praetors' Voice", "Swords to Plowshares", "Forest", "Fire // Ice", "Command Tower", "Kitchen Finks", "Liliana of the Veil", "Rhystic Study"} {
+		c := findCard(n)
+		if c == nil {
+			fmt.Println("px: sem", n)
+			continue
+		}
+		if art != "" {
+			b, _ := os.ReadFile(art)
+			os.MkdirAll(filepath.Dir(artPath(c.ID+":0")), 0o755)
+			os.WriteFile(artPath(c.ID+":0"), b, 0o644)
+		}
+		for _, st := range []string{"moldura", "estendida", "cena"} {
+			dump(safeName(n)+"-"+st, c, st)
+		}
+	}
+	mine := findCard("gabranth, juiz sombrio")
+	mine.Est, mine.Sub = "cena", "Judge Magister Gabranth"
+	dump("minha-cena", mine, "cena")
+	dump("playtest", findCard("Sol Ring"), "")
+	g.proxyModal()
+	pxTest("folhas")
+	t.pxWait = 1
 }

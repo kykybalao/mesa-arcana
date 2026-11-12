@@ -75,7 +75,7 @@ func (g *Game) drawHome() {
 		for _, b := range []struct {
 			lab string
 			fn  func()
-		}{{"Aparência", g.looksModal}, {langLabel(), g.toggleLang}, {"Criar carta", g.myModal}} {
+		}{{"Aparência", g.looksModal}, {langLabel(), g.toggleLang}, {"Criar carta", g.myModal}, {"Proxies", g.proxyModal}} {
 			w2 := tw(b.lab, fReg, 14) + 26
 			x2 -= w2
 			g.button(x2, 28, w2, 34, b.lab, 0, b.fn)

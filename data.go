@@ -49,6 +49,9 @@ type Card struct {
 	TK     int      `json:"tk,omitempty"`
 	Custom bool     `json:"custom,omitempty"`
 	Mine   bool     `json:"minha,omitempty"` // carta criada pelo usuário
+	Est    string   `json:"est,omitempty"`   // estilo da carta criada: "" playtest, moldura, estendida, cena
+	Sub    string   `json:"sub,omitempty"`   // segunda linha de nome (estilo cena)
+	Cor    string   `json:"cor,omitempty"`   // cor da moldura ("" = automática)
 }
 
 func (c *Card) Faces() []Face {
@@ -300,6 +303,7 @@ type Config struct {
 	Lang   string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
 	Mat    string              `json:"playmat,omitempty"`
 	Sleeve string              `json:"sleeve,omitempty"`
+	Proxy  string              `json:"proxy,omitempty"` // estilo das cartas sem imagem na mesa ("" = playtest)
 }
 
 var cfg = Config{Cmd: map[string][]string{}, Size: 112}

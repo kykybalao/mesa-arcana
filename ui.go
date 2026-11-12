@@ -925,6 +925,7 @@ func (g *Game) tableMenu() []item {
 		{label: "Próximo turno", key: "N", fn: g.nextTurn},
 		{label: "Arrumar o campo", fn: g.tidy},
 		{label: "Minhas cartas (criar ou pôr na mão)…", fn: g.myModal},
+		{label: "Fazer proxies (PNG para imprimir)…", fn: g.proxyModal},
 		{label: "Revelar / esconder a mão (rede)", fn: func() {
 			if nw.active() {
 				g.toggleReveal()
