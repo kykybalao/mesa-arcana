@@ -136,6 +136,12 @@ FAZER PROXIES
 - Arte: "Baixar a arte desta carta" ou "Baixar as artes do deck" baixa so a
   ilustracao do Scryfall (precisa de internet) e guarda em dados/artes. Voce
   tambem pode arrastar uma imagem sua para a janela.
+- Nome novo: embaixo da previa, escreva um nome no campo "Nome novo". Ele
+  vai em cima e o nome original da carta fica embaixo, em italico.
+- Imagem do PC: o botao "Escolher imagem do PC" abre a janela de arquivos
+  do Windows. Para ajustar, arraste a previa com o mouse (move a imagem) e
+  use a roda do mouse (zoom), ou os botoes - + e as setas. "Centralizar"
+  volta ao normal. O mesmo vale no "Criar carta", com a carta ja salva.
 - Gravar: uma carta em PNG, o deck inteiro em PNGs, ou folhas A4 com 9 cartas
   (63 x 88 mm; imprima em tamanho real, 100%). Tudo vai para a pasta proxies.
 - "Na mesa": escolhe como aparecem, durante o jogo, as cartas que nao tem a

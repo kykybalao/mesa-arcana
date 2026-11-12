@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/color"
@@ -59,7 +60,11 @@ func specOf(c *Card, fi int, style string) cardSpec {
 		sp.art = artTex(imgPath(key))
 	} else {
 		sp.art = artTex(artPath(key))
+		if a := looks.Alias[c.ID]; a != "" && fi == 0 {
+			sp.sub, sp.f.N = f.N, a
+		}
 	}
+	sp.adj = looks.Adj[key]
 	return sp
 }
 
@@ -318,6 +323,145 @@ func (g *Game) clearProxies() {
 	}
 }
 
+/* ---------------- nome novo e ajuste da arte ---------------- */
+
+// cardLooks guarda, por carta, o nome novo (o original vai embaixo) e o ajuste da arte (zoom e posição)
+type cardLooks struct {
+	Alias map[string]string     `json:"nomes"`
+	Adj   map[string][3]float64 `json:"ajustes"`
+}
+
+var looks = cardLooks{Alias: map[string]string{}, Adj: map[string][3]float64{}}
+
+func looksPath() string { return filepath.Join(baseDir, "dados", "proxies.json") }
+func loadLooks() {
+	if b, err := os.ReadFile(looksPath()); err == nil {
+		json.Unmarshal(bytes.TrimPrefix(b, []byte("\xef\xbb\xbf")), &looks)
+	}
+	if looks.Alias == nil {
+		looks.Alias = map[string]string{}
+	}
+	if looks.Adj == nil {
+		looks.Adj = map[string][3]float64{}
+	}
+}
+func saveLooks() {
+	if b, err := json.MarshalIndent(looks, "", " "); err == nil {
+		os.MkdirAll(filepath.Dir(looksPath()), 0o755)
+		os.WriteFile(looksPath(), b, 0o644)
+	}
+}
+
+func setAdj(key string, a [3]float64) {
+	if a[0] == 0 {
+		a[0] = 1
+	}
+	a[0] = max(0.3, min(6, a[0]))
+	a[1], a[2] = max(-1, min(1, a[1])), max(-1, min(1, a[2]))
+	if a == [3]float64{1, 0, 0} {
+		delete(looks.Adj, key)
+	} else {
+		looks.Adj[key] = a
+	}
+}
+func getAdj(key string) [3]float64 {
+	a := looks.Adj[key]
+	if a[0] == 0 {
+		a[0] = 1
+	}
+	return a
+}
+
+var (
+	picking atomic.Bool
+	picked  atomic.Value // caminho escolhido na janela do Windows
+	artGrab struct {
+		on     bool
+		lx, ly int
+	}
+)
+
+// artTools: botões de escolher imagem do PC e de ajustar a arte; dest é o arquivo onde a arte da carta fica.
+// A prévia em (px, py, pw) aceita arrastar (mover) e a roda do mouse (zoom). Devolve a altura usada e um aviso.
+func (g *Game) artTools(key, dest string, x, y, w, px, py, pw float64, changed func()) (float64, string) {
+	note := ""
+	if v, _ := picked.Load().(string); v != "" {
+		picked.Store("")
+		b, err := os.ReadFile(v)
+		if err != nil {
+			note = "Não consegui abrir esse arquivo."
+		} else if _, _, err := image.Decode(bytes.NewReader(b)); err != nil {
+			note = "Esse arquivo não é uma imagem PNG ou JPG."
+		} else {
+			os.MkdirAll(filepath.Dir(dest), 0o755)
+			os.WriteFile(dest, b, 0o644)
+			delete(looks.Adj, key)
+			saveLooks()
+			changed()
+			note = "Imagem colocada. Arraste a prévia para mover e use a roda do mouse para o zoom."
+		}
+	}
+	a := getAdj(key)
+	set := func(n [3]float64) {
+		setAdj(key, n)
+		saveLooks()
+		changed()
+	}
+	// arrastar e roda do mouse em cima da prévia
+	ph := pw * ratio
+	in := float64(g.mx) >= px && float64(g.mx) < px+pw && float64(g.my) >= py && float64(g.my) < py+ph
+	down := ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	if artGrab.on && down {
+		dx, dy := float64(g.mx-artGrab.lx), float64(g.my-artGrab.ly)
+		if dx != 0 || dy != 0 {
+			k := 1 / (pw * 0.35 * max(0.6, a[0]))
+			set([3]float64{a[0], a[1] - dx*k, a[2] - dy*k})
+			artGrab.lx, artGrab.ly = g.mx, g.my
+		}
+	} else if down && in && !artGrab.on && g.ctx == nil {
+		artGrab.on, artGrab.lx, artGrab.ly = true, g.mx, g.my
+	} else if !down {
+		artGrab.on = false
+	}
+	g.add(region{x: px, y: py, w: pw, h: ph, wheel: func(dy float64) { set([3]float64{a[0] * (1 + 0.08*dy), a[1], a[2]}) }})
+	y0 := y
+	if canPick {
+		st := 0
+		if picking.Load() {
+			st = 3
+		}
+		g.button(x, y, w, 28, "Escolher imagem do PC…", st, func() {
+			if picking.CompareAndSwap(false, true) {
+				go func() {
+					defer picking.Store(false)
+					picked.Store(pickImage())
+				}()
+			}
+		})
+		y += 32
+	}
+	bw := (w - 4*4) / 5
+	bx := x
+	for _, b := range []struct {
+		lab string
+		fn  func()
+	}{
+		{"−", func() { set([3]float64{a[0] / 1.1, a[1], a[2]}) }},
+		{"+", func() { set([3]float64{a[0] * 1.1, a[1], a[2]}) }},
+		{"←", func() { set([3]float64{a[0], a[1] + 0.1, a[2]}) }},
+		{"→", func() { set([3]float64{a[0], a[1] - 0.1, a[2]}) }},
+		{"↑", func() { set([3]float64{a[0], a[1], a[2] + 0.1}) }},
+	} {
+		g.button(bx, y, bw, 26, b.lab, 0, b.fn)
+		bx += bw + 4
+	}
+	y += 30
+	g.button(x, y, bw, 26, "↓", 0, func() { set([3]float64{a[0], a[1], a[2] - 0.1}) })
+	g.button(x+bw+4, y, w-bw-4, 26, fmt.Sprintf("Zoom %d%% · centralizar", int(a[0]*100+0.5)), 0, func() { set([3]float64{1, 0, 0}) })
+	y += 30
+	return y - y0, note
+}
+
 /* ---------------- janela ---------------- */
 
 var pxTest func(what string) string // usado pelo roteiro de teste
@@ -340,7 +484,10 @@ func (g *Game) proxyModal() {
 		deck = g.decks[min(g.sel, len(g.decks)-1)]
 	}
 	g.fields["pxq"] = ""
-	pick := func(c *Card) { cur, fi, pvKey = c, 0, "" }
+	pick := func(c *Card) {
+		cur, fi, pvKey = c, 0, ""
+		g.fields["pxa"] = looks.Alias[c.ID]
+	}
 	if deck != nil && len(deck.Entries) > 0 {
 		pick(deck.Entries[0].Card)
 	}
@@ -505,7 +652,35 @@ func (g *Game) proxyModal() {
 		// coluna C: prévia
 		px, pvW := bx+bw+20, 300.0
 		if cur != nil {
-			key := cur.ID + fmt.Sprint(fi) + style + cfg.Lang
+			ckey := cur.ID + ":" + string(rune('0'+fi))
+			if !cur.Mine {
+				if a := strings.TrimSpace(g.fields["pxa"]); a != looks.Alias[cur.ID] {
+					if a == "" {
+						delete(looks.Alias, cur.ID)
+					} else {
+						looks.Alias[cur.ID] = a
+					}
+					saveLooks()
+					g.forgetProxy(cur.ID)
+				}
+			}
+			key := cur.ID + fmt.Sprint(fi, looks.Alias[cur.ID], looks.Adj[ckey]) + style + cfg.Lang
+			ty := y + pvW*ratio + 12
+			if !cur.Mine {
+				g.field("pxa", px, ty, pvW, "Nome novo (o original fica embaixo)")
+				ty += 38
+			}
+			if style != "" {
+				dest := artPath(ckey)
+				if cur.Mine {
+					dest = imgPath(cur.ID + ":0")
+				}
+				c := cur
+				_, n := g.artTools(ckey, dest, px, ty, pvW, px, y, pvW, func() { g.forgetProxy(c.ID); pvKey = "" })
+				if n != "" {
+					msg = n
+				}
+			}
 			if key != pvKey {
 				if pv != nil {
 					pv.Deallocate()
@@ -565,7 +740,7 @@ func (g *Game) proxyModal() {
 			})
 			dy += 32
 		}
-		for _, l := range wrap("Baixa só a ilustração, não a carta inteira. Ou arraste uma imagem sua para esta janela.", fReg, 12, dw) {
+		for _, l := range wrap("Baixa só a ilustração. Para usar uma imagem sua, use o botão embaixo da prévia ou arraste o arquivo para a janela.", fReg, 12, dw) {
 			txt(g.dst, l, dx, dy, fReg, 12, cMut)
 			dy += 15
 		}

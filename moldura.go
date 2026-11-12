@@ -220,14 +220,19 @@ func artTex(path string) *ebiten.Image {
 }
 
 // cover desenha a imagem preenchendo o retângulo inteiro (corta o que sobra)
-func cover(dst, tex *ebiten.Image, x, y, w, h float64) {
+// adj = zoom (0 ou 1 = justo), e posição horizontal e vertical de -1 a 1 (0 = centro)
+func cover(dst, tex *ebiten.Image, x, y, w, h float64, adj [3]float64) {
 	x, y, w, h = x*uiS, y*uiS, w*uiS, h*uiS
 	b := tex.Bounds()
 	s := max(w/float64(b.Dx()), h/float64(b.Dy()))
+	if adj[0] > 0 {
+		s *= adj[0]
+	}
 	sub := dst.SubImage(image.Rect(int(x), int(y), int(x+w), int(y+h))).(*ebiten.Image)
+	sub.Fill(color.RGBA{0x0c, 0x0b, 0x0a, 0xff})
 	op := &ebiten.DrawImageOptions{Filter: ebiten.FilterLinear}
 	op.GeoM.Scale(s, s)
-	op.GeoM.Translate(x+(w-float64(b.Dx())*s)/2, y+(h-float64(b.Dy())*s)/2)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*s)*(0.5+adj[1]/2), y+(h-float64(b.Dy())*s)*(0.5+adj[2]/2))
 	sub.DrawImage(tex, op)
 }
 
@@ -575,6 +580,7 @@ type cardSpec struct {
 	sub   string // segunda linha de nome (só no estilo cena)
 	kind  string
 	art   *ebiten.Image
+	adj   [3]float64
 	token bool
 }
 
@@ -619,7 +625,7 @@ func renderCard(sp cardSpec, scale float64) *ebiten.Image {
 	tex := frameTex(sp.kind)
 	if sp.style == "cena" {
 		if sp.art != nil {
-			cover(im, sp.art, 0, 0, cdW, cdH)
+			cover(im, sp.art, 0, 0, cdW, cdH, sp.adj)
 		} else {
 			stretch(im, tex, 0, 0, cdW, cdH, 0.55)
 		}
@@ -675,7 +681,7 @@ func renderCard(sp cardSpec, scale float64) *ebiten.Image {
 			rect(im, ax-3, ay-3, aw+6, ah+6, black)
 		}
 		if sp.art != nil {
-			cover(im, sp.art, ax, ay, aw, ah)
+			cover(im, sp.art, ax, ay, aw, ah, sp.adj)
 		} else {
 			stretch(im, tex, ax, ay, aw, ah, 0.42)
 			txtC(im, "sem arte", ax+aw/2, ay+ah/2-14, fSerifI, 26, color.NRGBA{255, 255, 255, 110})
@@ -687,8 +693,15 @@ func renderCard(sp cardSpec, scale float64) *ebiten.Image {
 		// nome e custo
 		bar(im, 42, 44, 660, 60, p)
 		cw := drawCost(im, f.C, 692, 56, 36, true)
-		ns := fitSize(f.N, fSerifB, 39, 626-cw-10)
-		txt(im, f.N, 58, 49+(39-ns)*0.6, fSerifB, ns, ink)
+		if sp.sub != "" { // nome novo em cima, nome original embaixo
+			ns := fitSize(f.N, fSerifB, 31, 626-cw-10)
+			txt(im, f.N, 58, 43+(31-ns)*0.5, fSerifB, ns, ink)
+			ss := fitSize(sp.sub, fSerifI, 20, 626-cw-10)
+			txt(im, sp.sub, 59, 76, fSerifI, ss, color.RGBA{0x2c, 0x28, 0x24, 0xff})
+		} else {
+			ns := fitSize(f.N, fSerifB, 39, 626-cw-10)
+			txt(im, f.N, 58, 49+(39-ns)*0.6, fSerifB, ns, ink)
+		}
 		// tipo
 		bar(im, 42, 588, 660, 54, p)
 		ts := fitSize(f.T, fSerifB, 32, 628)

@@ -387,7 +387,7 @@ func (t *tester) px(g *Game) {
 		im.Deallocate()
 	}
 	art := os.Getenv("MESA_PXART")
-	for _, n := range []string{"Judge Magister Gabranth", "Sol Ring", "Blood Artist", "Counterspell", "Atraxa, Praetors' Voice", "Swords to Plowshares", "Forest", "Fire // Ice", "Command Tower", "Kitchen Finks", "Liliana of the Veil", "Rhystic Study"} {
+	for _, n := range []string{"Judge Magister Gabranth", "Sol Ring", "Rhystic Study"} {
 		c := findCard(n)
 		if c == nil {
 			fmt.Println("px: sem", n)
@@ -402,11 +402,25 @@ func (t *tester) px(g *Game) {
 			dump(safeName(n)+"-"+st, c, st)
 		}
 	}
+	if c := findCard("Sol Ring"); c != nil {
+		looks.Alias[c.ID] = "Anel do Poder"
+		setAdj(c.ID+":0", [3]float64{1.7, -0.8, 0.6})
+		for _, st := range []string{"moldura", "estendida", "cena"} {
+			dump("apelido-"+st, c, st)
+		}
+		setAdj(c.ID+":0", [3]float64{0.6, 0, 0})
+		dump("apelido-zoom-menor", c, "moldura")
+		setAdj(c.ID+":0", [3]float64{1, 0, 0})
+	}
 	mine := findCard("gabranth, juiz sombrio")
 	mine.Est, mine.Sub = "cena", "Judge Magister Gabranth"
 	dump("minha-cena", mine, "cena")
 	dump("playtest", findCard("Sol Ring"), "")
 	g.proxyModal()
-	pxTest("folhas")
+	if p := os.Getenv("MESA_PICK"); p != "" {
+		picked.Store(p)
+	} else {
+		pxTest("folhas")
+	}
 	t.pxWait = 1
 }

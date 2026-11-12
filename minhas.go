@@ -233,7 +233,7 @@ func (g *Game) myModal() {
 		row("Texto", "mcx", "Use  /  (com espaços) para pular linha", y+148)
 		row("P/R", "mcp", "Ex.: 3/3 (deixe vazio se não for criatura)", y+186)
 		row("Lealdade", "mcl", "Só para planeswalker", y+224)
-		row("Subtítulo", "mcs", "Segunda linha de nome (só no estilo Arte inteira)", y+262)
+		row("Subtítulo", "mcs", "Segunda linha, embaixo do nome (menos no Playtest)", y+262)
 		txt(g.dst, "Estilo", fx, y+307, fReg, 13, cMut)
 		sx := fx + 92
 		for _, s := range styleNames {
@@ -266,7 +266,7 @@ func (g *Game) myModal() {
 		d := draft()
 		g.forgetProxyDraft()
 		if est != "" {
-			key := fmt.Sprint(d.Face, d.Est, d.Cor, d.Sub, d.ID)
+			key := fmt.Sprint(d.Face, d.Est, d.Cor, d.Sub, d.ID, looks.Adj[d.ID+":0"])
 			if key != pvKey {
 				if pv != nil {
 					pv.Deallocate()
@@ -274,6 +274,12 @@ func (g *Game) myModal() {
 				pv, pvKey = renderCard(specOf(d, 0, est), 1), key
 			}
 			drawTex(g.dst, pv, px, y, pvW, false, 1)
+			if cur != nil {
+				c := cur
+				if _, n := g.artTools(c.ID+":0", imgPath(c.ID+":0"), px, y+pvW*ratio+12, pvW, px, y, pvW, func() { g.forgetProxy(c.ID); pvKey = "" }); n != "" {
+					msg = n
+				}
+			}
 		} else if cur != nil && hasImg(cur.ID+":0") {
 			drawTex(g.dst, g.cardTex(cur, 0), px, y, pvW, false, 1)
 		} else {

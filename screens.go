@@ -662,6 +662,7 @@ func main() {
 	g := &Game{screen: "home", customs: map[string]*Card{}, proxies: map[string]*ebiten.Image{}, fields: map[string]string{}, cw: cfg.Size}
 	dl.msg.Store("")
 	loadMine()
+	loadLooks()
 	buildIndex()
 	go loadAnalysis() // o banco de combos carrega em segundo plano
 	g.reloadDecks("")
