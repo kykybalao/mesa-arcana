@@ -299,14 +299,15 @@ func (d *Deck) imageKeys() []string {
 }
 
 type Config struct {
-	Cmd    map[string][]string `json:"comandantes"`
-	Size   float64             `json:"tamanho"`
-	Name   string              `json:"nome,omitempty"`
-	Addr   string              `json:"mesa,omitempty"`
-	Lang   string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
-	Mat    string              `json:"playmat,omitempty"`
-	Sleeve string              `json:"sleeve,omitempty"`
-	Proxy  string              `json:"proxy,omitempty"` // estilo das cartas sem imagem na mesa ("" = playtest)
+	Cmd     map[string][]string `json:"comandantes"`
+	Size    float64             `json:"tamanho"`
+	Name    string              `json:"nome,omitempty"`
+	Addr    string              `json:"mesa,omitempty"`
+	Lang    string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
+	Mat     string              `json:"playmat,omitempty"`
+	Sleeve  string              `json:"sleeve,omitempty"`
+	NoBands bool                `json:"sem_faixas,omitempty"`
+	Proxy   string              `json:"proxy,omitempty"` // estilo das cartas sem imagem na mesa ("" = playtest)
 }
 
 var cfg = Config{Cmd: map[string][]string{}, Size: 112}

@@ -294,16 +294,32 @@ func (g *Game) drawGame() {
 	strip := 30.0 // faixa das fases do turno
 	var peer *Peer
 	netOn := nw.active()
+	var panes []pane
 	if netOn {
 		strip = 58 // mais a faixa dos jogadores da mesa
-		if g.viewPeer != 0 {
+		if g.viewPeer != 0 && g.viewMode <= 1 {
 			peer = nw.peer(g.viewPeer)
 		}
+	} else {
+		g.viewMode = 1
 	}
 	bx, by, bw, bh := leftW, top+strip, W-leftW-rightW, H-top-strip-handH
+	fx, fy, fw, fh := bx, by, bw, bh // a área inteira; bx..bh passa a ser só o meu campo
+	if netOn && g.viewMode > 1 {
+		var mine [4]float64
+		mine, panes = g.layoutPanes(nw.peerList(), bx, by, bw, bh)
+		bx, by, bw, bh = mine[0], mine[1], mine[2], mine[3]
+	}
 	g.arrowReset()
 	g.pruneArrows()
 	g.bf = image.Rect(int(bx), int(by), int(bx+bw), int(by+bh))
+	if g.clampBF {
+		g.clampBF = false
+		for _, id := range s.Z["battlefield"] {
+			i := s.Cards[id]
+			i.X, i.Y = max(0, min(bw-cw*0.8, i.X)), max(0, min(bh-cw*0.9, i.Y))
+		}
+	}
 
 	if peer == nil {
 		// campo
@@ -320,6 +336,7 @@ func (g *Game) drawGame() {
 		if len(s.Z["battlefield"]) == 0 {
 			txtC(g.dst, "CAMPO DE BATALHA", bx+bw/2, by+bh/2-12, fBold, 22, color.RGBA{0xff, 0xff, 0xff, 0x22})
 		}
+		g.drawBands(bx, by, bw, bh)
 		bfImg := clip(g.dst, bx, by, bw, bh)
 		whole := g.dst
 		g.dst = bfImg
@@ -344,6 +361,13 @@ func (g *Game) drawGame() {
 			}
 		}
 		g.dst = whole
+		if s.Phase == "play" {
+			g.drawTrackers(bx+8, by+8, bw-200)
+		}
+		for _, pn := range panes {
+			g.drawPeerPane(pn)
+		}
+		bx, by, bw, bh = fx, fy, fw, fh // daqui em diante (fases, avisos, mão) vale a largura inteira
 
 		// faixa das fases: clique numa fase para anunciá-la
 		rect(g.dst, bx, top, bw, 30, cPanel)
@@ -463,7 +487,7 @@ func (g *Game) drawGame() {
 		g.drawPlayers(bx, top+30, bw)
 	}
 	if s.Phase == "play" {
-		g.drawArrows(peer)
+		g.drawArrows()
 		g.arrowBanner(bx, by, bw, bh)
 	}
 

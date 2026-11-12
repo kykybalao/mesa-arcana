@@ -100,8 +100,10 @@ type Game struct {
 	showHand bool     // minha mão está revelada para a mesa
 	chat     []string // mensagens do chat da mesa
 	arrows   []Arrow
+	viewMode int  // 1 uma mesa, 2 lado a lado, 3 empilhado, 4 quadrante
+	clampBF  bool // conferir se alguma carta ficou fora do campo
 	au       arrowUI
-	viewPeer int      // 0 = minha mesa; senão, o jogador cuja mesa está na tela
+	viewPeer int // 0 = minha mesa; senão, o jogador cuja mesa está na tela
 	anKey    string
 	anRes    *Analysis
 	equip    int // carta esperando o clique no alvo para ser anexada
@@ -256,6 +258,24 @@ func (g *Game) keys() {
 		return
 	}
 	switch {
+	case jp(ebiten.KeyDigit1):
+		g.setMode(1)
+	case jp(ebiten.KeyDigit2):
+		g.setMode(2)
+	case jp(ebiten.KeyDigit3):
+		g.setMode(3)
+	case jp(ebiten.KeyDigit4):
+		g.setMode(4)
+	case jp(ebiten.KeyTab):
+		g.cyclePeer()
+	case jp(ebiten.KeyBracketLeft), jp(ebiten.KeyBracketRight):
+		d := 8.0
+		if jp(ebiten.KeyBracketLeft) {
+			d = -8
+		}
+		g.cw = max(70, min(190, g.cw+d))
+		cfg.Size = g.cw
+		saveCfg()
 	case jp(ebiten.KeyD):
 		g.drawN(1)
 	case jp(ebiten.KeyN):
@@ -950,6 +970,8 @@ func (g *Game) tableMenu() []item {
 		{label: "Próximo turno", key: "N", fn: g.nextTurn},
 		{label: "Arrumar o campo", fn: g.tidy},
 		{label: "Apagar minhas setas", fn: func() { g.clearArrows(0) }},
+		{label: "Meus marcadores (veneno, energia…)", fn: g.trackerMenu},
+		{label: "Mostrar / esconder as faixas do campo", fn: func() { cfg.NoBands = !cfg.NoBands; saveCfg() }},
 		{label: "Minhas cartas (criar ou pôr na mão)…", fn: g.myModal},
 		{label: "Fazer proxies (PNG para imprimir)…", fn: g.proxyModal},
 		{label: "Revelar / esconder a mão (rede)", fn: func() {

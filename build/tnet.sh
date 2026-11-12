@@ -1,6 +1,7 @@
 #!/bin/bash
 # teste de rede: duas cópias do programa na mesma máquina (anfitrião + visitante)
 cd /home/user/mesa && go build -o build/mesa-linux . || exit 1
+python3 -c "import shutil; [shutil.rmtree(d, ignore_errors=True) for d in ('build/neta', 'build/netb')]"
 for n in a b; do
   mkdir -p build/net$n/decks build/net$n/shots
   cp /mnt/project-files/decks/gabranth-v4-500.txt build/net$n/decks/Gabranth.txt

@@ -113,6 +113,20 @@ ESCOLHER A ARTE
   imagem atual. Vale para todos os decks. So funciona com o Scryfall liberado
   (em casa).
 
+VISAO DA MESA (em rede)
+- Na faixa de jogadores, a direita, escolha como ver a mesa (ou use as
+  teclas 1 a 4): 1 Uma mesa por vez, 2 Lado a lado (a sua e a de um
+  oponente), 3 Empilhado (oponentes em cima, voce embaixo), 4 Quadrante
+  (todo mundo ao mesmo tempo). Tab troca o oponente em foco.
+- Cada mesa tem a placa do jogador com nome, vida, mao, grimorio, turno e
+  marcadores. Clique na placa para abrir so a mesa dele.
+- As teclas [ e ] diminuem e aumentam as cartas.
+- Marcadores: botao "Marcadores" no canto do seu campo (veneno, energia,
+  experiencia e dano de comandante por oponente). Os que nao estao em zero
+  ficam visiveis com - e +, e os outros jogadores veem na sua placa.
+- O campo mostra duas faixas, criaturas/encantamentos em cima e terrenos
+  embaixo. Sao so visuais; para esconder, botao direito no campo.
+
 CONTADORES E SETAS
 - Contador ja colocado: clique no "-" ou no "+" do proprio contador, em cima
   da carta, para diminuir ou aumentar. No zero ele some.

@@ -20,7 +20,7 @@ type arrowUI struct {
 	pick  bool // escolhendo o alvo
 	src   int
 	inst  map[int][4]float64    // minhas cartas no campo, neste quadro
-	pub   map[int][4]float64    // cartas da mesa do outro jogador que está na tela
+	pub   map[[2]int][4]float64 // cartas das mesas dos outros jogadores que estão na tela (jogador, carta)
 	chips map[string][2]float64 // ponta de cada jogador na faixa de jogadores ("" = eu)
 	cnt   bool                  // desenhando o meu campo: os contadores ganham botões
 	btns  []region
@@ -33,7 +33,7 @@ func (n *Net) myName() string {
 }
 
 func (g *Game) arrowReset() {
-	g.au.inst, g.au.pub, g.au.chips = map[int][4]float64{}, map[int][4]float64{}, map[string][2]float64{}
+	g.au.inst, g.au.pub, g.au.chips = map[int][4]float64{}, map[[2]int][4]float64{}, map[string][2]float64{}
 }
 
 // pruneArrows tira as setas cuja carta saiu do campo
@@ -148,11 +148,20 @@ func pubName(g *Game, p *Peer, id int) string {
 	return ""
 }
 
-// drawArrows desenha as setas que fazem sentido na mesa que está na tela (view == nil: a minha)
-func (g *Game) drawArrows(view *Peer) {
+// drawArrows desenha as setas entre as cartas que estão na tela; quando uma ponta está em uma mesa
+// que não está aparecendo, a seta vai até o nome do jogador na faixa de jogadores.
+func (g *Game) drawArrows() {
 	gold, red := color.RGBA{0xf2, 0xc2, 0x4e, 0xff}, color.RGBA{0xf0, 0x6a, 0x5e, 0xff}
 	me := nw.myName()
-	chip := func(name string) ([2]float64, bool) { c, ok := g.au.chips[name]; return c, ok }
+	peers := nw.peerList()
+	byName := func(n string) *Peer {
+		for _, p := range peers {
+			if p.Name == n {
+				return p
+			}
+		}
+		return nil
+	}
 	myCard := func(id int) string {
 		if i := g.S.Cards[id]; i != nil {
 			f, _ := loc(g.card(i), i.Face)
@@ -160,116 +169,69 @@ func (g *Game) drawArrows(view *Peer) {
 		}
 		return ""
 	}
-	if view == nil {
-		for _, a := range g.arrows {
-			var x1, y1 float64
-			if r, ok := g.au.inst[a.From]; ok {
-				x1, y1 = mid(r)
-			} else if c, ok := chip(""); ok {
-				x1, y1 = c[0], c[1]
-			} else {
-				continue
-			}
-			if a.Peer == "" {
-				if r, ok := g.au.inst[a.To]; ok {
-					x2, y2 := mid(r)
-					g.drawArrow(x1, y1, x2, y2, gold, "")
-				}
-			} else if c, ok := chip(a.Peer); ok {
-				lab := "mesa de " + a.Peer
-				for _, p := range nw.peerList() {
-					if p.Name == a.Peer {
-						if n := pubName(g, p, a.To); n != "" {
-							lab = n + " (" + a.Peer + ")"
-						}
-					}
-				}
-				g.drawArrow(x1, y1, c[0], c[1], gold, lab)
-			}
-		}
-		for _, p := range nw.peerList() {
-			if p.State == nil {
-				continue
-			}
-			for _, a := range p.State.Arrows {
-				if a.Peer != me || me == "" {
-					continue
-				}
-				c, ok := chip(p.Name)
-				r, ok2 := g.au.inst[a.To]
-				if ok && ok2 {
-					x2, y2 := mid(r)
-					lab := p.Name
-					if n := pubName(g, p, a.From); n != "" {
-						lab += ": " + n
-					}
-					g.drawArrow(c[0], c[1], x2, y2, red, lab)
-				}
-			}
-		}
-		return
+	// ponta: posição, se é a própria carta (e não o nome do jogador) e o rótulo usado quando não é
+	type end struct {
+		x, y  float64
+		card  bool
+		label string
+		ok    bool
 	}
-	// mesa de outro jogador
-	if view.State != nil {
-		for _, a := range view.State.Arrows {
-			r, ok := g.au.pub[a.From]
-			if !ok {
-				continue
-			}
-			x1, y1 := mid(r)
-			switch {
-			case a.Peer == "":
-				if t, ok := g.au.pub[a.To]; ok {
-					x2, y2 := mid(t)
-					g.drawArrow(x1, y1, x2, y2, red, "")
-				}
-			case a.Peer == me:
-				if c, ok := chip(""); ok {
-					lab := "minha mesa"
-					if n := myCard(a.To); n != "" {
-						lab = "minha " + n
-					}
-					g.drawArrow(x1, y1, c[0], c[1], red, lab)
-				}
-			default:
-				if c, ok := chip(a.Peer); ok {
-					g.drawArrow(x1, y1, c[0], c[1], red, "mesa de "+a.Peer)
-				}
-			}
+	mine := func(id int) end {
+		if r, ok := g.au.inst[id]; ok && id != 0 {
+			x, y := mid(r)
+			return end{x, y, true, "", true}
 		}
+		c, ok := g.au.chips[""]
+		lab := "você"
+		if n := myCard(id); n != "" {
+			lab = n + " (você)"
+		}
+		return end{c[0], c[1], false, lab, ok}
+	}
+	theirs := func(p *Peer, id int) end {
+		if p == nil {
+			return end{}
+		}
+		if r, ok := g.au.pub[[2]int{p.ID, id}]; ok && id != 0 {
+			x, y := mid(r)
+			return end{x, y, true, "", true}
+		}
+		c, ok := g.au.chips[p.Name]
+		lab := p.Name
+		if n := pubName(g, p, id); n != "" {
+			lab = n + " (" + p.Name + ")"
+		}
+		return end{c[0], c[1], false, lab, ok}
+	}
+	draw := func(a, b end, col color.RGBA) {
+		if !a.ok || !b.ok || (!a.card && !b.card) {
+			return
+		}
+		lab := a.label
+		if lab == "" {
+			lab = b.label
+		}
+		g.drawArrow(a.x, a.y, b.x, b.y, col, lab)
 	}
 	for _, a := range g.arrows {
-		if a.Peer != view.Name {
-			continue
-		}
-		c, ok := chip("")
-		t, ok2 := g.au.pub[a.To]
-		if ok && ok2 {
-			x2, y2 := mid(t)
-			lab := "você"
-			if n := myCard(a.From); n != "" {
-				lab = "sua " + n
-			}
-			g.drawArrow(c[0], c[1], x2, y2, gold, lab)
+		if a.Peer == "" {
+			draw(mine(a.From), mine(a.To), gold)
+		} else {
+			draw(mine(a.From), theirs(byName(a.Peer), a.To), gold)
 		}
 	}
-	for _, p := range nw.peerList() {
-		if p.ID == view.ID || p.State == nil {
+	for _, p := range peers {
+		if p.State == nil {
 			continue
 		}
 		for _, a := range p.State.Arrows {
-			if a.Peer != view.Name {
-				continue
-			}
-			c, ok := chip(p.Name)
-			t, ok2 := g.au.pub[a.To]
-			if ok && ok2 {
-				x2, y2 := mid(t)
-				lab := p.Name
-				if n := pubName(g, p, a.From); n != "" {
-					lab += ": " + n
-				}
-				g.drawArrow(c[0], c[1], x2, y2, red, lab)
+			switch {
+			case a.Peer == "":
+				draw(theirs(p, a.From), theirs(p, a.To), red)
+			case a.Peer == me && me != "":
+				draw(theirs(p, a.From), mine(a.To), red)
+			default:
+				draw(theirs(p, a.From), theirs(byName(a.Peer), a.To), red)
 			}
 		}
 	}

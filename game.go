@@ -29,6 +29,7 @@ type State struct {
 	Z     map[string][]int
 	Life  int
 	Opp   [3]int
+	Trk   map[string]int // marcadores do jogador: veneno, energia, experiência, dano de comandante
 	Turn  int
 	Tax   map[string]int
 	Mulls int

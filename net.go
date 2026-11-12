@@ -51,6 +51,7 @@ type PubState struct {
 	Customs map[string]*Card `json:"customs,omitempty"`
 	Shown   []PubInst        `json:"shown,omitempty"` // mão revelada para a mesa
 	Arrows  []Arrow          `json:"setas,omitempty"`
+	Trk     map[string]int   `json:"marc,omitempty"`
 }
 type Msg struct {
 	T     string    `json:"t"` // hello, state, log, bye, full
@@ -432,6 +433,7 @@ func (g *Game) pubState() *PubState {
 		p.Shown = conv("hand", false)
 	}
 	p.Arrows = g.arrows
+	p.Trk = s.Trk
 	return p
 }
 
@@ -615,7 +617,9 @@ func (g *Game) drawPlayers(x, y, w float64) {
 		g.add(region{x: px, y: y + 3, w: cw, h: 21, click: fn})
 		px += cw + 6
 	}
-	chip("Minha mesa", g.viewPeer == 0, func() { g.viewPeer = 0 })
+	g.drawModes(x+w-8, y)
+	multi := g.viewMode > 1
+	chip("Minha mesa", g.viewPeer == 0 && !multi, func() { g.viewPeer = 0; g.setMode(1) })
 	for _, p := range nw.peerList() {
 		lab := p.Name + " (sem deck)"
 		if p.State != nil && p.State.InGame {
@@ -623,7 +627,12 @@ func (g *Game) drawPlayers(x, y, w float64) {
 		}
 		id := p.ID
 		chipName = p.Name
-		chip(lab, g.viewPeer == id, func() { g.viewPeer = id })
+		chip(lab, g.viewPeer == id && g.viewMode <= 2, func() {
+			g.viewPeer = id
+			if g.viewMode > 2 {
+				g.setMode(1)
+			}
+		})
 	}
 }
 
@@ -656,7 +665,7 @@ func (g *Game) drawPubInst(p *Peer, pi PubInst, x, y, w float64, flat bool) {
 		r.x, r.y, r.w, r.h = x+w/2-h/2, y+h/2-w/2, h, w
 	}
 	if !flat { // carta no campo do outro jogador: pode ser alvo de seta
-		g.au.pub[pi.ID] = [4]float64{r.x, r.y, r.w, r.h}
+		g.au.pub[[2]int{p.ID, pi.ID}] = [4]float64{r.x, r.y, r.w, r.h}
 		r.click = func() { g.pubClick(p, pi, false) }
 		r.rclick = func() { g.pubClick(p, pi, true) }
 	}

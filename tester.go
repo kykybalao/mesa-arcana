@@ -259,6 +259,14 @@ func (t *tester) step(g *Game) error {
 			shot("7b-rede")
 		}
 	case 48:
+		if os.Getenv("MESA_NET") != "" {
+			g.setMode(4)
+			g.bumpTrk("Veneno", 1)
+			g.bumpTrk("Veneno", 1)
+			g.bumpTrk(g.trackerNames()[3], 5)
+			chk(g.S.Trk["Veneno"] == 2 && g.viewMode == 4, "marcadores e quadrante")
+			shot("7e-quadrante")
+		}
 		if bf := g.S.Z["battlefield"]; len(bf) >= 3 {
 			id := bf[len(bf)-1]
 			g.S.Cards[id].Counters["+1/+1"] = 1
@@ -292,12 +300,16 @@ func (t *tester) step(g *Game) error {
 			g.closeModal()
 		}
 		g.viewPeer = 0
+		if os.Getenv("MESA_NET") != "" {
+			g.setMode(3)
+		}
 	case 50: // daqui em diante, mouse simulado: arrastar da mão para o campo
 		g.ctx = nil
 		shot("7d-setas")
 		t.fake = true
 		t.mx, t.my = 5, 300
 	case 51:
+		g.setMode(1)
 		t.id = g.S.Z["hand"][0]
 		t.cnt = len(g.S.Z["battlefield"])
 		t.mx, t.my = t.at(g, t.id)
