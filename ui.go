@@ -100,6 +100,7 @@ type Game struct {
 	showHand bool     // minha mão está revelada para a mesa
 	chat     []string // mensagens do chat da mesa
 	arrows   []Arrow
+	pvNow    bool // o cursor está em cima de uma carta agora
 	viewMode int  // 1 uma mesa, 2 lado a lado, 3 empilhado, 4 quadrante
 	clampBF  bool // conferir se alguma carta ficou fora do campo
 	au       arrowUI
@@ -220,8 +221,10 @@ func (g *Game) Update() error {
 		}
 	}
 	// carta sob o cursor vai para a prévia
+	g.pvNow = false
 	if !g.drag.moved {
 		if r := g.hit(func(r *region) bool { return r.pv != nil }); r != nil {
+			g.pvNow = true
 			g.pv, g.pvFace, g.pvHide = r.pv, r.pvFace, r.pvHidden
 		}
 	}
@@ -276,6 +279,8 @@ func (g *Game) keys() {
 		g.cw = max(70, min(190, g.cw+d))
 		cfg.Size = g.cw
 		saveCfg()
+	case jp(ebiten.KeyP):
+		g.togglePanel()
 	case jp(ebiten.KeyD):
 		g.drawN(1)
 	case jp(ebiten.KeyN):
@@ -400,6 +405,7 @@ func (g *Game) drop() {
 		y := float64(g.my) - float64(g.bf.Min.Y) - g.drag.oy
 		x = max(0, min(float64(g.bf.Dx())-g.cw*0.5, x))
 		y = max(0, min(float64(g.bf.Dy())-g.cw*0.6, y))
+		x, y = g.snapZone(x, y)
 		g.move(id, zone, moveOpt{pos: true, x: x, y: y})
 	case zone == "hand" && i.Zone == "hand":
 		h := g.S.Z["hand"]
@@ -971,7 +977,9 @@ func (g *Game) tableMenu() []item {
 		{label: "Arrumar o campo", fn: g.tidy},
 		{label: "Apagar minhas setas", fn: func() { g.clearArrows(0) }},
 		{label: "Meus marcadores (veneno, energia…)", fn: g.trackerMenu},
-		{label: "Mostrar / esconder as faixas do campo", fn: func() { cfg.NoBands = !cfg.NoBands; saveCfg() }},
+		{label: "Campo: " + fieldNames[fieldMode()] + " (trocar)", fn: g.cycleField},
+		{label: "Encaixar cartas nas zonas: " + simNao(!cfg.NoSnap), fn: func() { cfg.NoSnap = !cfg.NoSnap; saveCfg() }},
+		{label: "Esconder / mostrar o painel da esquerda", key: "P", fn: g.togglePanel},
 		{label: "Minhas cartas (criar ou pôr na mão)…", fn: g.myModal},
 		{label: "Fazer proxies (PNG para imprimir)…", fn: g.proxyModal},
 		{label: "Revelar / esconder a mão (rede)", fn: func() {

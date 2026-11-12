@@ -282,6 +282,13 @@ func (t *tester) step(g *Game) error {
 			g.clickCard(bf[0])
 			chk(len(g.arrows) == n+1 && !g.au.pick, "seta na própria mesa")
 		}
+		if os.Getenv("MESA_NET") == "" {
+			cfg.Field, cfg.HideLeft = 1, true
+			g.tidy()
+			x, y := g.snapZone(333, 95)
+			chk(x != 333 && y != 95, "encaixe na zona")
+			shot("7f-zonas")
+		}
 		if os.Getenv("MESA_ARTE") != "" {
 			g.artModal(findCard("Sol Ring"))
 			t.cnt = 0
@@ -300,6 +307,10 @@ func (t *tester) step(g *Game) error {
 			g.closeModal()
 		}
 		g.viewPeer = 0
+		if cfg.Field == 1 {
+			cfg.Field, cfg.HideLeft = 0, false
+			g.tidy()
+		}
 		if os.Getenv("MESA_NET") != "" {
 			g.setMode(3)
 		}

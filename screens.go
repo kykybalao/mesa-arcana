@@ -285,7 +285,11 @@ func (g *Game) pasteDeck() {
 func (g *Game) drawGame() {
 	s := g.S
 	W, H := float64(g.W), float64(g.H)
-	const top, leftW = 46.0, 250.0
+	const top = 46.0
+	leftW := 250.0
+	if cfg.HideLeft {
+		leftW = 0
+	}
 	cw := g.cw
 	ch := cw * ratio
 	pileW := min(cw, ((H-top-10)/4-30)/ratio)
@@ -492,63 +496,75 @@ func (g *Game) drawGame() {
 	}
 
 	// painel esquerdo: prévia, texto e registro
-	rect(g.dst, 0, top, leftW, H-top, cPanel)
-	rect(g.dst, leftW-1, top, 1, H-top, cLine)
-	pvW := leftW - 16
-	pvH := pvW * ratio
-	logH := 150.0
-	if netOn {
-		logH = 210 // sobra espaço para o chat
-	}
-	if g.pv != nil && !g.pvHide {
-		drawTex(g.dst, g.cardTex(g.pv, g.pvFace), 8, top+8, pvW, false, 1)
-		f, _ := loc(g.pv, g.pvFace)
-		body := f.N
-		if f.C != "" {
-			body += "  " + f.C
+	if leftW > 0 {
+		rect(g.dst, 0, top, leftW, H-top, cPanel)
+		rect(g.dst, leftW-1, top, 1, H-top, cLine)
+		pvW := leftW - 16
+		pvH := pvW * ratio
+		logH := 150.0
+		if netOn {
+			logH = 210 // sobra espaço para o chat
 		}
-		body += "\n" + f.T + "\n\n" + f.X
-		if f.P != "" || f.O != "" {
-			body += "\n\n" + f.P + "/" + f.O
+		if g.pv != nil && !g.pvHide {
+			drawTex(g.dst, g.cardTex(g.pv, g.pvFace), 8, top+8, pvW, false, 1)
+			f, _ := loc(g.pv, g.pvFace)
+			body := f.N
+			if f.C != "" {
+				body += "  " + f.C
+			}
+			body += "\n" + f.T + "\n\n" + f.X
+			if f.P != "" || f.O != "" {
+				body += "\n\n" + f.P + "/" + f.O
+			}
+			if f.L != "" {
+				body += "\n\nLealdade: " + f.L
+			}
+			if nt := locNote(g.pv, g.pvFace); nt != "" {
+				body += "\n\n" + nt
+			}
+			ls := wrap(body, fReg, 12.5, pvW)
+			maxL := int((H - logH - (top + pvH + 20)) / 16)
+			if len(ls) > maxL && maxL > 0 {
+				ls = append(ls[:maxL-1], "…")
+			}
+			if maxL > 0 {
+				txt(g.dst, strings.Join(ls, "\n"), 8, top+pvH+18, fReg, 12.5, color.RGBA{0xcf, 0xd8, 0xdc, 0xff})
+			}
+		} else {
+			rstroke(g.dst, 8, top+8, pvW, pvH, 11, 1, cLine)
+			msg := "Passe o mouse sobre uma carta"
+			if g.pvHide {
+				msg = "Carta oculta"
+			}
+			txtC(g.dst, msg, leftW/2, top+pvH/2, fReg, 12.5, cMut)
 		}
-		if f.L != "" {
-			body += "\n\nLealdade: " + f.L
+		ly := H - logH
+		rect(g.dst, 8, ly, pvW, 1, cLine)
+		var lines []string
+		for k := len(s.Log) - 1; k >= 0 && len(lines) < 12; k-- {
+			w := wrap(s.Log[k], fReg, 11.5, pvW)
+			lines = append(append([]string{}, w...), lines...)
 		}
-		if nt := locNote(g.pv, g.pvFace); nt != "" {
-			body += "\n\n" + nt
+		if netOn {
+			g.chatBox(8, H-38, pvW)
+			logH -= 40
 		}
-		ls := wrap(body, fReg, 12.5, pvW)
-		maxL := int((H - logH - (top + pvH + 20)) / 16)
-		if len(ls) > maxL && maxL > 0 {
-			ls = append(ls[:maxL-1], "…")
+		maxL := int((logH - 12) / 14.4)
+		if len(lines) > maxL {
+			lines = lines[len(lines)-maxL:]
 		}
-		if maxL > 0 {
-			txt(g.dst, strings.Join(ls, "\n"), 8, top+pvH+18, fReg, 12.5, color.RGBA{0xcf, 0xd8, 0xdc, 0xff})
-		}
+		txt(g.dst, strings.Join(lines, "\n"), 8, ly+6, fReg, 11.5, cMut)
 	} else {
-		rstroke(g.dst, 8, top+8, pvW, pvH, 11, 1, cLine)
-		msg := "Passe o mouse sobre uma carta"
-		if g.pvHide {
-			msg = "Carta oculta"
+		g.floatPreview(W-rightW, top+strip)
+	}
+	// botão de esconder ou mostrar o painel da esquerda
+	{
+		lab := "« Painel"
+		if cfg.HideLeft {
+			lab = "Painel »"
 		}
-		txtC(g.dst, msg, leftW/2, top+pvH/2, fReg, 12.5, cMut)
+		g.button(fx+6, top+4, 0, 22, lab, 0, g.togglePanel)
 	}
-	ly := H - logH
-	rect(g.dst, 8, ly, pvW, 1, cLine)
-	var lines []string
-	for k := len(s.Log) - 1; k >= 0 && len(lines) < 12; k-- {
-		w := wrap(s.Log[k], fReg, 11.5, pvW)
-		lines = append(append([]string{}, w...), lines...)
-	}
-	if netOn {
-		g.chatBox(8, H-38, pvW)
-		logH -= 40
-	}
-	maxL := int((logH - 12) / 14.4)
-	if len(lines) > maxL {
-		lines = lines[len(lines)-maxL:]
-	}
-	txt(g.dst, strings.Join(lines, "\n"), 8, ly+6, fReg, 11.5, cMut)
 
 	if peer == nil {
 		// painel direito: pilhas

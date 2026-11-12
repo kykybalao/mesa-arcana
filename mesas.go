@@ -5,6 +5,8 @@ import (
 	"image/color"
 	"sort"
 	"strings"
+
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 // Modos de visão da mesa em rede: 1 uma mesa por vez, 2 lado a lado, 3 empilhado (oponentes em cima), 4 quadrante.
@@ -220,9 +222,135 @@ func (g *Game) drawTrackers(x, y, maxW float64) {
 	}
 }
 
-// drawBands: faixas do campo (criaturas e encantamentos em cima, terrenos embaixo), só visuais
+var fieldNames = []string{"faixas", "zonas", "limpo"}
+
+func fieldMode() int {
+	if cfg.Field == 0 && cfg.NoBands {
+		return 2
+	}
+	return max(0, min(2, cfg.Field))
+}
+func simNao(b bool) string {
+	if b {
+		return "sim"
+	}
+	return "não"
+}
+func (g *Game) cycleField() {
+	cfg.Field, cfg.NoBands = (fieldMode()+1)%3, false
+	saveCfg()
+}
+func (g *Game) togglePanel() {
+	cfg.HideLeft = !cfg.HideLeft
+	saveCfg()
+	g.clampBF = true
+}
+
+// fieldZones: zonas do campo (em coordenadas do campo): criaturas, artefatos e encantamentos, terrenos
+func (g *Game) fieldZones(W, H float64) [3][4]float64 {
+	const m, gap = 6.0, 6.0
+	ch := g.cw * ratio
+	lh := min(ch+34, H*0.42)
+	th := H - lh - gap - 2*m
+	cwid := (W - 2*m - gap) * 0.64
+	return [3][4]float64{
+		{m, m, cwid, th},
+		{m + cwid + gap, m, W - 2*m - gap - cwid, th},
+		{m, m + th + gap, W - 2*m, lh},
+	}
+}
+
+var zoneLabels = [3]string{"CRIATURAS", "ARTEFATOS E ENCANTAMENTOS", "TERRENOS"}
+
+func zoneOf(t string) int {
+	switch {
+	case strings.Contains(t, "Land"):
+		return 2
+	case strings.Contains(t, "Creature"), strings.Contains(t, "Planeswalker"), strings.Contains(t, "Battle"):
+		return 0
+	}
+	return 1
+}
+
+const zoneTop, zoneRow = 34.0, 30.0
+
+// zonePos: lugar livre para uma carta nova, dentro da zona do tipo dela
+func (g *Game) zonePos(i *Inst, W, H float64) (float64, float64) {
+	z := g.fieldZones(W, H)[zoneOf(g.face(i).T)]
+	cw := g.cw
+	per := max(1, int((z[2]-12)/(cw+8)))
+	x0, y0 := z[0]+8, z[1]+zoneTop
+	taken := map[int]bool{}
+	for _, id := range g.S.Z["battlefield"] {
+		o := g.S.Cards[id]
+		if o == i || o.Att != 0 || o.X < z[0]-cw/2 || o.X > z[0]+z[2] || o.Y < z[1]-10 || o.Y > z[1]+z[3] {
+			continue
+		}
+		col := int((o.X-x0)/(cw+8) + 0.5)
+		row := int((o.Y-y0)/zoneRow + 0.5)
+		taken[row*per+col] = true
+	}
+	n := 0
+	for taken[n] && n < per*6 {
+		n++
+	}
+	return x0 + float64(n%per)*(cw+8), y0 + float64(n/per)*zoneRow
+}
+
+// snapZone encaixa a carta solta na grade da zona em que ela caiu (só no campo com zonas)
+func (g *Game) snapZone(x, y float64) (float64, float64) {
+	if fieldMode() != 1 || cfg.NoSnap {
+		return x, y
+	}
+	W, H := float64(g.bf.Dx()), float64(g.bf.Dy())
+	cw := g.cw
+	ch := cw * ratio
+	cx, cy := x+cw/2, y+ch*0.3
+	for _, z := range g.fieldZones(W, H) {
+		if cx < z[0] || cx >= z[0]+z[2]+6 || cy < z[1] || cy >= z[1]+z[3]+6 {
+			continue
+		}
+		per := max(1, int((z[2]-12)/(cw+8)))
+		col := max(0, min(per-1, int((x-z[0]-8)/(cw+8)+0.5)))
+		rows := max(1, int((z[3]-zoneTop-ch)/zoneRow)+1)
+		row := max(0, min(rows-1, int((y-z[1]-zoneTop)/zoneRow+0.5)))
+		return z[0] + 8 + float64(col)*(cw+8), z[1] + zoneTop + float64(row)*zoneRow
+	}
+	return x, y
+}
+
+// drawBands: divisões do campo, só visuais: faixas (linha entre criaturas e terrenos) ou zonas com moldura
 func (g *Game) drawBands(bx, by, bw, bh float64) {
-	if cfg.NoBands {
+	switch fieldMode() {
+	case 2:
+		return
+	case 1:
+		gold := color.RGBA{0xe0, 0xb3, 0x4a, 0x9c}
+		for k, z := range g.fieldZones(bw, bh) {
+			x, y, w, h := bx+z[0], by+z[1], z[2], z[3]
+			rrect(g.dst, x, y, w, h, 10, color.RGBA{0, 0, 0, 0x4a})
+			rstroke(g.dst, x+0.5, y+0.5, w-1, h-1, 10, 1.2, gold)
+			rstroke(g.dst, x+5.5, y+5.5, w-11, h-11, 6, 0.8, color.RGBA{0xe0, 0xb3, 0x4a, 0x38})
+			// cantos: o losango da marca do programa
+			for _, c := range [][2]float64{{x + 14, y + 14}, {x + w - 14, y + 14}, {x + 14, y + h - 14}, {x + w - 14, y + h - 14}} {
+				p := &vector.Path{}
+				S := float32(uiS)
+				p.MoveTo(float32(c[0])*S, float32(c[1]-6)*S)
+				p.LineTo(float32(c[0]+6)*S, float32(c[1])*S)
+				p.LineTo(float32(c[0])*S, float32(c[1]+6)*S)
+				p.LineTo(float32(c[0]-6)*S, float32(c[1])*S)
+				p.Close()
+				fillP(g.dst, p, color.RGBA{0x10, 0x14, 0x17, 0xff})
+				strokeP(g.dst, p, 1.2*S, gold)
+				circ(g.dst, c[0], c[1], 1.8, color.RGBA{0x5c, 0xc2, 0xa6, 0xd0})
+			}
+			lab := zoneLabels[k]
+			lw := tw(lab, fBold, 11) + 20
+			if lw < w-60 {
+				rrect(g.dst, x+w/2-lw/2, y+h-9, lw, 16, 8, color.RGBA{0x10, 0x14, 0x17, 0xff})
+				txtC(g.dst, lab, x+w/2, y+h-8, fBold, 11, color.RGBA{0xe0, 0xb3, 0x4a, 0xd8})
+			}
+		}
 		return
 	}
 	ly := by + bh - g.cw*ratio - 22
@@ -234,6 +362,20 @@ func (g *Game) drawBands(bx, by, bw, bh float64) {
 	lab := "CRIATURAS / ENCANTAMENTOS"
 	txt(g.dst, lab, bx+bw-10-tw(lab, fBold, 10.5), by+10, fBold, 10.5, faint)
 	txt(g.dst, "TERRENOS", bx+bw-10-tw("TERRENOS", fBold, 10.5), ly+5, fBold, 10.5, faint)
+}
+
+// floatPreview: com o painel escondido, a carta sob o cursor aparece grande do lado oposto ao cursor
+func (g *Game) floatPreview(right, y float64) {
+	if g.pv == nil || g.pvHide || !g.pvNow || g.drag.moved || g.modal != nil || g.ctx != nil {
+		return
+	}
+	w := 250.0
+	x := right - w - 12
+	if float64(g.mx) > float64(g.W)/2 {
+		x = 12
+	}
+	rrect(g.dst, x-4, y+8, w+8, w*ratio+8, 14, color.RGBA{0, 0, 0, 0xc0})
+	drawTex(g.dst, g.cardTex(g.pv, g.pvFace), x, y+12, w, false, 1)
 }
 
 // drawModes: botões dos modos de visão, no fim da faixa de jogadores

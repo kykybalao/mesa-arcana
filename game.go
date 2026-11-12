@@ -191,6 +191,9 @@ func (g *Game) autoPos(i *Inst) (float64, float64) {
 	if W < 100 {
 		W, H = 900, 500
 	}
+	if fieldMode() == 1 {
+		return g.zonePos(i, W, H)
+	}
 	cw := g.cw
 	ch := cw * ratio
 	t := g.face(i).T

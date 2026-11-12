@@ -127,6 +127,17 @@ VISAO DA MESA (em rede)
 - O campo mostra duas faixas, criaturas/encantamentos em cima e terrenos
   embaixo. Sao so visuais; para esconder, botao direito no campo.
 
+PAINEL E ZONAS DO CAMPO
+- Botao "Painel" no canto de cima do campo (ou tecla P) esconde e mostra o
+  painel da esquerda. Com ele escondido, a carta sob o mouse aparece grande
+  do lado oposto ao cursor. O registro e o chat voltam junto com o painel.
+- Botao direito no campo, "Campo: ... (trocar)": faixas (uma linha entre
+  criaturas e terrenos), zonas (tres quadros: criaturas, artefatos e
+  encantamentos, terrenos) ou limpo.
+- No modo zonas, a carta jogada vai para a zona do tipo dela e a carta
+  solta com o mouse encaixa na grade da zona. Para soltar livre, botao
+  direito no campo, "Encaixar cartas nas zonas: nao".
+
 CONTADORES E SETAS
 - Contador ja colocado: clique no "-" ou no "+" do proprio contador, em cima
   da carta, para diminuir ou aumentar. No zero ele some.
