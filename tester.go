@@ -283,6 +283,26 @@ func (t *tester) step(g *Game) error {
 			chk(len(g.arrows) == n+1 && !g.au.pick, "seta na própria mesa")
 		}
 		if os.Getenv("MESA_NET") == "" {
+			arts := 0
+			for _, p := range g.permsOf("battlefield") {
+				if hasWord(p.t, "artifact") {
+					arts++
+				}
+			}
+			m := g.mk(findCard("Master of Etherium").ID, "battlefield")
+			v, ok := g.autoPT(m)
+			chk(ok && v == fmt.Sprintf("%d/%d", arts+1, arts+1), "poder automático: "+v)
+			pl := g.mk(findCard("Cranial Plating").ID, "battlefield")
+			pl.Att = m.ID
+			m.Counters["+1/+1"] = 2
+			v, _ = g.autoPT(m)
+			chk(v == fmt.Sprintf("%d/%d", (arts+2)*2+2, arts+2+2), "poder com equipamento e contadores: "+v)
+			a := g.mk(findCard("Allosaurus Rider").ID, "battlefield")
+			lands, _ := g.count("lands you control", a)
+			v, _ = g.autoPT(a)
+			chk(v == fmt.Sprintf("%d/%d", lands+1, lands+1), "1 mais terrenos: "+v)
+			_, ok = g.autoPT(g.mk(findCard("Sol Ring").ID, "battlefield"))
+			chk(!ok, "não-criatura não ganha poder")
 			cfg.Field, cfg.HideLeft = 1, true
 			g.tidy()
 			x, y := g.snapZone(333, 95)

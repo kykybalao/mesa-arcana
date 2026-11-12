@@ -138,6 +138,19 @@ PAINEL E ZONAS DO CAMPO
   solta com o mouse encaixa na grade da zona. Para soltar livre, botao
   direito no campo, "Encaixar cartas nas zonas: nao".
 
+PODER E RESISTENCIA AUTOMATICOS
+- Nas suas cartas no campo, o programa le o texto e mostra o valor
+  calculado num selo verde no canto da carta. Ele entende:
+  "poder e resistencia iguais ao numero de..." (artefatos, criaturas,
+  terrenos, um tipo como Florestas ou Ratos, cartas na mao, no cemiterio,
+  seus pontos de vida), "recebe +1/+1 para cada...", o bonus de
+  equipamentos e auras anexados pelo menu "Equipar / anexar" e os
+  contadores +1/+1 e -1/-1.
+- Nao entra na conta: efeitos de outras cartas ("as outras criaturas
+  recebem +1/+1"), efeitos ate o fim do turno e condicoes ("enquanto...").
+  Quando o programa nao entende a frase, ele nao mostra nada.
+- Para desligar: botao direito no campo, "Poder automatico nas cartas".
+
 CONTADORES E SETAS
 - Contador ja colocado: clique no "-" ou no "+" do proprio contador, em cima
   da carta, para diminuir ou aumentar. No zero ele some.

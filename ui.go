@@ -555,6 +555,18 @@ func (g *Game) drawInst(i *Inst, x, y, w float64, forceDown, forceUp bool, alpha
 		}
 		cy += 21
 	}
+	if g.au.cnt && i.ID != 0 { // poder/resistência calculado (minhas cartas no campo)
+		if s, ok := g.autoPT(i); ok {
+			pw2 := tw(s, fBold, 13.5) + 16
+			px, py := x+w-pw2-3, y+h-24
+			if tapped {
+				px, py = bx+h-pw2-3, by+w-24
+			}
+			rrect(g.dst, px, py, pw2, 21, 8, cAcc2)
+			rrect(g.dst, px+1.5, py+1.5, pw2-3, 18, 7, color.RGBA{0x06, 0x12, 0x10, 0xf2})
+			txtC(g.dst, s, px+pw2/2, py+2.5, fBold, 13.5, color.White)
+		}
+	}
 	if i.Token && !tapped {
 		rrect(g.dst, x+3, y+h-17, 40, 14, 3, color.RGBA{0, 0, 0, 0xcc})
 		txt(g.dst, "FICHA", x+7, y+h-16, fBold, 9.5, cAcc2)
@@ -977,6 +989,7 @@ func (g *Game) tableMenu() []item {
 		{label: "Arrumar o campo", fn: g.tidy},
 		{label: "Apagar minhas setas", fn: func() { g.clearArrows(0) }},
 		{label: "Meus marcadores (veneno, energia…)", fn: g.trackerMenu},
+		{label: "Poder automático nas cartas: " + simNao(!cfg.NoAuto), fn: func() { cfg.NoAuto = !cfg.NoAuto; saveCfg() }},
 		{label: "Campo: " + fieldNames[fieldMode()] + " (trocar)", fn: g.cycleField},
 		{label: "Encaixar cartas nas zonas: " + simNao(!cfg.NoSnap), fn: func() { cfg.NoSnap = !cfg.NoSnap; saveCfg() }},
 		{label: "Esconder / mostrar o painel da esquerda", key: "P", fn: g.togglePanel},

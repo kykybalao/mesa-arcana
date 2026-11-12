@@ -306,8 +306,9 @@ type Config struct {
 	Lang     string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
 	Mat      string              `json:"playmat,omitempty"`
 	Sleeve   string              `json:"sleeve,omitempty"`
-	HideLeft bool                `json:"sem_painel,omitempty"` // painel da esquerda escondido
-	Field    int                 `json:"campo,omitempty"`      // 0 faixas, 1 zonas, 2 limpo
+	HideLeft bool                `json:"sem_painel,omitempty"`     // painel da esquerda escondido
+	Field    int                 `json:"campo,omitempty"`          // 0 faixas, 1 zonas, 2 limpo
+	NoAuto   bool                `json:"sem_poder_auto,omitempty"` // não calcular poder/resistência
 	NoSnap   bool                `json:"sem_encaixe,omitempty"`
 	NoBands  bool                `json:"sem_faixas,omitempty"`
 	Proxy    string              `json:"proxy,omitempty"` // estilo das cartas sem imagem na mesa ("" = playtest)
