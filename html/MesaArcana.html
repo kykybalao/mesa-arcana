@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<title>Mesa Arcana — simulador offline de Commander</title>
+<style>
+:root{--cw:108px;--bg:#12181c;--panel:#1b242a;--panel2:#232f36;--line:#34444d;--txt:#e7ecee;--mut:#93a4ad;--acc:#e0b34a;--acc2:#5cc2a6;--bad:#e2685f;--felt:#17332d}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--txt);font:14px/1.4 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;overflow:hidden;user-select:none}
+button,select,input,textarea{font:inherit;color:inherit}
+button{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--acc)}
+button.pri{background:var(--acc);color:#1b1608;border-color:var(--acc);font-weight:600}
+button.bad:hover{border-color:var(--bad);color:var(--bad)}
+button.mini{padding:1px 6px;font-size:12px}
+input,textarea,select{background:#0e1316;border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+[hidden]{display:none!important}
+.logo{font-weight:700;letter-spacing:.5px;color:var(--acc);display:flex;align-items:center;gap:8px}
+.logo i{width:20px;height:20px;border:2px solid var(--acc);border-radius:4px;transform:rotate(45deg);display:inline-block;position:relative}
+.logo i:after{content:"";position:absolute;inset:4px;background:var(--acc2);border-radius:50%}
+
+/* ---------- início ---------- */
+#home{height:100%;overflow:auto;padding:24px;user-select:text}
+#home .wrap{max-width:1100px;margin:0 auto}
+#home h1{margin:0 0 4px;font-size:26px}
+#home .sub{color:var(--mut);margin-bottom:20px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.box h2{margin:0 0 10px;font-size:16px;color:var(--acc)}
+#list{width:100%;height:260px;resize:vertical;font-family:Consolas,monospace;font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.grow{flex:1}
+#prog{margin-top:10px;color:var(--mut);min-height:20px;white-space:pre-wrap}
+#bar0{height:6px;background:#0e1316;border-radius:3px;margin-top:6px;overflow:hidden}
+#bar0 b{display:block;height:100%;width:0;background:var(--acc2);transition:width .2s}
+.deck{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px;background:var(--panel2)}
+.deck b{font-size:15px}
+.deck small{color:var(--mut)}
+.warn{color:var(--acc)}
+.err{color:var(--bad)}
+.help{color:var(--mut);font-size:13px}
+.help kbd,kbd{background:#0e1316;border:1px solid var(--line);border-radius:4px;padding:0 5px;font-family:inherit;font-size:12px}
+
+/* ---------- jogo ---------- */
+#game{height:100%;display:grid;grid-template-rows:auto 1fr auto}
+#bar{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:4px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:2px 6px}
+.stat span{color:var(--mut);font-size:12px}
+.stat b{min-width:26px;text-align:center;font-size:17px}
+.stat.life b{color:var(--acc2);font-size:20px}
+.sp{flex:1}
+#main{display:grid;grid-template-columns:250px 1fr auto;min-height:0}
+#left{background:var(--panel);border-right:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0}
+#pv{aspect-ratio:488/680;border-radius:11px;background:#0e1316;border:1px dashed var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;text-align:center;flex:none}
+#pv img{width:100%;height:100%;display:block}
+#pvt{font-size:12px;white-space:pre-wrap;color:#cfd8dc;overflow:auto;flex:1;min-height:40px;user-select:text}
+#log{font-size:11px;color:var(--mut);overflow:auto;height:110px;border-top:1px solid var(--line);padding-top:6px;flex:none}
+#bf{position:relative;overflow:hidden;background:var(--mat,radial-gradient(ellipse at 50% 40%,#1f4a40,var(--felt) 70%,#0f231f));background-size:cover;background-position:center;box-shadow:inset 0 0 60px #0008}
+.looks{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 16px}.looks>div{cursor:pointer;text-align:center;font-size:12px;color:var(--mut)}
+.looks .th{width:150px;height:84px;border-radius:6px;border:3px solid transparent;background-size:cover;background-position:center}.looks .th.sl{width:74px;height:103px;border-radius:7px}
+.looks .on .th{border-color:var(--acc)}.looks .on{color:var(--txt)}
+#bf .hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ffffff22;font-size:22px;letter-spacing:2px;pointer-events:none}
+#steps{display:flex;justify-content:center;gap:6px;padding:4px;background:var(--panel);border-bottom:1px solid var(--line);min-height:31px}
+#steps button{border-radius:12px;padding:1px 12px;font-size:12.5px;color:var(--mut)}
+#steps button.on{background:var(--acc);border-color:var(--acc);color:#1b1608;font-weight:700}
+#mid{display:grid;grid-template-rows:auto 1fr;min-height:0;min-width:0}
+#announce{position:absolute;left:50%;top:38%;transform:translateX(-50%);background:#000c;color:var(--acc);font-size:30px;font-weight:700;padding:8px 30px;border-radius:12px;z-index:600;pointer-events:none;animation:fade 1.4s forwards}
+@keyframes fade{0%,60%{opacity:1}100%{opacity:0}}
+#equip{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:#000d;border:1px solid var(--acc2);border-radius:10px;padding:8px 14px;z-index:500;display:flex;gap:10px;align-items:center}
+#mull{position:absolute;left:50%;top:14px;transform:translateX(-50%);background:#000c;border:1px solid var(--acc);border-radius:10px;padding:10px 14px;z-index:500;display:flex;gap:10px;align-items:center}
+#right{background:var(--panel);border-left:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:8px;overflow:auto;width:calc(var(--cw) + 34px)}
+.pile{border:1px dashed var(--line);border-radius:8px;padding:6px;min-height:calc(var(--cw)*1.4 + 34px);position:relative}
+.pile h4{margin:0 0 4px;font-size:11px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;display:flex;justify-content:space-between}
+.pile .card{position:relative;margin:0 auto}
+.pile.cmd .card+.card{margin-top:calc(var(--cw)*-1.1)}
+#hand{background:linear-gradient(#1b242a,#141b20);border-top:1px solid var(--line);padding:8px 10px;display:flex;align-items:flex-end;min-height:calc(var(--cw)*1.4 + 20px);overflow-x:auto;overflow-y:hidden}
+#hand .card{position:relative;flex:none;margin-right:calc(var(--cw)*-.1);transition:transform .1s}
+#hand .card:hover{transform:translateY(-8px);z-index:5}
+#hand .card.sel{outline:3px solid var(--bad);transform:translateY(-14px)}
+.dropok{outline:2px solid var(--acc);outline-offset:-2px}
+
+.card{width:var(--cw);height:calc(var(--cw)*1.395);border-radius:calc(var(--cw)*.048);position:absolute;cursor:grab;box-shadow:0 2px 6px #000a;background:#222;transition:transform .12s;touch-action:none}
+.card.tapped{transform:rotate(90deg)}
+.card img{width:100%;height:100%;border-radius:inherit;display:block;pointer-events:none}
+.txt{width:100%;height:100%;border-radius:inherit;border:1px solid #8d8474;background:#e8e1d3;color:#1d1b18;padding:5% 6% 4%;font-size:calc(var(--cw)*.07);line-height:1.22;display:flex;flex-direction:column;overflow:hidden;pointer-events:none;font-family:"Segoe UI",system-ui,Arial,sans-serif}
+.txt .hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:4%;padding-bottom:5%;border-bottom:1px solid #9c9382}
+.txt .hdr b{font-size:calc(var(--cw)*.082);line-height:1.1;font-weight:700}
+.txt .hdr code{font-family:Consolas,"Courier New",monospace;font-size:calc(var(--cw)*.06);color:#3a3630;white-space:nowrap;padding-top:1%}
+.txt i{font-style:normal;font-weight:700;font-size:calc(var(--cw)*.058);padding:4% 0;border-bottom:1px solid #9c9382;margin-bottom:5%}
+.txt span{white-space:pre-wrap;flex:1;overflow:hidden}
+.txt.lg span{font-size:.86em;line-height:1.16}
+.txt.xl span{font-size:.74em;line-height:1.12}
+.txt u{align-self:flex-end;text-decoration:none;font-weight:700;font-size:calc(var(--cw)*.075);background:#efe9dd;border:1px solid #6f685c;border-radius:calc(var(--cw)*.05);padding:1% 6%;flex:none}
+.txt.tok{background:#dfe6dc}
+#pv .txt{border-radius:11px;text-align:left}
+#pv{--cw:196px}
+.card .back{width:100%;height:100%;border-radius:inherit;border:3px solid var(--sl-edge,#0b0f12);background:var(--sl-bg,repeating-linear-gradient(45deg,#24323a 0 8px,#1c282f 8px 16px));background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.card .back:after{content:"";width:44%;aspect-ratio:1;border:3px solid var(--sl-a,var(--acc));border-radius:var(--sl-r,8px);transform:rotate(45deg);background:radial-gradient(circle,var(--sl-b,var(--acc2)) 0 28%,var(--sl-edge,#12181c) 30%)}
+.card .back.pic:after{display:none}
+.card .cts{position:absolute;left:3px;top:30%;display:flex;flex-direction:column;gap:2px;pointer-events:none}
+.card .cts span{background:#000d;border:1px solid var(--acc);color:#fff;border-radius:10px;padding:0 6px;font-size:11px;font-weight:700;white-space:nowrap}
+.card .tg{position:absolute;left:3px;bottom:3px;background:#000c;color:var(--acc2);border-radius:4px;font-size:9px;padding:0 4px;pointer-events:none}
+.card .tax{position:absolute;left:3px;bottom:3px;background:#000d;color:var(--acc);border:1px solid var(--acc);border-radius:4px;font-size:10px;padding:0 4px;pointer-events:none}
+.ghost{position:fixed!important;z-index:9999;pointer-events:none;opacity:.9;transform:none!important;margin:0!important}
+.ghost.tapped{transform:rotate(90deg)!important}
+.dragging{opacity:.25}
+
+#ctx{position:fixed;z-index:10000;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 30px #000c;padding:4px;min-width:210px;max-height:90vh;overflow:auto}
+#ctx .it{padding:5px 10px;border-radius:5px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px}
+#ctx .it:hover{background:var(--panel2)}
+#ctx .hd{padding:6px 10px 2px;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut)}
+#ctx .pm{display:flex;gap:4px;align-items:center}
+#ctx .pm b{min-width:18px;text-align:center}
+#modal{position:fixed;inset:0;background:#000b;z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px}
+#modal .win{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:min(1200px,96vw);max-height:92vh;display:flex;flex-direction:column;min-width:340px}
+#modal .hd{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px;font-weight:600}
+#modal .bd{padding:14px;overflow:auto}
+#modal .ft{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.grid{display:flex;flex-wrap:wrap;gap:10px}
+.cell{width:calc(var(--cw) + 30px);display:flex;flex-direction:column;align-items:center;gap:4px}
+.cell .card{position:relative;cursor:default}
+.cell .acts{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- ====================== TELA INICIAL ====================== -->
+<div id="home">
+ <div class="wrap">
+  <h1 class="logo"><i></i> Mesa Arcana <span style="flex:1"></span><button id="blang" style="font-size:13px;font-weight:400"></button><button id="blooks" style="font-size:13px;font-weight:400">Aparência</button></h1>
+  <div class="sub">Simulador offline de Commander. Importe qualquer lista e jogue sem conexão, direto do pendrive.</div>
+  <div class="cols">
+   <div class="box">
+    <h2>1. Importar decklist</h2>
+    <input id="dname" placeholder="Nome do deck" style="width:100%;margin-bottom:8px">
+    <textarea id="list" placeholder="Cole a lista aqui, uma carta por linha:&#10;1 Judge Magister Gabranth&#10;1 Sol Ring&#10;11 Plains&#10;..."></textarea>
+    <div class="row">
+     <button class="pri" id="bimport">Importar deck</button>
+     <button id="btxt">Abrir arquivo .txt</button>
+     <input type="file" id="ftxt" accept=".txt,.dek,.dec,text/plain" hidden>
+    </div>
+    <div id="bar0"><b></b></div>
+    <div id="prog"></div>
+    <p class="help">Funciona sem internet: o texto de todas as cartas já está no arquivo <kbd>dados/cartas.js</kbd> e as cartas aparecem como proxy. Com internet e Scryfall liberado, as imagens são baixadas junto. Aceita listas do Moxfield, Archidekt, Arena, MTGO e EDHREC, e corrige sozinho erros pequenos de digitação. Ao importar, mostra a bracket estimada e os combos do deck. A primeira carta (ou a seção “Commander”) vira o comandante; dá para trocar na lista de decks.</p>
+   </div>
+   <div class="box">
+    <h2>2. Meus decks</h2>
+    <div id="decks"></div>
+    <div class="row">
+     <button id="bpack">Abrir pacote offline (.json)</button>
+     <input type="file" id="fpack" accept=".json,application/json" hidden>
+    </div>
+    <p class="help"><b>Para usar em outro computador sem internet:</b> clique em “Salvar pacote” no deck e guarde o arquivo na pasta <kbd>pacotes</kbd> do pendrive. No outro computador, abra o <kbd>MesaArcana.html</kbd> e use “Abrir pacote offline” (ou arraste o arquivo para esta página).</p>
+   </div>
+  </div>
+  <div class="box" style="margin-top:20px">
+   <h2>Como jogar</h2>
+   <div class="help">
+    Arraste as cartas entre mão, campo, cemitério, exílio, grimório e zona de comando. Clique numa carta no campo para virar/desvirar. Clique duplo numa carta da mão para jogá-la. Clique no grimório para comprar. Botão direito abre o menu completo (contadores, fichas, transformar, vidência, buscar no grimório…).<br>
+    “Próximo turno” só desvira: a compra é manual, para dar tempo aos gatilhos da manutenção. “Próxima fase” anuncia a fase. Para equipar, botão direito na carta, “Equipar / anexar em…” e clique no alvo. O imposto do comandante é ajustado no menu dele.<br>Atalhos: <kbd>D</kbd> comprar · <kbd>F</kbd> próxima fase · <kbd>N</kbd> próximo turno · <kbd>U</kbd> desvirar tudo · <kbd>S</kbd> embaralhar · <kbd>T</kbd> fichas · <kbd>Ctrl+Z</kbd> desfazer. Soltar uma carta no grimório segurando <kbd>Shift</kbd> coloca no fundo.
+   </div>
+  </div>
+  <p class="help" style="text-align:center;margin-top:16px">Mesa Arcana é um projeto pessoal, não oficial. Dados e imagens de cartas via Scryfall. Magic: The Gathering é marca da Wizards of the Coast.</p>
+ </div>
+</div>
+
+<!-- ====================== MESA ====================== -->
+<div id="game" hidden>
+ <div id="bar">
+  <span class="logo"><i></i></span>
+  <div class="stat life"><span>Vida</span><button class="mini" data-life="-1">−</button><b id="life">40</b><button class="mini" data-life="1">+</button></div>
+  <div class="stat" title="Vida dos oponentes (para contar quão rápido o deck fecha o jogo)"><span>Oponentes</span>
+   <span id="opps"></span>
+  </div>
+  <div class="stat"><span>Turno</span><b id="turn">1</b></div>
+  <button id="bstep" class="pri" title="Anuncia a próxima fase (F ou espaço)">Próxima fase</button>
+  <button id="bnext" title="Desvira tudo e começa o próximo turno, sem comprar (N)">Próximo turno</button>
+  <button id="buntap" title="Desvira tudo (U)">Desvirar</button>
+  <button id="btok" title="T">Fichas</button>
+  <button id="bdice" title="Dado ou moeda">Dado</button>
+  <span class="sp"></span>
+  <label class="help" title="Tamanho das cartas">Tam. <input type="range" id="size" min="70" max="170" value="108" style="vertical-align:middle;padding:0;width:90px"></label>
+  <button id="blooks2" title="Aparência: playmat e sleeve">🎨</button>
+  <button id="bundo" title="Ctrl+Z">Desfazer</button>
+  <button id="brestart">Reiniciar</button>
+  <button id="bexit" class="bad">Sair</button>
+ </div>
+ <div id="main">
+  <div id="left">
+   <div id="pv">Passe o mouse sobre uma carta</div>
+   <div id="pvt"></div>
+   <div id="log"></div>
+  </div>
+  <div id="mid"><div id="steps"></div><div id="bf" data-zone="battlefield"><div class="hint">CAMPO DE BATALHA</div></div></div>
+  <div id="right">
+   <div class="pile cmd" data-zone="command"><h4><span>Comando</span></h4><div id="zcommand"></div></div>
+   <div class="pile" data-zone="library"><h4><span>Grimório</span><span id="nlibrary"></span></h4><div id="zlibrary"></div></div>
+   <div class="pile" data-zone="graveyard"><h4><span>Cemitério</span><span id="ngraveyard"></span></h4><div id="zgraveyard"></div></div>
+   <div class="pile" data-zone="exile"><h4><span>Exílio</span><span id="nexile"></span></h4><div id="zexile"></div></div>
+  </div>
+ </div>
+ <div id="hand" data-zone="hand"></div>
+</div>
+
+<div id="ctx" hidden></div>
+<div id="modal" hidden></div>
+
+<script src="dados/cartas.js"></script>
+<script src="dados/analise.js"></script>
+<script src="dados/pt.js"></script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const el=(tag,attrs={},...kids)=>{const e=document.createElement(tag);for(const k in attrs){if(k==='class')e.className=attrs[k];else if(k.startsWith('on'))e.addEventListener(k.slice(2),attrs[k]);else if(k==='html')e.innerHTML=attrs[k];else if(attrs[k]!==false&&attrs[k]!=null)e.setAttribute(k,attrs[k]);}for(const c of kids.flat())if(c!=null)e.append(c);return e;};
+const ZN={library:'Grimório',hand:'Mão',battlefield:'Campo',graveyard:'Cemitério',exile:'Exílio',command:'Zona de comando'};
+
+/* ====================== ARMAZENAMENTO (IndexedDB, com reserva em memória) ====================== */
+const DB={db:null,mem:{cards:new Map(),decks:new Map()},
+ open(){return new Promise(res=>{try{const r=indexedDB.open('mesa-arcana',1);
+   r.onupgradeneeded=()=>{r.result.createObjectStore('cards',{keyPath:'id'});r.result.createObjectStore('decks',{keyPath:'id'});};
+   r.onsuccess=()=>{this.db=r.result;res(true)};r.onerror=()=>res(false);r.onblocked=()=>res(false);}catch(e){res(false)}});},
+ req(store,mode,fn){if(!this.db)return Promise.resolve(fn(null));
+  return new Promise((res,rej)=>{const t=this.db.transaction(store,mode);const q=fn(t.objectStore(store));t.oncomplete=()=>res(q?q.result:undefined);t.onerror=t.onabort=()=>rej(t.error);});},
+ put(store,v){this.mem[store].set(v.id,v);return this.req(store,'readwrite',s=>s&&s.put(v)).catch(e=>console.warn('IDB',e));},
+ del(store,id){this.mem[store].delete(id);return this.req(store,'readwrite',s=>s&&s.delete(id)).catch(()=>{});},
+ async load(){for(const st of['cards','decks']){try{const all=await this.req(st,'readonly',s=>s&&s.getAll());(all||[]).forEach(v=>this.mem[st].set(v.id,v));}catch(e){console.warn(e)}}}
+};
+const CARDS=DB.mem.cards, DECKS=DB.mem.decks;
+const urlCache=new Map();
+let netFail=false; // o Scryfall não respondeu (rede bloqueada): usa só os proxies de texto
+function imgURL(c,f){if(!c)return null;const k=c.id+':'+f;if(urlCache.has(k))return urlCache.get(k);let u=null;const b=c.imgs&&c.imgs[f];
+ if(b instanceof Blob)u=URL.createObjectURL(b);else if(navigator.onLine&&!netFail&&c.faces[f]&&c.faces[f].img)u=c.faces[f].img;
+ if(b instanceof Blob)urlCache.set(k,u);return u;}
+
+/* ====================== SCRYFALL ====================== */
+const API='https://api.scryfall.com';
+let lastCall=0;
+async function sf(path,opts={}){ // no máximo ~8 chamadas por segundo (o Scryfall pede até 10)
+ const w=lastCall+125-Date.now();if(w>0)await sleep(w);lastCall=Date.now();
+ const r=await fetch(API+path,{...opts,headers:{'Accept':'application/json',...(opts.headers||{})}});
+ if(r.status===429){await sleep(1500);return sf(path,opts);}
+ return r;}
+function normCard(c){
+ let faces;
+ if(c.card_faces&&c.card_faces.length>1&&c.card_faces[0].image_uris){
+  faces=c.card_faces.map(f=>({name:f.name,type:f.type_line||'',text:f.oracle_text||'',cost:f.mana_cost||'',pow:f.power,tou:f.toughness,loy:f.loyalty,img:f.image_uris.normal}));
+ }else{
+  const fs=c.card_faces||[];
+  faces=[{name:c.name,type:c.type_line||'',cost:c.mana_cost||fs.map(f=>f.mana_cost).filter(Boolean).join(' // '),
+   text:c.oracle_text||fs.map(f=>f.name+(f.mana_cost?' '+f.mana_cost:'')+'\n'+(f.oracle_text||'')).join('\n—\n'),
+   pow:c.power??(fs[0]&&fs[0].power),tou:c.toughness??(fs[0]&&fs[0].toughness),loy:c.loyalty??(fs[0]&&fs[0].loyalty),img:c.image_uris?c.image_uris.normal:null}];
+ }
+ return{id:c.id,name:c.name,type:c.type_line||faces[0].type,faces,imgs:[],
+  tokens:(c.all_parts||[]).filter(p=>p.component==='token'&&p.id!==c.id).map(p=>p.id)};
+}
+function parseList(text){
+ const out=[],by=new Map();let sec='';
+ const HEAD=/^(commander|comandante|commanders|deck|main|mainboard|maindeck|sideboard|side|maybeboard|considering|companion|tokens?|lands?|terrenos?|creatures?|criaturas?|artifacts?|artefatos?|enchantments?|encantamentos?|instants?|sorcery|sorceries|feiti[cç]os?|planeswalkers?|battles?|spells?)\b[\s:()\d]*$/i;
+ for(const raw of text.split(/\r?\n/)){
+  let l=raw.trim();if(!l)continue;
+  if(/^(\/\/|#)/.test(l)){sec=l.replace(/^(\/\/|#)\s*/,'').toLowerCase();continue;}
+  if(/^SB:\s*/i.test(l))continue; // reserva do MTGO fica de fora
+  l=l.replace(/\t/g,' ');
+  let m=l.match(/^(\d+)\s*x?\s+(.+)$/i),qty=1,name=l;
+  if(m){qty=+m[1];name=m[2];}else if(HEAD.test(l)){sec=l.toLowerCase();continue;}
+  else if((m=l.match(/^(.+?)\s+x\s*(\d+)$/i))){qty=+m[2];name=m[1];} // "Sol Ring x2"
+  if(/^(sideboard|side|maybeboard|considering|tokens?)/.test(sec))continue;
+  const cmdr=/^(commander|comandante)/.test(sec)||/\*CMDR\*|\[[^\]]*commander/i.test(name);
+  name=name.replace(/\[[^\]]*\]|\^[^^]*\^/g,'').replace(/\*[^*]*\*/g,'').trim().replace(/\s+\([A-Za-z0-9]{2,6}\)(\s+\S+)?\s*$/,'').replace(/\s+#.*$/,'').replace(/\s*\/{1,2}\s*/,' // ').trim();
+  if(!name||!qty)continue;
+  const k=name.toLowerCase();
+  if(by.has(k)){by.get(k).qty+=qty;by.get(k).cmdr=by.get(k).cmdr||cmdr;}else{const e={qty,name,cmdr};by.set(k,e);out.push(e);}
+ }
+ return out;
+}
+/* ---------- banco local: texto de todas as cartas, para importar qualquer lista sem internet ---------- */
+let LOCAL=null;
+const squash=s=>s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'');
+async function localDB(){
+ if(LOCAL!==null)return LOCAL;
+ if(!window.MESA_DB||!window.DecompressionStream){LOCAL=false;return false;}
+ try{
+  const bin=atob(window.MESA_DB),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  const db=JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+  const L={byId:new Map(),byName:new Map(),bySq:new Map(),names:[],date:db.data};
+  for(const r of db.cartas){L.byId.set(r.i,r);if(r.tk)continue;const k=r.n.toLowerCase();
+   for(const n of[k,k.split(' // ')[0]]){if(!L.byName.has(n))L.byName.set(n,r);const q=squash(n);if(!L.bySq.has(q)){L.bySq.set(q,r);L.names.push(q);}}}
+  LOCAL=L;
+ }catch(e){console.warn('banco local',e);LOCAL=false;}
+ return LOCAL;
+}
+function fromLocal(r){
+ const img=k=>r.ni?null:(k===0&&r.u)||`https://cards.scryfall.io/normal/${k?'back':'front'}/${r.i[0]}/${r.i[1]}/${r.i}.jpg`;
+ const mk=(f,k)=>({name:f.n,type:f.t||'',text:f.x||'',cost:f.c||'',pow:f.p,tou:f.o,loy:f.l,img:img(k)});
+ const faces=r.f?r.f.map(mk):[mk(r,0)];
+ return{id:r.i,name:r.n,type:r.t||faces[0].type,faces,imgs:[],tokens:r.k||[]};
+}
+function lev(a,b,max){if(Math.abs(a.length-b.length)>max)return max+1;let p=[...Array(b.length+1).keys()],c=[];
+ for(let i=1;i<=a.length;i++){c=[i];let best=i;for(let j=1;j<=b.length;j++){c[j]=Math.min(p[j-1]+(a[i-1]!==b[j-1]),p[j]+1,c[j-1]+1);if(c[j]<best)best=c[j];}if(best>max)return max+1;p=c;}
+ return p[b.length];}
+/* nome parecido (erro de digitação ou nome incompleto); só devolve se houver um candidato claro */
+function suggestLocal(L,name){const q=squash(name);if(q.length<4)return null;const max=Math.max(2,q.length>>2);let best=null,bd=max+1,tie=false;
+ for(const n of L.names){let d=lev(q,n,max);if(d>max&&n.startsWith(q))d=max;if(d<bd){bd=d;best=n;tie=false;}else if(d===bd&&n!==best)tie=true;}
+ return best&&!tie?L.bySq.get(best):null;}
+/* ---------- análise local: bracket estimada e combos (critérios oficiais das brackets; combos do Commander Spellbook) ---------- */
+async function gunzipB64(b64){const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+ return JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text());}
+let AN=null;
+const nameKey=n=>n.toLowerCase().replace(/\*$/,'').split(' // ')[0];
+async function loadAnalysis(){
+ if(AN!==null)return AN;
+ if(!window.MESA_AN||!window.DecompressionStream){AN=false;return false;}
+ try{const db=await gunzipB64(window.MESA_AN);const idx=new Map();
+  db.combos.forEach((c,i)=>c.c.forEach(n=>{const k=nameKey(n);if(!idx.has(k))idx.set(k,[]);idx.get(k).push(i);}));
+  const lists={};for(const k in db.listas)lists[k]=new Set(db.listas[k].map(nameKey));
+  AN={combos:db.combos,idx,lists,date:db.data};}catch(e){console.warn('análise',e);AN=false;}
+ return AN;}
+const TAGB={E:1,C:2,O:1,P:3,S:3,R:4},TAGN={E:'Exhibition',C:'Core',O:'Oddball',P:'Powerful',S:'Spicy',R:'Ruthless'},BRN=['','Exhibition','Core','Upgraded','Optimized','cEDH'];
+const cardTxt=c=>c.faces.map(f=>(f.cost||'')+' '+(f.text||'')).join('\n');
+function identityOf(cs){const has=new Set();for(const c of cs)for(const m of cardTxt(c).matchAll(/\{([^}]+)\}/g))for(const ch of m[1])if('WUBRG'.includes(ch))has.add(ch);return[...'WUBRG'].filter(x=>has.has(x)).join('');}
+function analyze(A,cards,cmd){
+ const a={gc:[],mld:[],et:[],tutors:[],inn:[],tpl:[],almost:[],reasons:[],two:0},have=new Set(),isCmd=new Set(cmd.map(c=>nameKey(c.name)));
+ for(const c of cards){const k=nameKey(c.name);if(have.has(k))continue;have.add(k);const t=cardTxt(c);
+  if(A.lists.gc.has(k))a.gc.push(c.name);
+  if(A.lists.mld.has(k)||/destroy all lands|each player sacrifices all lands|destroy all (non-?basic )?lands|lands don't untap during/i.test(t))a.mld.push(c.name);
+  if(A.lists.et.has(k)||/takes? (an|two|three|\w+) extra turns?|extra turn after this one/i.test(t))a.et.push(c.name);
+  if(A.lists.tutor.has(k))a.tutors.push(c.name);}
+ const ident=identityOf(cmd.length?cmd:cards),cnt=new Map();
+ for(const k of have)for(const i of A.idx.get(k)||[])cnt.set(i,(cnt.get(i)||0)+1);
+ for(const[i,n]of cnt){const c=A.combos[i];if(n<c.c.length-1)continue;let miss='',ok=true;
+  for(const p of c.c){const k=nameKey(p);if(!have.has(k))miss=p.replace(/\*$/,'');else if(p.endsWith('*')&&!isCmd.has(k))ok=false;}
+  if(!ok)continue;
+  if(!miss&&!c.t){a.inn.push(c);if(c.c.length===2)a.two++;}else if(!miss)a.tpl.push(c);
+  else if(!c.t&&[...c.i].every(x=>!'WUBRG'.includes(x)||ident.includes(x)))a.almost.push({combo:c,missing:miss});}
+ const pop=(x,y)=>(y.n-x.n)||(x.id<y.id?-1:1);a.inn.sort(pop);a.tpl.sort(pop);a.almost.sort((x,y)=>pop(x.combo,y.combo));
+ let b=1;const up=(n,w)=>{if(n>b)b=n;a.reasons.push(`[${n}] ${w}`);};
+ if(a.gc.length>=4)up(4,`${a.gc.length} Game Changers (a bracket 3 aceita no máximo 3)`);else if(a.gc.length)up(3,`${a.gc.length} Game Changer(s) (as brackets 1 e 2 não aceitam nenhum)`);
+ if(a.mld.length)up(4,`${a.mld.length} carta(s) de destruição/negação em massa de terrenos (só na bracket 4 ou 5)`);
+ if(a.et.length>=2)up(4,`${a.et.length} cartas de turno extra (dá para encadear turnos; só na bracket 4 ou 5)`);else if(a.et.length)up(2,'1 carta de turno extra (a bracket 1 não usa turnos extras)');
+ const r=a.inn.filter(c=>TAGB[c.b]===4).length,sp=a.inn.filter(c=>TAGB[c.b]===3).length,oth=a.inn.length-r-sp;
+ if(r)up(4,`${r} combo(s) que o Commander Spellbook classifica como Ruthless (combo de 2 cartas cedo no jogo, trava ou similar)`);
+ if(sp)up(3,`${sp} combo(s) de fim de jogo (Spicy/Powerful): a bracket 2 não aceita combos infinitos de 2 cartas`);
+  if(!a.reasons.length)a.reasons.push('Nenhum Game Changer, destruição em massa de terrenos, turno extra ou combo de 2 cartas: pelas cartas o deck cabe na bracket 1 ou 2. A diferença entre elas é a intenção (deck temático ou deck no nível de um pré-construído).');
+ if(oth)a.reasons.push(`Obs.: há ${oth} combo(s) de 3 ou mais cartas ou de baixo impacto. Pelas regras eles não sobem a bracket, mas um deck com vários combos costuma jogar acima da bracket 2: vale avisar a mesa.`);
+ a.bracket=b;a.title=b<=1?'Bracket 1 ou 2 (Exhibition / Core)':`Bracket ${b} (${BRN[b]})`;return a;}
+const comboLine=c=>c.c.join(' + ').replace(/\*/g,' (comandante)')+(c.t?' + ['+c.t.join('; ')+']':'');
+const comboRes=c=>'→ '+c.p.join(', ')+(TAGN[c.b]?'  · '+TAGN[c.b]:'')+(c.r?'  · precisa: '+c.r:'');
+async function deckAnalysis(d){const A=await loadAnalysis();if(!A)return null;
+ const cards=d.list.map(e=>CARDS.get(e.cid)).filter(Boolean),cmd=d.cmd.map(id=>CARDS.get(id)).filter(Boolean);return{A,a:analyze(A,cards,cmd)};}
+async function analysisModal(d){
+ const r=await deckAnalysis(d);
+ if(!r){openModal('Análise',el('div',{},'Não achei o arquivo dados/analise.js ao lado do MesaArcana.html.'));return;}
+ const{A,a}=r,body=el('div',{style:'max-width:900px;user-select:text;font-size:13.5px'});
+ const H=t=>body.append(el('h4',{style:'margin:14px 0 4px;color:var(--acc)'},t)),P=(t,mut)=>body.append(el('div',{style:mut?'color:var(--mut)':''},t));
+ body.append(el('div',{style:`font-size:24px;font-weight:700;color:var(${a.bracket>=4?'--bad':a.bracket===3?'--acc':'--acc2'})`},a.title),
+  el('div',{class:'help'},`${a.gc.length} Game Changers · ${a.inn.length} combos no deck (${a.two} de 2 cartas) · ${a.almost.length} quase combos`));
+ H('Por que essa bracket');a.reasons.forEach(x=>P(x));
+ P('O número entre colchetes é a bracket mínima que cada critério exige; vale o maior. A bracket 5 (cEDH) depende da intenção de jogar no nível competitivo, então nenhum programa detecta só pelas cartas.',1);
+ const list=(t,l)=>{if(l.length){H(`${t} (${l.length})`);P(l.join(' · '));}};
+ list('Game Changers',a.gc);list('Destruição/negação em massa de terrenos',a.mld);list('Turnos extras',a.et);list('Tutores e buscas no grimório (não mudam a bracket)',a.tutors);
+ const cl=(c,pre)=>{P((pre||'')+comboLine(c));P('   '+comboRes(c),1);};
+ H(`Combos completos no deck (${a.inn.length})`);if(!a.inn.length)P('Nenhum combo conhecido com todas as peças no deck.',1);a.inn.slice(0,40).forEach((c,k)=>{P((k+1)+') '+comboLine(c));P('Resultado: '+comboRes(c).replace(/^→ /,''),1);
+  const need=[c.e,c.r].filter(Boolean).map(x=>x.trim().replace(/\.$/,''));if(c.m)need.push('mana disponível: '+c.m);
+  if(need.length)P('Antes de começar: '+need.join(' · '));
+  const st=(c.d||'').split('\n').map(x=>x.trim().replace(/^[-•*]+\s*/,'')).filter(Boolean);
+  if(st.length){P('Como fazer:');body.append(el('ol',{style:'margin:2px 0 12px 8px;padding-left:22px'},...st.map(x=>el('li',{},x))));}});
+ if(a.inn.length&&a.inn[0].d)P('Passos do Commander Spellbook, traduzidos automaticamente. Os que o programa não soube traduzir ficam em inglês.',1);
+ if(a.tpl.length){H(`Combos que pedem mais uma carta genérica (${a.tpl.length})`);P('As cartas nomeadas estão no deck; entre colchetes está o tipo de carta que completa o combo.',1);a.tpl.slice(0,20).forEach(c=>cl(c));}
+ const alm=el('div',{style:'display:none'}),b0=body;
+ const tgl=el('button',{style:'margin-top:14px',onclick:()=>{const on=alm.style.display==='none';alm.style.display=on?'':'none';tgl.textContent=(on?'Esconder':'Mostrar')+` o que falta 1 carta (${a.almost.length})`;}},`Mostrar o que falta 1 carta (${a.almost.length})`);
+ body.append(tgl,alm);
+ {const P2=(t,mut)=>alm.append(el('div',{style:mut?'color:var(--mut)':''},t));
+  alm.append(el('h4',{style:'margin:14px 0 4px;color:var(--acc)'},`Quase combos: falta 1 carta (${a.almost.length})`));
+  if(!a.almost.length)P2('Nenhum combo a 1 carta de distância dentro das cores do comandante.',1);
+  a.almost.slice(0,30).forEach(x=>{P2('Falta '+x.missing+':  '+comboLine(x.combo));P2('   '+comboRes(x.combo),1);});}
+ body.append(el('p',{class:'help'},`Fontes: critérios oficiais das brackets de Commander; combos e classificação do Commander Spellbook (${A.combos.length} combos, ordenados pela popularidade nos decks do EDHREC); listas do Scryfall; dados de ${A.date}.`));
+ openModal('Análise de '+d.name,body,[el('button',{class:'pri',onclick:closeModal},'Fechar')]);
+}
+function prog(t,frac){$('#prog').textContent=t;if(frac!=null)$('#bar0 b').style.width=Math.round(frac*100)+'%';}
+let busy=false;
+async function importDeck(text,name,deckId){
+ if(busy)return;busy=true;$('#bimport').disabled=true;
+ try{
+  const entries=parseList(text);
+  if(!entries.length){prog('Não achei nenhuma carta na lista.');return;}
+  const byName=new Map();
+  for(const c of CARDS.values()){if(c.custom)continue;byName.set(c.name.toLowerCase(),c);byName.set(c.name.split(' // ')[0].toLowerCase(),c);}
+  // terrenos básicos sempre na arte do Bob Ross (uma imagem só para cada)
+  const BOB={plains:'e20726fa-d99b-4e3d-8054-b7d313ceb02f',island:'1d433685-601d-4da2-9e4c-796646003ffe',swamp:'de8e7cd9-354d-4b2e-9823-79d6e8eed7e4',mountain:'03683fbb-9843-4c14-bb95-387150e97c90',forest:'c0e38987-e257-4da0-b270-bc48404947cd'};
+  const find=n=>{const k=n.toLowerCase();if(BOB[k])return CARDS.get(BOB[k]);return byName.get(k)||byName.get(k.split(' // ')[0]);};
+  const addCard=async c=>{const old=CARDS.get(c.id);if(old&&old.imgs)c.imgs=old.imgs;await DB.put('cards',c);byName.set(c.name.toLowerCase(),c);byName.set(c.name.split(' // ')[0].toLowerCase(),c);return c;};
+  const add=raw=>addCard(normCard(raw));
+  // 0) banco local: resolve tudo o que der sem internet
+  prog('Lendo o banco local de cartas…',0.02);
+  const L=await localDB(),fixed=[];let offline=!navigator.onLine;
+  if(L)for(const e of entries){
+   const k=e.name.toLowerCase();
+   if(BOB[k]){if(!CARDS.has(BOB[k])&&L.byId.has(BOB[k]))await addCard(fromLocal(L.byId.get(BOB[k])));continue;}
+   if(find(e.name))continue;
+   const r=L.byName.get(k)||L.byName.get(k.split(' // ')[0])||L.bySq.get(squash(k));
+   if(r){const c=await addCard(fromLocal(r));byName.set(k,c);}
+  }
+  // 1) dados das cartas, em lotes de 75
+  const need=entries.filter(e=>!find(e.name));
+  for(let i=0;i<need.length;i+=75){
+   prog(`Buscando dados das cartas no Scryfall… ${Math.min(i+75,need.length)}/${need.length}`,0.05+0.15*i/need.length);
+   if(offline)break;
+   try{
+    const r=await sf('/cards/collection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifiers:need.slice(i,i+75).map(e=>BOB[e.name.toLowerCase()]?{id:BOB[e.name.toLowerCase()]}:{name:e.name})})});
+    if(!r.ok)throw new Error('Scryfall respondeu '+r.status);
+    for(const c of (await r.json()).data||[])await add(c);
+   }catch(e){if(!L)throw e;offline=true;} // sem acesso ao Scryfall: segue só com o banco local
+  }
+  const missing=[];
+  for(const e of entries){ // nomes que não bateram: tenta a busca aproximada
+   if(find(e.name)||BOB[e.name.toLowerCase()])continue;
+   const sg=L&&suggestLocal(L,e.name);
+   if(sg){const c=await addCard(fromLocal(sg));byName.set(e.name.toLowerCase(),c);fixed.push(e.name+' → '+c.name);continue;}
+   let ok=false;
+   if(!offline)try{const r=await sf('/cards/named?fuzzy='+encodeURIComponent(e.name.split(' // ')[0]));
+    if(r.ok){const c=await add(await r.json());byName.set(e.name.toLowerCase(),c);fixed.push(e.name+' → '+c.name);ok=true;}}catch(_){offline=true;}
+   if(!ok)missing.push(e.name);
+  }
+  if(!entries.some(e=>find(e.name)))throw new Error(L?'nenhuma carta da lista foi reconhecida':'sem banco local (falta o arquivo dados/cartas.js) e sem acesso ao Scryfall');
+  const list=entries.filter(e=>find(e.name)).map(e=>({qty:e.qty,cid:find(e.name).id,cmdr:e.cmdr}));
+  // 2) fichas que as cartas criam
+  const tokIds=[...new Set(list.flatMap(e=>CARDS.get(e.cid).tokens||[]))];
+  const tokNeed=tokIds.filter(id=>!CARDS.has(id));
+  for(let i=0;i<tokNeed.length;i++){
+   if(L&&L.byId.has(tokNeed[i])){await addCard(fromLocal(L.byId.get(tokNeed[i])));continue;}
+   if(offline)continue;
+   prog(`Buscando fichas… ${i+1}/${tokNeed.length}`,0.2+0.1*i/tokNeed.length);
+   try{const r=await sf('/cards/'+tokNeed[i]);if(r.ok)await add(await r.json());}catch(e){}
+  }
+  // uma única imagem por tipo de ficha: impressões repetidas apontam para a primeira
+  const seen=new Map(),tokens=[],canon={};
+  for(const id of tokIds){const t=CARDS.get(id);if(!t)continue;const f=t.faces[0];const k=[t.name,f.type,f.pow,f.tou,f.text].join('|');if(!seen.has(k)){seen.set(k,id);tokens.push(id);}canon[id]=seen.get(k);}
+  for(const e of list){const c=CARDS.get(e.cid);if(!(c.tokens||[]).length)continue;const nt=[...new Set(c.tokens.map(id=>canon[id]).filter(Boolean))];if(nt.join()!==c.tokens.join()){c.tokens=nt;await DB.put('cards',c);}}
+  // 3) imagens
+  const jobs=[];
+  for(const id of new Set([...list.map(e=>e.cid),...tokens])){const c=CARDS.get(id);c.faces.forEach((f,i)=>{if(f.img&&!(c.imgs[i] instanceof Blob))jobs.push([c,i]);});}
+  let done=0,fail=0,blocked=false;const nImg=jobs.length;
+  if(offline&&!navigator.onLine){jobs.length=0;blocked=true;}
+  const worker=async()=>{while(jobs.length){const[c,i]=jobs.shift();
+    try{const r=await fetch(c.faces[i].img);if(!r.ok)throw 0;c.imgs[i]=await r.blob();await DB.put('cards',c);}catch(e){fail++;if(fail>=4&&fail===done+1){jobs.length=0;blocked=true;netFail=true;}}
+    done++;prog(`Baixando imagens… ${done}/${done+jobs.length}`,0.3+0.7*done/(done+jobs.length));await sleep(60);}};
+  await Promise.all([worker(),worker(),worker()]);
+  // 4) grava o deck
+  const old=deckId&&DECKS.get(deckId);
+  let cmd=old?old.cmd.filter(id=>list.some(e=>e.cid===id)):[];
+  if(!cmd.length)cmd=list.filter(e=>e.cmdr).map(e=>e.cid).slice(0,2);
+  if(!cmd.length&&/Legendary/.test(CARDS.get(list[0].cid).type))cmd=[list[0].cid];
+  const deck={id:deckId||('d'+Date.now()),name:name||CARDS.get(cmd[0]||list[0].cid).name,text,list:list.map(({qty,cid})=>({qty,cid})),cmd,tokens,updated:Date.now()};
+  await DB.put('decks',deck);
+  const total=list.reduce((s,e)=>s+e.qty,0);
+  const an=await deckAnalysis(deck).catch(()=>null);
+  prog(`Pronto: “${deck.name}” com ${total} cartas e ${tokens.length} fichas.`+(an?`\n${an.a.title} · ${an.a.gc.length} Game Changers · ${an.a.inn.length} combos no deck. Clique em “Bracket e combos” no deck para ver os detalhes.`:'')+(fixed.length?`\nNomes corrigidos: ${fixed.join('; ')}`:'')+(missing.length?`\nNão encontrei: ${missing.join(', ')}`:'')
+   +(blocked&&nImg?`\nSem acesso ao Scryfall nesta rede: as ${nImg} imagens ficam para depois e as cartas aparecem como proxy. O deck já está pronto para jogar.`:fail?`\n${fail} imagens não baixaram; clique em “Atualizar” no deck para tentar de novo.`:''),1);
+  renderDecks();
+ }catch(e){console.error(e);prog('Erro: '+(e.message||e)+'\nConfira a internet e tente de novo.');}
+ finally{busy=false;$('#bimport').disabled=false;}
+}
+const b2d=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b);});
+function d2b(d){const i=d.indexOf(','),mime=(d.slice(0,i).match(/:(.*?);/)||[])[1]||'image/jpeg',bin=atob(d.slice(i+1)),u=new Uint8Array(bin.length);for(let j=0;j<bin.length;j++)u[j]=bin.charCodeAt(j);return new Blob([u],{type:mime});}
+function deckCardIds(d){return[...new Set([...d.list.map(e=>e.cid),...(d.tokens||[])])];}
+async function exportPack(d){
+ prog('Montando o pacote…');
+ const cards=[];
+ for(const id of deckCardIds(d)){const c=CARDS.get(id);if(!c)continue;const imgs=[];for(let i=0;i<c.faces.length;i++)imgs[i]=c.imgs[i] instanceof Blob?await b2d(c.imgs[i]):null;cards.push({...c,imgs});}
+ const blob=new Blob([JSON.stringify({format:'mesa-arcana-pacote',version:1,deck:d,cards})],{type:'application/json'});
+ const a=el('a',{href:URL.createObjectURL(blob),download:d.name.replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-')+'.pacote.json'});
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+ prog(`Pacote salvo (${(blob.size/1048576).toFixed(1)} MB). Guarde o arquivo na pasta “pacotes” do pendrive.`);
+}
+async function importPack(file){
+ try{prog('Abrindo o pacote…');
+  const p=JSON.parse(await file.text());
+  if(p.format!=='mesa-arcana-pacote'||!p.deck||!Array.isArray(p.cards))throw new Error('este arquivo não é um pacote da Mesa Arcana');
+  for(const c of p.cards){c.imgs=(c.imgs||[]).map(x=>typeof x==='string'?d2b(x):null);const old=CARDS.get(c.id);if(old)c.imgs=c.imgs.map((b,i)=>b||old.imgs[i]||null);for(const k of urlCache.keys())if(k.startsWith(c.id+':'))urlCache.delete(k);await DB.put('cards',c);}
+  await DB.put('decks',p.deck);prog(`Pacote “${p.deck.name}” carregado. Já dá para jogar sem internet.`,1);renderDecks();
+ }catch(e){prog('Não consegui abrir o pacote: '+(e.message||e));}
+}
+
+/* ====================== TELA INICIAL ====================== */
+function renderDecks(){
+ const box=$('#decks');box.textContent='';
+ const ds=[...DECKS.values()].sort((a,b)=>b.updated-a.updated);
+ if(!ds.length){box.append(el('p',{class:'help'},'Nenhum deck ainda. Importe uma lista ao lado ou abra um pacote.'));return;}
+ for(const d of ds){
+  const total=d.list.reduce((s,e)=>s+e.qty,0);
+  let noimg=0;for(const id of deckCardIds(d)){const c=CARDS.get(id);if(!c)continue;c.faces.forEach((f,i)=>{if(f.img&&!(c.imgs[i] instanceof Blob))noimg++;});}
+  const legs=d.list.map(e=>CARDS.get(e.cid)).filter(c=>c&&(/Legendary/.test(c.type)||d.cmd.includes(c.id)));
+  const mk=i=>el('select',{onchange:ev=>{const v=ev.target.value;const cmd=[...d.cmd];if(v)cmd[i]=v;else cmd.splice(i,1);d.cmd=[...new Set(cmd.filter(Boolean))];DB.put('decks',d);renderDecks();}},
+    el('option',{value:''},i?'(sem parceiro)':'(sem comandante)'),legs.map(c=>el('option',{value:c.id,selected:d.cmd[i]===c.id?'':null},c.name)));
+  box.append(el('div',{class:'deck'},
+   el('div',{},el('b',{},d.name),' ',el('small',{},`${total} cartas · ${(d.tokens||[]).length} fichas`),
+     noimg?el('div',{class:'warn'},`${noimg} imagens ainda não estão guardadas offline.`):el('div',{},el('small',{},'Completo para jogar offline.'))),
+   el('div',{class:'row'},el('small',{},'Comandante'),mk(0),d.cmd.length?mk(1):null),
+   el('div',{class:'row'},
+    el('button',{class:'pri',onclick:()=>startGame(d)},'Jogar'),
+    el('button',{onclick:()=>analysisModal(d)},'Bracket e combos'),
+    el('button',{onclick:()=>exportPack(d)},'Salvar pacote'),
+    el('button',{onclick:()=>{$('#dname').value=d.name;$('#list').value=d.text||'';}},'Editar lista'),
+    el('button',{onclick:()=>importDeck(d.text||'',d.name,d.id)},'Atualizar'),
+    el('button',{class:'bad',onclick:async()=>{if(await confirmBox(`Excluir o deck “${d.name}”?`)){await DB.del('decks',d.id);renderDecks();}}},'Excluir'))));
+ }
+}
+$('#bimport').onclick=()=>{const name=$('#dname').value.trim();const same=[...DECKS.values()].find(d=>name&&d.name===name);importDeck($('#list').value,name,same&&same.id);};
+$('#btxt').onclick=()=>$('#ftxt').click();
+$('#ftxt').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('#list').value=await f.text();if(!$('#dname').value)$('#dname').value=f.name.replace(/\.[^.]+$/,'');e.target.value='';};
+$('#bpack').onclick=()=>$('#fpack').click();
+$('#fpack').onchange=async e=>{for(const f of e.target.files)await importPack(f);e.target.value='';};
+addEventListener('dragover',e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes('Files'))e.preventDefault();});
+addEventListener('drop',async e=>{if(!e.dataTransfer||!e.dataTransfer.files.length)return;e.preventDefault();if(G)return;for(const f of e.dataTransfer.files){if(/\.json$/i.test(f.name))await importPack(f);else{$('#list').value=await f.text();if(!$('#dname').value)$('#dname').value=f.name.replace(/\.[^.]+$/,'');}}});
+
+/* ====================== ESTADO DO JOGO ====================== */
+let G=null,UNDO=[],DECK=null;
+const inst=id=>G.cards[id];
+const cardOf=i=>CARDS.get(i.cid);
+const faceOf=i=>{const c=cardOf(i);return c.faces[i.face]||c.faces[0];};
+function snap(){UNDO.push(JSON.stringify(G));if(UNDO.length>80)UNDO.shift();}
+function undo(){if(!UNDO.length)return;G=JSON.parse(UNDO.pop());render();}
+function log(t){G.log.push(`T${G.turn}: ${t}`);if(G.log.length>200)G.log.shift();}
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const r=new Uint32Array(1);crypto.getRandomValues(r);const j=r[0]%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function mkInst(cid,zone,extra={}){const iid='c'+(++G.n);G.cards[iid]={iid,cid,zone,tapped:false,faceDown:false,face:0,counters:{},x:0,y:0,...extra};G.z[zone].push(iid);return G.cards[iid];}
+function startGame(d){
+ DECK=d;UNDO=[];
+ G={n:0,cards:{},z:{library:[],hand:[],battlefield:[],graveyard:[],exile:[],command:[]},life:40,opp:[40,40,40],turn:1,step:0,tax:{},mulls:0,phase:'mull',log:[],pick:null};
+ const cmd=new Set(d.cmd);
+ for(const e of d.list){if(!CARDS.has(e.cid))continue;for(let k=0;k<e.qty;k++){if(cmd.has(e.cid)&&k===0)mkInst(e.cid,'command',{cmdr:true});else mkInst(e.cid,'library');}}
+ shuffleArr(G.z.library);
+ for(let k=0;k<7;k++)drawRaw();
+ log('Nova partida. Mão inicial de 7.');
+ $('#home').hidden=true;$('#game').hidden=false;render();
+}
+function drawRaw(){const id=G.z.library.shift();if(!id)return null;G.cards[id].zone='hand';G.z.hand.push(id);return id;}
+function draw(n=1){snap();let k=0;for(let i=0;i<n;i++)if(drawRaw())k++;log(k?`comprou ${k}`:'grimório vazio!');render();}
+function cardW(){return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cw'));}
+function autoPos(i){
+ const bf=$('#bf'),W=bf.clientWidth||900,H=bf.clientHeight||500,cw=cardW(),ch=cw*1.395,t=faceOf(i).type||'';
+ const y0=/Land/.test(t)?Math.max(8,H-ch-10):/Creature/.test(t)?8+ch*0.24:Math.max(8,(H-ch)/2);
+ const per=Math.max(1,Math.floor((W-16)/(cw+8)));
+ const taken=new Set(G.z.battlefield.map(id=>G.cards[id]).filter(o=>o!==i&&Math.abs(o.y-y0)<ch*0.45).map(o=>Math.round((o.x-10)/(cw+8))));
+ let n=0;while(taken.has(n)&&n<per*3)n++;
+ return{x:10+(n%per)*(cw+8),y:y0+Math.floor(n/per)*26};
+}
+/* move uma carta entre zonas. opts: {x,y} no campo; bottom:true no grimório; index */
+function move(iid,zone,opts={}){
+ const i=G.cards[iid];if(!i)return;const from=i.zone;
+ G.z[from]=G.z[from].filter(x=>x!==iid);
+ if(i.token&&zone!=='battlefield'){delete G.cards[iid];log(`ficha ${cardOf(i).name} saiu do jogo`);return;}
+ if(from==='battlefield'&&zone!=='battlefield'){i.tapped=false;i.counters={};i.face=0;i.faceDown=false;i.att=null;}
+ if(zone!=='battlefield'&&zone!==from)i.faceDown=false;
+ i.zone=zone;
+ if(zone==='library'){if(opts.bottom)G.z.library.push(iid);else G.z.library.unshift(iid);}
+ else G.z[zone].push(iid);
+ if(zone==='battlefield'){
+  if(opts.x!=null){i.x=opts.x;i.y=opts.y;i.att=null;}else if(from!=='battlefield'){const p=autoPos(i);i.x=p.x;i.y=p.y;}
+  if(from!=='battlefield'){const f=faceOf(i);if(f.loy&&!isNaN(+f.loy))i.counters['Lealdade']=+f.loy;}
+ }
+ if(from!==zone)log(`${i.faceDown?'carta virada para baixo':cardOf(i).name}: ${ZN[from]} → ${ZN[zone]}${zone==='library'?(opts.bottom?' (fundo)':' (topo)'):''}`);
+}
+function act(fn){snap();fn();render();}
+function untapAll(){act(()=>{G.z.battlefield.forEach(id=>G.cards[id].tapped=false);log('desvirou tudo');});}
+const STEPS=['Manutenção','Compra','Principal 1','Combate','Principal 2','Final'];
+let equipSrc=null;
+/* as fases são só anunciadas: nada acontece sozinho (nem a compra), por causa dos gatilhos */
+function announce(t){const o=$('#announce');if(o)o.remove();$('#bf').append(el('div',{id:'announce'},t));}
+function nextTurn(){if(G.phase!=='play')return;snap();G.z.battlefield.forEach(id=>G.cards[id].tapped=false);G.turn++;G.step=0;log(`— turno ${G.turn} — desvirou tudo. Manutenção`);render();announce(`Turno ${G.turn} · Manutenção`);}
+function setStep(k){if(G.phase!=='play'||k===G.step)return;snap();G.step=k;log('fase: '+STEPS[k]);render();announce(STEPS[k]);}
+function nextStep(){if(G.phase!=='play')return;if(G.step>=STEPS.length-1)nextTurn();else setStep(G.step+1);}
+/* equipar/anexar: a carta fica colada por trás da carta de base e anda junto com ela */
+function attach(src,dst){let a=G.cards[src],b=G.cards[dst];if(!a||!b||src===dst||a.zone!=='battlefield'||b.zone!=='battlefield')return;
+ if(b.att){dst=b.att;b=G.cards[dst];if(!b||dst===src)return;}
+ snap();G.z.battlefield.forEach(id=>{if(G.cards[id].att===src)G.cards[id].att=null;});a.att=dst;log(`${cardOf(a).name} anexada em ${cardOf(b).name}`);render();}
+function syncAtt(){const bf=G.z.battlefield,n={},cw=cardW();let any=false;
+ for(const id of bf){const i=G.cards[id];if(!i.att)continue;const h=G.cards[i.att];if(!h||h.zone!=='battlefield'||h.att){i.att=null;continue;}
+  any=true;n[i.att]=(n[i.att]||0)+1;i.x=h.x+cw*0.10*n[i.att];i.y=h.y-cw*1.395*0.115*n[i.att];}
+ if(!any)return;const out=[];
+ for(const id of bf){if(G.cards[id].att)continue;out.push(...bf.filter(a=>G.cards[a].att===id).reverse(),id);}
+ G.z.battlefield=out;}
+function shuffleLib(){act(()=>{shuffleArr(G.z.library);log('embaralhou o grimório');});}
+function addToken(cid,n=1){act(()=>{for(let k=0;k<n;k++){const i=mkInst(cid,'battlefield',{token:true});const p=autoPos(i);i.x=p.x;i.y=p.y;const f=faceOf(i);if(f.loy&&!isNaN(+f.loy))i.counters['Lealdade']=+f.loy;}log(`criou ${n} ficha(s) ${CARDS.get(cid).name}`);});}
+
+/* ---------- mulligan (Londres, primeiro grátis) ---------- */
+function mulligan(){act(()=>{G.z.hand.slice().forEach(id=>{G.cards[id].zone='library';G.z.library.push(id);});G.z.hand=[];shuffleArr(G.z.library);for(let k=0;k<7;k++)drawRaw();G.mulls++;log(`mulligan nº ${G.mulls}`);});}
+function keep(){const n=Math.max(0,G.mulls-1);act(()=>{if(n>0){G.phase='bottom';G.pick=[];}else{G.phase='play';log('manteve a mão');}});}
+function confirmBottom(){const n=Math.max(0,G.mulls-1);if(G.pick.length!==n)return;act(()=>{G.pick.forEach(id=>move(id,'library',{bottom:true}));G.pick=null;G.phase='play';log(`manteve com ${G.z.hand.length} cartas`);});}
+
+/* ====================== DESENHO ====================== */
+function faceNode(c,f,down){
+ if(down)return el('div',{class:'back'});
+ const u=imgURL(c,f),fc=c.faces[f]||c.faces[0];
+ if(u){const im=el('img',{src:u,alt:fc.name,draggable:'false'});im.onerror=()=>{if(!u.startsWith('blob:'))netFail=true;im.replaceWith(txtNode(c,fc));};return im;}
+ return txtNode(c,fc);
+}
+/* ---------- cartas em português ---------- */
+let PT=null,LANG='pt';try{LANG=localStorage.getItem('ma-lang')||'pt';}catch(_){}
+async function loadPT(){
+ if(PT||!window.MESA_PT||!window.DecompressionStream)return;
+ try{const bin=atob(window.MESA_PT),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  PT=JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text());}catch(e){console.warn('pt',e);PT={};}
+}
+/* devolve a face no idioma escolhido; .src: 0 oficial, 1 e 2 tradução não oficial, -1 sem tradução */
+function loc(c,fc){
+ if(LANG!=='pt'||!PT||c.custom)return fc;
+ const p=PT[c.name]||PT['#'+c.id];if(!p)return Object.assign({},fc,{src:-1,en:fc.name});
+ let pf=p;if(c.faces.length>1&&p.f){pf=p.f[c.faces.indexOf(fc)]||{};}else if(c.faces.length>1)pf={t:p.t,x:p.x};
+ const o=Object.assign({},fc,{en:fc.name,src:p.o||0});
+ if(pf.n)o.name=pf.n;if(pf.t)o.type=pf.t;if(pf.x)o.text=pf.x;else if(fc.text)o.src=-1;
+ return o;
+}
+function locNote(fc){
+ if(fc.src==null)return'';let s=fc.en&&fc.en!==fc.name?'Nome em inglês: '+fc.en:'';
+ if(fc.src===1||fc.src===2)s+='\nTradução não oficial.';else if((fc.src===-1||fc.src===3)&&fc.text)s+='\nAinda sem tradução: texto em inglês.';
+ return s.trim();
+}
+function txtNode(c,fc){
+ fc=loc(c,fc);
+ const t=fc.text||'',n=t.length+18*(t.split('\n').length-1);
+ const pt=fc.pow!=null&&fc.pow!==''?fc.pow+'/'+fc.tou:(fc.loy?String(fc.loy):null);
+ return el('div',{class:'txt'+(c.custom||/Token/.test(fc.type)?' tok':'')+(n>330?' xl':n>200?' lg':'')},el('div',{class:'hdr'},el('b',{},fc.name),el('code',{},fc.cost||'')),el('i',{},fc.type),el('span',{},t),pt?el('u',{},pt):null);
+}
+function cardEl(i,o={}){
+ const c=cardOf(i),down=o.down||i.faceDown;
+ const e=el('div',{class:'card'+(i.tapped&&i.zone==='battlefield'?' tapped':''),'data-iid':i.iid},faceNode(c,i.face,down));
+ const cs=Object.entries(i.counters||{}).filter(([,v])=>v);
+ if(cs.length)e.append(el('div',{class:'cts'},cs.map(([k,v])=>el('span',{},k==='Contador'?String(v):`${v} ${k}`))));
+ if(i.token)e.append(el('div',{class:'tg'},'FICHA'));
+ if(i.cmdr&&G.tax[i.cid])e.append(el('div',{class:'tax'},`imposto +${G.tax[i.cid]*2}`));
+ return e;
+}
+function render(){
+ if(!G)return;
+ syncAtt();
+ const sb=$('#steps');sb.textContent='';
+ if(G.phase==='play')STEPS.forEach((n,k)=>sb.append(el('button',{class:k===G.step?'on':'',onclick:()=>setStep(k)},n)));
+ $('#life').textContent=G.life;$('#turn').textContent=G.turn;
+ const op=$('#opps');op.textContent='';
+ G.opp.forEach((v,k)=>op.append(el('button',{class:'mini','data-opp':k,'data-d':-1,title:'−1 (Shift −5)'},'−'),el('b',{style:v<=0?'color:var(--bad)':''},String(v)),el('button',{class:'mini','data-opp':k,'data-d':1},'+'),k<2?' ':''));
+ const bf=$('#bf');bf.querySelectorAll('.card,#mull,#equip').forEach(n=>n.remove());
+ if(equipSrc&&!(G.cards[equipSrc]&&G.cards[equipSrc].zone==='battlefield'))equipSrc=null;
+ if(equipSrc)bf.append(el('div',{id:'equip'},el('span',{},'Clique na carta que vai receber '+cardOf(G.cards[equipSrc]).name),el('button',{onclick:()=>{equipSrc=null;render();}},'Cancelar')));
+ bf.querySelector('.hint').hidden=G.z.battlefield.length>0;
+ G.z.battlefield.forEach((id,k)=>{const i=G.cards[id],e=cardEl(i);e.style.left=i.x+'px';e.style.top=i.y+'px';e.style.zIndex=k+1;bf.append(e);});
+ if(G.phase!=='play'){const n=Math.max(0,G.mulls-1);
+  bf.append(G.phase==='mull'
+   ?el('div',{id:'mull'},el('span',{},G.mulls?`Mulligan nº ${G.mulls}${n?` (vai devolver ${n} ao fundo)`:' (grátis)'}`:'Mão inicial'),el('button',{class:'pri',onclick:keep},'Manter'),el('button',{onclick:mulligan},'Mulligan'))
+   :el('div',{id:'mull'},el('span',{},`Clique em ${n} carta(s) da mão para pôr no fundo do grimório (${G.pick.length}/${n})`),el('button',{class:'pri',disabled:G.pick.length===n?null:'',onclick:confirmBottom},'Confirmar')));}
+ const h=$('#hand');h.textContent='';
+ G.z.hand.forEach(id=>{const e=cardEl(G.cards[id]);if(G.pick&&G.pick.includes(id))e.classList.add('sel');h.append(e);});
+ const zc=$('#zcommand');zc.textContent='';G.z.command.forEach(id=>zc.append(cardEl(G.cards[id])));
+ for(const z of['library','graveyard','exile']){const box=$('#z'+z);box.textContent='';const a=G.z[z];$('#n'+z).textContent=a.length;
+  if(a.length){const id=z==='library'?a[0]:a[a.length-1];box.append(cardEl(G.cards[id],{down:z==='library'}));}}
+ const lg=$('#log');lg.textContent='';G.log.slice(-60).forEach(t=>lg.append(el('div',{},t)));lg.scrollTop=1e6;
+ $('#bundo').disabled=!UNDO.length;
+}
+function preview(c,f,hidden){
+ const pv=$('#pv'),pt=$('#pvt');pv.textContent='';
+ if(hidden||!c){pv.textContent=hidden?'Carta oculta':'Passe o mouse sobre uma carta';pt.textContent='';return;}
+ const fc=c.faces[f]||c.faces[0],u=imgURL(c,f);
+ if(u){const im=el('img',{src:u,alt:''});im.onerror=()=>{if(!u.startsWith('blob:'))netFail=true;im.replaceWith(txtNode(c,fc));};pv.append(im);}else pv.append(txtNode(c,fc));
+ const en=fc;{const l=loc(c,en);var note=locNote(l);var fc2=l;}
+ pt.textContent=`${fc2.name}  ${fc.cost||''}\n${fc2.type}\n\n${fc2.text||''}${fc.pow!=null&&fc.pow!==''?`\n\n${fc.pow}/${fc.tou}`:''}${fc.loy?`\n\nLealdade: ${fc.loy}`:''}${note?'\n\n'+note:''}`;
+}
+document.addEventListener('mouseover',e=>{
+ if(!G||drag&&drag.moved)return;const n=e.target.closest&&e.target.closest('.card');if(!n)return;
+ if(n.dataset.iid){const i=G.cards[n.dataset.iid];if(i)preview(cardOf(i),i.face,i.zone==='library'&&!n.closest('#modal'));}
+ else if(n.dataset.cid)preview(CARDS.get(n.dataset.cid),0);
+});
+
+/* ====================== ARRASTAR / CLICAR ====================== */
+let drag=null,lastClick={id:null,t:0};
+document.addEventListener('pointerdown',e=>{
+ if(e.button!==0||!G)return;if(e.target.closest('#ctx'))return; // clique dentro do menu: deixa o item tratar
+ hideCtx();
+ const n=e.target.closest('.card[data-iid]');if(!n||n.closest('#modal'))return;
+ const r=n.getBoundingClientRect(),cw=cardW();
+ drag={iid:n.dataset.iid,node:n,sx:e.clientX,sy:e.clientY,ox:Math.min(cw,Math.max(0,e.clientX-r.left)),oy:Math.min(cw*1.395,Math.max(0,e.clientY-r.top)),moved:false,ghost:null};
+ e.preventDefault();
+});
+document.addEventListener('pointermove',e=>{
+ if(!drag)return;
+ if(!drag.moved){if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<6)return;if(G.phase!=='play'){return;}
+  drag.moved=true;drag.ghost=drag.node.cloneNode(true);drag.ghost.classList.add('ghost');document.body.append(drag.ghost);drag.node.classList.add('dragging');}
+ drag.ghost.style.left=(e.clientX-drag.ox)+'px';drag.ghost.style.top=(e.clientY-drag.oy)+'px';
+ document.querySelectorAll('.dropok').forEach(n=>n.classList.remove('dropok'));
+ const t=document.elementFromPoint(e.clientX,e.clientY);const z=t&&t.closest('[data-zone]');if(z&&z.id!=='bf')z.classList.add('dropok');
+});
+document.addEventListener('pointerup',e=>{
+ if(!drag)return;const d=drag;drag=null;
+ document.querySelectorAll('.dropok').forEach(n=>n.classList.remove('dropok'));
+ if(!d.moved){clickCard(d.iid,e);return;}
+ d.ghost.remove();d.node.classList.remove('dragging');
+ const t=document.elementFromPoint(e.clientX,e.clientY),z=t&&t.closest('[data-zone]');
+ if(!z){render();return;}
+ const zone=z.dataset.zone,i=G.cards[d.iid];
+ if(zone===i.zone&&zone!=='battlefield'&&zone!=='hand'){render();return;}
+ act(()=>{
+  if(zone==='battlefield'){const r=$('#bf').getBoundingClientRect(),cw=cardW();
+   move(d.iid,zone,{x:Math.max(0,Math.min(r.width-cw*0.5,e.clientX-r.left-d.ox)),y:Math.max(0,Math.min(r.height-cw*0.6,e.clientY-r.top-d.oy))});}
+  else if(zone==='hand'&&i.zone==='hand'){ // reordenar a mão
+   const others=[...$('#hand').querySelectorAll('.card')].filter(n=>n.dataset.iid!==d.iid);let idx=others.findIndex(n=>{const r=n.getBoundingClientRect();return e.clientX<r.left+r.width/2;});
+   G.z.hand=G.z.hand.filter(x=>x!==d.iid);if(idx<0)G.z.hand.push(d.iid);else G.z.hand.splice(G.z.hand.indexOf(others[idx].dataset.iid),0,d.iid);}
+  else move(d.iid,zone,{bottom:e.shiftKey});
+ });
+});
+function clickCard(iid,e){
+ const i=G.cards[iid];if(!i)return;
+ const dbl=lastClick.id===iid&&Date.now()-lastClick.t<400;lastClick={id:iid,t:Date.now()};
+ if(G.phase==='bottom'){if(i.zone==='hand'){const k=G.pick.indexOf(iid);if(k>=0)G.pick.splice(k,1);else if(G.pick.length<Math.max(0,G.mulls-1))G.pick.push(iid);render();}return;}
+ if(G.phase!=='play')return;
+ if(equipSrc){if(i.zone==='battlefield'&&iid!==equipSrc){const s=equipSrc;equipSrc=null;attach(s,iid);}return;}
+ if(i.zone==='battlefield')act(()=>{i.tapped=!i.tapped;});
+ else if(i.zone==='library')draw(1);
+ else if(i.zone==='graveyard'||i.zone==='exile')viewZone(i.zone);
+ else if(dbl&&(i.zone==='hand'||i.zone==='command')){lastClick.id=null;act(()=>move(iid,'battlefield'));}
+}
+
+/* ====================== MENU DE CONTEXTO ====================== */
+function hideCtx(){$('#ctx').hidden=true;}
+function showCtx(x,y,items){
+ const m=$('#ctx');m.textContent='';
+ for(const it of items){if(!it)continue;
+  if(it.hd)m.append(el('div',{class:'hd'},it.hd));
+  else if(it.pm){const b=el('b',{},String(it.val()));m.append(el('div',{class:'it'},el('span',{},it.label),el('span',{class:'pm'},el('button',{class:'mini',onclick:ev=>{ev.stopPropagation();it.pm(-1);b.textContent=it.val();}},'−'),b,el('button',{class:'mini',onclick:ev=>{ev.stopPropagation();it.pm(1);b.textContent=it.val();}},'+'))));}
+  else m.append(el('div',{class:'it',onclick:()=>{hideCtx();it.fn();}},el('span',{},it.label),it.key?el('kbd',{},it.key):null));}
+ m.hidden=false;const r=m.getBoundingClientRect();
+ m.style.left=Math.max(4,Math.min(x,innerWidth-r.width-6))+'px';m.style.top=Math.max(4,Math.min(y,innerHeight-r.height-6))+'px';
+}
+const libMenu=()=>[{hd:'Grimório'},
+ {label:'Comprar 1',key:'D',fn:()=>draw(1)},
+ {label:'Comprar X…',fn:async()=>{const n=await ask('Comprar quantas cartas?','2');if(n>0)draw(+n);}},
+ {label:'Olhar o topo X (vidência)…',fn:async()=>{const n=await ask('Olhar quantas cartas do topo?','1');if(n>0)scry(+n);}},
+ {label:'Buscar no grimório',fn:()=>viewZone('library',true)},
+ {label:'Moer X (topo → cemitério)…',fn:async()=>{const n=await ask('Moer quantas cartas?','1');if(n>0)act(()=>{for(let k=0;k<+n&&G.z.library.length;k++)move(G.z.library[0],'graveyard');});}},
+ {label:'Revelar o topo',fn:()=>{const id=G.z.library[0];if(id)viewList('Topo do grimório',[id]);}},
+ {label:'Embaralhar',key:'S',fn:shuffleLib}];
+document.addEventListener('contextmenu',e=>{
+ if(!G||$('#game').hidden)return;e.preventDefault();
+ if(G.phase!=='play'||e.target.closest('#modal'))return;
+ const n=e.target.closest('.card[data-iid]'),zoneEl=e.target.closest('[data-zone]');
+ if(!n){
+  if(zoneEl&&zoneEl.dataset.zone==='library')return showCtx(e.clientX,e.clientY,libMenu());
+  if(zoneEl&&['graveyard','exile'].includes(zoneEl.dataset.zone))return showCtx(e.clientX,e.clientY,[{label:'Ver '+ZN[zoneEl.dataset.zone].toLowerCase(),fn:()=>viewZone(zoneEl.dataset.zone)}]);
+  return showCtx(e.clientX,e.clientY,[{hd:'Mesa'},{label:'Criar ficha…',key:'T',fn:tokenModal},{label:'Desvirar tudo',key:'U',fn:untapAll},{label:'Próxima fase',key:'F',fn:nextStep},{label:'Próximo turno',key:'N',fn:nextTurn},{label:'Arrumar o campo',fn:tidy},{label:'Desfazer',key:'Ctrl+Z',fn:undo}]);
+ }
+ const iid=n.dataset.iid,i=G.cards[iid],c=cardOf(i);
+ if(i.zone==='library')return showCtx(e.clientX,e.clientY,libMenu());
+ const items=[{hd:i.faceDown?'Carta virada para baixo':c.name}];
+ if(i.zone==='battlefield'){
+  items.push({label:i.tapped?'Desvirar':'Virar',fn:()=>act(()=>{i.tapped=!i.tapped;})});
+  if(c.faces.length>1)items.push({label:'Transformar (outra face)',fn:()=>act(()=>{i.face=(i.face+1)%c.faces.length;})});
+  items.push({label:i.faceDown?'Virar a face para cima':'Virar a face para baixo',fn:()=>act(()=>{i.faceDown=!i.faceDown;})});
+  items.push({label:'Equipar / anexar em…',fn:()=>{equipSrc=iid;render();}});
+  if(i.att)items.push({label:'Desanexar',fn:()=>act(()=>{const o=G.cards[iid];o.att=null;o.x+=cardW()*0.5;o.y+=cardW()*0.4;})});
+  items.push({label:'Trazer para a frente',fn:()=>act(()=>{G.z.battlefield=G.z.battlefield.filter(x=>x!==iid);G.z.battlefield.push(iid);})});
+  items.push({hd:'Contadores'});
+  const ct=k=>({label:k,val:()=>G.cards[iid].counters[k]||0,pm:d=>{snap();const o=G.cards[iid];o.counters[k]=Math.max(0,(o.counters[k]||0)+d);if(!o.counters[k])delete o.counters[k];render();}});
+  const names=new Set(['+1/+1','-1/-1','Contador',...Object.keys(i.counters)]);if(faceOf(i).loy)names.add('Lealdade');
+  names.forEach(k=>items.push(ct(k)));
+  items.push({label:'Outro tipo de contador…',fn:async()=>{const k=await ask('Nome do contador (ex.: carga, escudo, atordoamento)','carga');if(k)act(()=>{i.counters[k]=(i.counters[k]||0)+1;});}});
+  items.push({hd:'Fichas'});
+  (c.tokens||[]).filter(id=>CARDS.has(id)).forEach(id=>items.push({label:'Criar '+tokLabel(CARDS.get(id)),fn:()=>addToken(id)}));
+  items.push({label:'Criar cópia (ficha)',fn:()=>act(()=>{const t=mkInst(i.cid,'battlefield',{token:true,face:i.face,x:i.x+24,y:i.y+24});log('criou cópia de '+c.name);})});
+ }
+ if(i.cmdr)items.push({hd:'Comandante'},{label:'Imposto (vezes já conjurado)',val:()=>G.tax[i.cid]||0,pm:d=>{snap();G.tax[i.cid]=Math.max(0,(G.tax[i.cid]||0)+d);render();}});
+ if(!c.custom)items.push({hd:'Imagem'},{label:'Escolher a arte… (internet)',fn:()=>artModal(c)});
+ items.push({hd:'Mover para'});
+ const mv=(z,label,o)=>i.zone===z&&!o?null:{label,fn:()=>act(()=>move(iid,z,o||{}))};
+ items.push(mv('battlefield','Campo de batalha'),i.zone!=='battlefield'?{label:'Campo, virada para baixo',fn:()=>act(()=>{move(iid,'battlefield');if(G.cards[iid])G.cards[iid].faceDown=true;})}:null,
+  mv('hand','Mão'),mv('graveyard','Cemitério'),mv('exile','Exílio'),{label:'Topo do grimório',fn:()=>act(()=>move(iid,'library'))},{label:'Fundo do grimório',fn:()=>act(()=>move(iid,'library',{bottom:true}))},
+  i.cmdr?mv('command','Zona de comando'):null);
+ if(i.zone==='hand')items.push({hd:'Mão'},{label:'Descartar a mão inteira',fn:()=>act(()=>G.z.hand.slice().forEach(id=>move(id,'graveyard')))},{label:'Descartar uma aleatória',fn:()=>act(()=>{const h=G.z.hand;if(h.length)move(shuffleArr(h.slice())[0],'graveyard');})});
+ showCtx(e.clientX,e.clientY,items);
+});
+function tokLabel(t){const f=t.faces[0];return t.name+(f.pow!=null&&f.pow!==''?` ${f.pow}/${f.tou}`:'');}
+function tidy(){act(()=>{const ids=G.z.battlefield.slice();ids.forEach(id=>{G.cards[id].x=-9999;G.cards[id].y=-9999;});ids.forEach(id=>{if(G.cards[id].att)return;const p=autoPos(G.cards[id]);G.cards[id].x=p.x;G.cards[id].y=p.y;});});}
+
+/* ====================== JANELAS ====================== */
+let modalClose=null;
+function openModal(title,body,foot,onClose){
+ const m=$('#modal');m.textContent='';modalClose=onClose||null;
+ m.append(el('div',{class:'win'},el('div',{class:'hd'},el('span',{},title),el('button',{class:'mini',onclick:closeModal},'✕')),el('div',{class:'bd'},body),foot?el('div',{class:'ft'},foot):null));
+ m.hidden=false;}
+function closeModal(){const f=modalClose;modalClose=null;$('#modal').hidden=true;$('#modal').textContent='';if(f)f();}
+$('#modal').addEventListener('pointerdown',e=>{if(e.target.id==='modal')closeModal();});
+function ask(q,def=''){return new Promise(res=>{let done=false;const inp=el('input',{value:def,style:'width:100%'});const ok=()=>{done=true;const v=inp.value.trim();closeModal();res(v);};
+ inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')ok();if(e.key==='Escape')closeModal();});
+ openModal(q,inp,[el('button',{onclick:closeModal},'Cancelar'),el('button',{class:'pri',onclick:ok},'OK')],()=>{if(!done)res('');});inp.focus();inp.select();});}
+function confirmBox(q){return new Promise(res=>{let done=false;openModal('Confirmar',el('div',{},q),[el('button',{onclick:closeModal},'Cancelar'),el('button',{class:'pri',onclick:()=>{done=true;closeModal();res(true);}},'Sim')],()=>{if(!done)res(false);});});}
+function staticCard(i){const e=cardEl(i);e.style.position='relative';return e;}
+/* lista de cartas de uma zona, com botões para mover */
+function viewZone(zone,search){
+ let shuffleAfter=!!search;
+ const body=el('div',{class:'grid'});
+ const draw_=()=>{body.textContent='';
+  let ids=G.z[zone].slice();
+  if(search)ids.sort((a,b)=>cardOf(G.cards[a]).name.localeCompare(cardOf(G.cards[b]).name));else if(zone!=='library')ids.reverse();
+  if(!ids.length)body.append(el('div',{class:'help'},'Vazio.'));
+  for(const id of ids)body.append(cell(id,draw_));};
+ draw_();
+ const chk=search?el('label',{class:'help'},el('input',{type:'checkbox',checked:'',onchange:e=>shuffleAfter=e.target.checked}),' Embaralhar ao fechar'):null;
+ openModal(search?'Buscar no grimório':ZN[zone]+` (${G.z[zone].length})`,body,[chk,el('button',{class:'pri',onclick:closeModal},'Fechar')],()=>{if(search&&shuffleAfter){shuffleArr(G.z.library);log('embaralhou o grimório');}render();});
+}
+function viewList(title,ids){const body=el('div',{class:'grid'});const d=()=>{body.textContent='';ids.filter(id=>G.cards[id]).forEach(id=>body.append(cell(id,d)));};d();openModal(title,body,[el('button',{class:'pri',onclick:closeModal},'Fechar')],render);}
+function cell(id,redraw){
+ const i=G.cards[id];const b=(t,z,o)=>i.zone===z&&!o?null:el('button',{class:'mini',onclick:()=>{snap();move(id,z,o||{});const n=document.querySelector(`#modal .cell[data-c="${id}"]`);if(n)n.remove();render();}},t);
+ const fake={...i,faceDown:false};
+ return el('div',{class:'cell','data-c':id},staticCard(fake),el('div',{class:'acts'},b('Mão','hand'),b('Campo','battlefield'),b('Cemit.','graveyard'),b('Exílio','exile'),b('Topo','library',{}),b('Fundo','library',{bottom:true}),i.cmdr?b('Comando','command'):null));
+}
+/* vidência / olhar o topo */
+function scry(n){
+ const ids=G.z.library.slice(0,n);if(!ids.length)return;
+ const st=ids.map(id=>({id,dest:'top'}));const body=el('div',{class:'grid'});
+ const d=()=>{body.textContent='';st.forEach((s,k)=>{
+  const sel=el('select',{onchange:e=>s.dest=e.target.value},[['top','Topo'],['bottom','Fundo'],['graveyard','Cemitério'],['hand','Mão'],['exile','Exílio']].map(([v,t])=>el('option',{value:v,selected:s.dest===v?'':null},t)));
+  body.append(el('div',{class:'cell'},staticCard({...G.cards[s.id],faceDown:false}),el('div',{class:'acts'},el('button',{class:'mini',disabled:k?null:'',onclick:()=>{[st[k-1],st[k]]=[st[k],st[k-1]];d();}},'◀'),sel,el('button',{class:'mini',disabled:k<st.length-1?null:'',onclick:()=>{[st[k+1],st[k]]=[st[k],st[k+1]];d();}},'▶'))));});};
+ d();
+ openModal(`Topo do grimório (${ids.length}) — a da esquerda fica mais em cima`,body,[el('button',{class:'pri',onclick:()=>{
+  snap();G.z.library=G.z.library.filter(x=>!ids.includes(x));
+  const tops=st.filter(s=>s.dest==='top').map(s=>s.id),bots=st.filter(s=>s.dest==='bottom').map(s=>s.id);
+  G.z.library.unshift(...tops);G.z.library.push(...bots);
+  st.filter(s=>!['top','bottom'].includes(s.dest)).forEach(s=>{G.z.library.unshift(s.id);move(s.id,s.dest);});
+  log(`olhou ${ids.length} do topo: ${tops.length} no topo, ${bots.length} no fundo`);closeModal();render();}},'Confirmar')]);
+}
+/* fichas */
+function tokenModal(){
+ const body=el('div',{});const g=el('div',{class:'grid'});
+ const ids=(DECK.tokens||[]).filter(id=>CARDS.has(id));
+ const customs=[...CARDS.values()].filter(c=>c.custom);
+ for(const c of[...ids.map(id=>CARDS.get(id)),...customs]){
+  const fake={iid:'',cid:c.id,zone:'x',face:0,counters:{}};const ce=staticCard(fake);ce.removeAttribute('data-iid');ce.dataset.cid=c.id;
+  g.append(el('div',{class:'cell'},ce,el('div',{class:'acts'},el('button',{class:'mini',onclick:()=>addToken(c.id,1)},'+1'),el('button',{class:'mini',onclick:()=>addToken(c.id,2)},'+2'),el('button',{class:'mini',onclick:()=>addToken(c.id,5)},'+5'))));}
+ if(!ids.length&&!customs.length)g.append(el('div',{class:'help'},'Este deck não tem fichas baixadas. Crie uma personalizada abaixo.'));
+ const nm=el('input',{placeholder:'Nome (ex.: Tesouro)',style:'width:170px'}),tp=el('input',{placeholder:'Tipo (ex.: Criatura — Espírito)',style:'width:210px'}),pt=el('input',{placeholder:'P/R (ex.: 1/1)',style:'width:100px'}),tx=el('input',{placeholder:'Texto (opcional)',style:'width:240px'});
+ [nm,tp,pt,tx].forEach(i=>i.addEventListener('keydown',e=>e.stopPropagation()));
+ body.append(g,el('h4',{style:'margin:16px 0 6px'},'Ficha personalizada'),el('div',{class:'row'},nm,tp,pt,tx,el('button',{class:'pri',onclick:()=>{
+  const name=nm.value.trim()||'Ficha';const[p,t]=(pt.value.trim().match(/^([^/]+)\/(.+)$/)||[]).slice(1);
+  const id='custom:'+name+'|'+tp.value+'|'+pt.value+'|'+tx.value;
+  if(!CARDS.has(id))CARDS.set(id,{id,name,type:tp.value||'Ficha',custom:true,imgs:[],tokens:[],faces:[{name,type:tp.value||'Ficha',text:tx.value,cost:'',pow:p,tou:t}]});
+  addToken(id,1);closeModal();}},'Criar')));
+ openModal('Fichas',body,[el('span',{class:'help',style:'margin-right:auto'},'Fichas somem ao sair do campo.'),el('button',{class:'pri',onclick:closeModal},'Fechar')]);
+}
+function diceModal(){
+ const out=el('div',{style:'font-size:28px;text-align:center;min-width:260px;padding:10px'},'—');
+ const roll=n=>{const r=new Uint32Array(1);crypto.getRandomValues(r);return r[0]%n+1;};
+ const b=(t,f)=>el('button',{onclick:()=>{const v=f();out.textContent=v;act(()=>log(`${t}: ${v}`));}},t);
+ openModal('Dado / moeda',el('div',{},out,el('div',{class:'row',style:'justify-content:center'},b('Moeda',()=>roll(2)===1?'Cara':'Coroa'),b('d6',()=>roll(6)),b('d20',()=>roll(20)))));
+}
+
+/* ====================== BARRA E ATALHOS ====================== */
+$('#bar').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b||!G)return;const k=e.shiftKey?5:1;
+ if(b.dataset.life)act(()=>{G.life+=k*+b.dataset.life;});
+ else if(b.dataset.opp!=null)act(()=>{G.opp[+b.dataset.opp]+=k*+b.dataset.d;});
+});
+const playing=()=>G&&G.phase==='play'&&$('#modal').hidden;
+$('#bnext').onclick=()=>playing()&&nextTurn();
+$('#bstep').onclick=()=>playing()&&nextStep();
+$('#buntap').onclick=()=>playing()&&untapAll();
+$('#btok').onclick=()=>playing()&&tokenModal();
+$('#bdice').onclick=()=>G&&diceModal();
+$('#bundo').onclick=undo;
+$('#brestart').onclick=async()=>{if(await confirmBox('Começar uma partida nova com este deck?'))startGame(DECK);};
+$('#bexit').onclick=async()=>{if(await confirmBox('Sair da partida e voltar para a lista de decks?')){G=null;$('#game').hidden=true;$('#home').hidden=false;renderDecks();}};
+$('#size').oninput=e=>{document.documentElement.style.setProperty('--cw',e.target.value+'px');try{localStorage.setItem('ma-size',e.target.value);}catch(_){}};
+document.addEventListener('keydown',e=>{
+ if(!G||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(e.key==='Escape'){hideCtx();if(equipSrc){equipSrc=null;render();}if(!$('#modal').hidden)closeModal();return;}
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();return;}
+ if(e.ctrlKey||e.metaKey||e.altKey||!playing())return;
+ const k=e.key.toLowerCase();
+ if(k==='f'||k===' '){e.preventDefault();nextStep();}else if(k==='d')draw(1);else if(k==='n')nextTurn();else if(k==='u')untapAll();else if(k==='s')shuffleLib();else if(k==='t')tokenModal();
+});
+addEventListener('beforeunload',e=>{if(G){e.preventDefault();e.returnValue='';}});
+
+/* ====================== ESCOLHER ARTE ====================== */
+async function artModal(c){
+ const f0=c.faces[0],tok=/Token/.test(f0.type||c.type||''),st=el('div',{class:'help',style:'margin-bottom:8px'},'Procurando as artes no Scryfall…'),grid=el('div',{class:'looks'}),body=el('div',{style:'width:min(900px,86vw)'},st,grid);
+ openModal('Escolher a arte de '+f0.name,body,[el('button',{class:'pri',onclick:closeModal},'Fechar')]);
+ let data;
+ try{const r=await fetch(API+'/cards/search?'+new URLSearchParams({q:`!"${f0.name}" `+(tok?'t:token':'game:paper'),unique:'prints',order:'released',include_extras:'true',include_variations:'true'}));if(!r.ok)throw 0;data=(await r.json()).data;}
+ catch(e){st.textContent='Não consegui falar com o Scryfall nesta rede. A troca de arte só funciona com internet liberada.';return;}
+ const prints=data.filter(d=>!tok||(d.type_line===f0.type&&(d.power||'')===(f0.pow||'')&&(d.toughness||'')===(f0.tou||'')&&(d.oracle_text||'').trim()===(f0.text||'').trim()))
+  .map(d=>{const a=d.image_uris||(d.card_faces&&d.card_faces[0].image_uris),b=!d.image_uris&&d.card_faces&&d.card_faces[1]&&d.card_faces[1].image_uris;return a&&{small:a.small,normal:a.normal,back:b&&b.normal,set:d.set_name,code:(d.set||'').toUpperCase()+' '+d.collector_number+' · '+(d.released_at||'').slice(0,4)};}).filter(Boolean).slice(0,120);
+ st.textContent=prints.length?prints.length+' artes encontradas. Clique em uma para usar.':'Não achei outras artes para esta carta.';
+ let busy=false;
+ prints.forEach(p=>grid.append(el('div',{style:'width:120px',onclick:async()=>{if(busy)return;busy=true;st.textContent='Baixando a arte de '+p.set+'…';
+   const urls=[p.normal,p.back];let ok=false;
+   for(let i=0;i<c.faces.length&&i<2;i++){if(!urls[i])continue;c.faces[i].img=urls[i];try{const r=await fetch(urls[i]);if(!r.ok)throw 0;c.imgs[i]=await r.blob();ok=true;}catch(e){c.imgs[i]=null;}}
+   for(const k of[...urlCache.keys()])if(k.startsWith(c.id+':'))urlCache.delete(k);
+   try{await DB.put('cards',c);}catch(e){}
+   st.textContent=ok?'Arte trocada: '+p.set+'.':'Não consegui guardar a imagem para usar sem internet, mas ela aparece enquanto houver conexão.';busy=false;if(G)render();}},
+  el('img',{src:p.small,loading:'lazy',style:'width:120px;aspect-ratio:488/680;border-radius:6px;background:var(--line);display:block'}),el('div',{style:'color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'},p.set),p.code)));
+}
+
+/* ====================== APARÊNCIA ====================== */
+const MATS=[['','Feltro liso',''],
+ ['nebulosa','Nebulosa','radial-gradient(ellipse at 25% 30%,#7a3bb8aa,transparent 55%),radial-gradient(ellipse at 75% 65%,#2aa0b0aa,transparent 50%),radial-gradient(ellipse at 60% 20%,#3a2a90aa,transparent 45%),#0d0b24'],
+ ['floresta','Floresta','radial-gradient(ellipse at 30% 40%,#2f7a48,transparent 60%),radial-gradient(ellipse at 80% 70%,#7f9a3e88,transparent 45%),#0a2216'],
+ ['brasas','Brasas','radial-gradient(ellipse at 50% 100%,#ff9628aa,transparent 55%),radial-gradient(ellipse at 20% 30%,#7a1c12,transparent 60%),radial-gradient(ellipse at 85% 25%,#5c1810,transparent 55%),#190a0a'],
+ ['abismo','Abismo','repeating-linear-gradient(175deg,transparent 0 46px,#50bec822 46px 50px),radial-gradient(ellipse at 50% 30%,#12507a,transparent 70%),#04101f'],
+ ['pergaminho','Pergaminho','radial-gradient(ellipse at 40% 40%,#9a835e,transparent 75%),radial-gradient(ellipse at 80% 80%,#5c482f,transparent 60%),#6a5840'],
+ ['grade','Grade arcana','radial-gradient(circle at 50% 50%,transparent 0 88px,#e8b94a 88px 90px,transparent 90px 140px,#e8b94a 140px 142px,transparent 142px),repeating-linear-gradient(0deg,transparent 0 58px,#46c8aa33 58px 60px),repeating-linear-gradient(90deg,transparent 0 58px,#46c8aa33 58px 60px),#141c24'],
+ ['marmore','Mármore','repeating-linear-gradient(115deg,transparent 0 70px,#c0c4cc22 70px 73px,transparent 73px 160px),radial-gradient(ellipse at 30% 30%,#5a5e68,transparent 70%),#26282e']];
+const SLEEVES=[['','Arcana',null],['rubi','Rubi',['#16070a','#5c1420','#f0c9a0','#ff5a6a','8px']],['esmeralda','Esmeralda',['#06140e','#12482f','#d9c27a','#6fe3a5','50%']],
+ ['safira','Safira',['#070c1c','#16306e','#cfd8e8','#66b2ff','50%']],['ametista','Ametista',['#110a1c','#3e2166','#e8b94a','#c59bff','8px']],
+ ['ouro','Ouro velho',['#171208','#5a4516','#f3e3b0','#fff1c2','50%']],['noite','Noite',['#000000','#1c2026','#8a929a','#e6e9ec','8px']],['coral','Coral',['#1c0d0a','#8a3b2a','#ffe2c4','#4fc3a1','50%']]];
+let LOOK={mat:'',sleeve:'',matImg:'',sleeveImg:''};try{Object.assign(LOOK,JSON.parse(localStorage.getItem('ma-look')||'{}'));}catch(_){}
+function saveLook(){try{localStorage.setItem('ma-look',JSON.stringify(LOOK));return true;}catch(e){return false;}}
+function slBg(k){const s=SLEEVES.find(x=>x[0]===k);return s&&s[2]?`repeating-linear-gradient(45deg,${s[2][1]} 0 8px,${s[2][0]}66 8px 16px),${s[2][1]}`:'repeating-linear-gradient(45deg,#24323a 0 8px,#1c282f 8px 16px)';}
+function applyLook(){
+ const r=document.documentElement.style,m=MATS.find(x=>x[0]===LOOK.mat);
+ if(LOOK.mat==='custom'&&LOOK.matImg)r.setProperty('--mat',`linear-gradient(#0003,#0003),url("${LOOK.matImg}")`);else if(m&&m[2])r.setProperty('--mat',m[2]);else r.removeProperty('--mat');
+ const s=SLEEVES.find(x=>x[0]===LOOK.sleeve);let css='';
+ if(LOOK.sleeve==='custom'&&LOOK.sleeveImg){r.setProperty('--sl-bg',`url("${LOOK.sleeveImg}")`);r.setProperty('--sl-edge','#0b0f12');css='.card .back:after{display:none}';}
+ else if(s&&s[2]){r.setProperty('--sl-edge',s[2][0]);r.setProperty('--sl-bg',slBg(s[0]));r.setProperty('--sl-a',s[2][2]);r.setProperty('--sl-b',s[2][3]);r.setProperty('--sl-r',s[2][4]);}
+ else['--sl-edge','--sl-bg','--sl-a','--sl-b','--sl-r'].forEach(k=>r.removeProperty(k));
+ let st=$('#lookcss');if(!st){st=el('style',{id:'lookcss'});document.head.append(st);}st.textContent=css;
+}
+/* reduz a imagem escolhida para caber no armazenamento do navegador */
+function pickImage(maxW,cb){const inp=el('input',{type:'file',accept:'image/*'});inp.onchange=()=>{const f=inp.files[0];if(!f)return;const im=new Image();im.onload=()=>{
+  const k=Math.min(1,maxW/im.width),cv=el('canvas',{});cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+  cb(cv.toDataURL('image/jpeg',.85));URL.revokeObjectURL(im.src);};im.src=URL.createObjectURL(f);};inp.click();}
+function looksModal(){
+ const body=el('div',{style:'max-width:880px'});
+ const draw=()=>{body.textContent='';
+  const sec=(title,list,key,imgKey,cls,bgOf,maxW)=>{body.append(el('h4',{style:'margin:4px 0;color:var(--acc)'},title));const row=el('div',{class:'looks'});
+   list.forEach(x=>row.append(el('div',{class:LOOK[key]===x[0]?'on':'',onclick:()=>{LOOK[key]=x[0];saveLook();applyLook();draw();}},el('div',{class:'th '+cls,style:'background:'+bgOf(x)+';background-size:cover'}),x[1])));
+   if(LOOK[imgKey])row.append(el('div',{class:LOOK[key]==='custom'?'on':'',onclick:()=>{LOOK[key]='custom';saveLook();applyLook();draw();}},el('div',{class:'th '+cls,style:`background:url("${LOOK[imgKey]}") center/cover`}),'Personalizado'));
+   row.append(el('div',{onclick:()=>pickImage(maxW,d=>{LOOK[imgKey]=d;LOOK[key]='custom';if(!saveLook())alert('A imagem ficou grande demais para o navegador guardar. Ela vale só até fechar a página.');applyLook();draw();})},el('div',{class:'th '+cls,style:'display:flex;align-items:center;justify-content:center;border:2px dashed var(--line);font-size:26px'},'+'),'Usar imagem minha…'));
+   body.append(row);};
+  sec('Playmat (fundo do campo de batalha)',MATS,'mat','matImg','',x=>x[2]||'radial-gradient(ellipse at 50% 40%,#1f4a40,#16342d 70%,#0f231f)',1600);
+  sec('Sleeve (verso das cartas)',SLEEVES,'sleeve','sleeveImg','sl',x=>slBg(x[0]),500);
+  body.append(el('p',{class:'help'},'As imagens personalizadas ficam guardadas neste navegador.'));};
+ draw();openModal('Aparência: playmat e sleeve',body,[el('button',{class:'pri',onclick:closeModal},'Fechar')]);
+}
+function langLabel(){$('#blang').textContent='Cartas em: '+(LANG==='pt'?'Português':'Inglês');}
+$('#blang').onclick=()=>{LANG=LANG==='pt'?'en':'pt';try{localStorage.setItem('ma-lang',LANG);}catch(_){}langLabel();if(G)render();};
+$('#blooks').onclick=looksModal;$('#blooks2').onclick=looksModal;
+
+/* ====================== INÍCIO ====================== */
+(async()=>{
+ try{const s=localStorage.getItem('ma-size');if(s){document.documentElement.style.setProperty('--cw',s+'px');$('#size').value=s;}}catch(_){}
+ langLabel();applyLook();loadPT().then(()=>{if(G)render();});
+ const ok=await DB.open();await DB.load();
+ if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+ if(!ok)prog('Aviso: este navegador não deixou guardar dados. Use “Salvar pacote” e “Abrir pacote offline” para não perder o deck.');
+ renderDecks();
+})();
+</script>
+</body>
+</html>

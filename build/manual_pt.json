@@ -1,0 +1,603 @@
+{
+"Judge Magister Gabranth": {
+"x": "Ameaçar\nToda vez que outra criatura ou artefato que você controla morre, coloque um marcador +1/+1 em Judge Magister Gabranth."
+},
+"Dalkovan Encampment": {
+"x": "Dalkovan Encampment entra virado, a menos que você controle um Pântano ou uma Montanha.\n{T}: Adicione {W}.\n{2}{W}, {T}: Toda vez que você atacar neste turno, crie duas fichas de criatura Guerreiro 1/1 vermelhas viradas e atacando. Sacrifique-as no início da próxima etapa final."
+},
+"Undercity Dire Rat": {
+"x": "Cauda de Rato — Quando Undercity Dire Rat morrer, crie uma ficha de Tesouro."
+},
+"Al Bhed Salvagers": {
+"x": "Toda vez que Al Bhed Salvagers ou outra criatura ou artefato que você controla morre, o oponente alvo perde 1 ponto de vida e você ganha 1 ponto de vida."
+},
+"SOLDIER Military Program": {
+"x": "No início do combate no seu turno, escolha um. Se você controla um comandante, em vez disso você pode escolher ambos.\n• Crie uma ficha de criatura Soldado 1/1 branca.\n• Coloque um marcador +1/+1 em cada um de até dois Soldados que você controla."
+},
+"Phantom Train": {
+"x": "Atropelar\nSacrifique outro artefato ou criatura: Coloque um marcador +1/+1 em Phantom Train. Ele se torna uma criatura artefato Espírito, além de seus outros tipos, até o final do turno."
+},
+"Sidequest: Hunt the Mark // Yiazmat, Ultimate Mark": {
+"f": [
+{
+"x": "Quando Sidequest: Hunt the Mark entrar, destrua até uma criatura alvo.\nNo início de sua etapa final, se uma criatura morreu sob o controle de um oponente neste turno, crie uma ficha de Tesouro. Depois, se você controla três ou mais Tesouros, transforme Sidequest: Hunt the Mark."
+},
+{
+"x": "{1}{B}, sacrifique outra criatura ou artefato: Yiazmat ganha indestrutível até o final do turno. Vire-o."
+}
+]
+},
+"Tolls of War": {
+"x": "Quando Tolls of War entrar, crie uma ficha de Pista.\nToda vez que você sacrifica uma permanente durante o seu turno, crie uma ficha de criatura Aliado 1/1 branca. Esta habilidade só é desencadeada uma vez por turno."
+},
+"Mana Vault": {
+"x": "Mana Vault não desvira durante sua etapa de desvirar.\nNo início de sua manutenção, você pode pagar {4}. Se fizer isso, desvire Mana Vault.\nNo início de sua etapa de compra, se Mana Vault estiver virado, ele causa 1 ponto de dano a você.\n{T}: Adicione {C}{C}{C}."
+},
+"Three Tree City": {
+"x": "Conforme Three Tree City entra, escolha um tipo de criatura.\n{T}: Adicione {C}.\n{2}, {T}: Escolha uma cor. Adicione uma quantidade de mana daquela cor igual ao número de criaturas do tipo escolhido que você controla."
+},
+"Animate Dead": {
+"x": "Encantar card de criatura em um cemitério\nQuando Animate Dead entrar, se estiver no campo de batalha, ele perde \"encantar card de criatura em um cemitério\" e ganha \"encantar criatura colocada no campo de batalha com Animate Dead\". Devolva o card de criatura encantado ao campo de batalha sob seu controle e anexe Animate Dead a ele. Quando Animate Dead deixar o campo de batalha, o controlador daquela criatura a sacrifica.\nA criatura encantada recebe -1/-0."
+},
+"Mox Diamond": {
+"x": "Se Mox Diamond fosse entrar, em vez disso você pode descartar um card de terreno. Se fizer isso, coloque Mox Diamond no campo de batalha. Caso contrário, coloque-o no cemitério de seu dono.\n{T}: Adicione um mana de qualquer cor."
+},
+"Untimely Malfunction": {
+"x": "Escolha um —\n• Destrua o artefato alvo.\n• Mude o alvo da mágica ou habilidade alvo que tenha um único alvo.\n• Uma ou duas criaturas alvo não podem bloquear neste turno."
+},
+"Skyshroud Claim": {
+"x": "Procure em seu grimório até dois cards de Floresta, coloque-os no campo de batalha e depois embaralhe."
+},
+"Dawn's Truce": {
+"x": "Presentear um card\nVocê e as permanentes que você controla ganham resistência a magia até o final do turno. Se o presente foi prometido, as permanentes que você controla também ganham indestrutível até o final do turno."
+},
+"Mistrise Village": {
+"x": "Mistrise Village entra virado, a menos que você controle uma Montanha ou uma Floresta.\n{T}: Adicione {U}.\n{U}, {T}: A próxima mágica que você conjurar neste turno não pode ser anulada."
+},
+"Selvala, Heart of the Wilds": {
+"x": "Toda vez que outra criatura entra, o controlador dela pode comprar um card se o poder dela for maior que o poder de cada outra criatura.\n{G}, {T}: Adicione X manas em qualquer combinação de cores, sendo X o maior poder entre as criaturas que você controla."
+},
+"Enduring Vitality": {
+"t": "Criatura Encantamento — Alce Vislumbre",
+"x": "Vigilância\nAs criaturas que você controla têm \"{T}: Adicione um mana de qualquer cor.\"\nQuando Enduring Vitality morrer, se era uma criatura, devolva-o ao campo de batalha sob o controle de seu dono. Ele é um encantamento."
+},
+"Red Elemental Blast": {
+"x": "Escolha um —\n• Anule a mágica azul alvo.\n• Destrua a permanente azul alvo."
+},
+"Pyroblast": {
+"x": "Escolha um —\n• Anule a mágica alvo se ela for azul.\n• Destrua a permanente alvo se ela for azul."
+},
+"Voice of Victory": {
+"x": "Mobilizar 2\nSeus oponentes não podem conjurar mágicas durante o seu turno."
+},
+"Culling the Weak": {
+"x": "Como custo adicional para conjurar esta mágica, sacrifique uma criatura.\nAdicione {B}{B}{B}{B}."
+},
+"Redirect Lightning": {
+"x": "Como custo adicional para conjurar esta mágica, pague 5 pontos de vida ou pague {2}.\nMude o alvo da mágica ou habilidade alvo que tenha um único alvo."
+},
+"Blazemire Verge": {
+"x": "{T}: Adicione {B}.\n{T}: Adicione {R}. Ative somente se você controlar um Pântano ou uma Montanha."
+},
+"Blasphemous Edict": {
+"x": "Você pode pagar {B} em vez de pagar o custo de mana desta mágica se houver treze ou mais criaturas no campo de batalha.\nCada jogador sacrifica treze criaturas à própria escolha."
+},
+"Hexing Squelcher": {
+"t": "Criatura — Goblin Feiticeiro",
+"x": "Esta mágica não pode ser anulada.\nSalvaguarda — Pague 2 pontos de vida.\nAs mágicas que você controla não podem ser anuladas.\nAs outras criaturas que você controla têm \"Salvaguarda — Pague 2 pontos de vida.\""
+},
+"Talon Gates of Madara": {
+"x": "Quando Talon Gates of Madara entrar, até uma criatura alvo sai de fase.\n{T}: Adicione {C}.\n{1}, {T}: Adicione um mana de qualquer cor.\n{4}: Coloque este card de sua mão no campo de batalha."
+},
+"Brotherhood Regalia": {
+"x": "A criatura equipada tem salvaguarda {2}, é um Assassino além de seus outros tipos e não pode ser bloqueada.\nEquipar criatura lendária {1}\nEquipar {3}"
+},
+"Saw in Half": {
+"x": "Destrua a criatura alvo. Se aquela criatura morrer dessa forma, o controlador dela cria duas fichas que são cópias daquela criatura, exceto que o poder delas é metade do poder daquela criatura e a resistência delas é metade da resistência daquela criatura. Arredonde para cima cada vez."
+},
+"Icetill Explorer": {
+"x": "Você pode jogar um terreno adicional em cada um dos seus turnos.\nVocê pode jogar terrenos de seu cemitério.\nAterragem — Toda vez que um terreno que você controla entra, triture um card."
+},
+"Gloomlake Verge": {
+"x": "{T}: Adicione {U}.\n{T}: Adicione {B}. Ative somente se você controlar uma Ilha ou um Pântano."
+},
+"Banner of Kinship": {
+"x": "Conforme Banner of Kinship entra, escolha um tipo de criatura. Banner of Kinship entra com um marcador de sociedade para cada criatura do tipo escolhido que você controla.\nAs criaturas do tipo escolhido que você controla recebem +1/+1 para cada marcador de sociedade em Banner of Kinship."
+},
+"Floodfarm Verge": {
+"x": "{T}: Adicione {W}.\n{T}: Adicione {U}. Ative somente se você controlar uma Planície ou uma Ilha."
+},
+"Trouble in Pairs": {
+"x": "Se um oponente fosse começar um turno extra, em vez disso aquele jogador pula aquele turno.\nToda vez que um oponente ataca você com duas ou mais criaturas, compra o segundo card dele em cada turno ou conjura a segunda mágica dele em cada turno, você compra um card."
+},
+"Elspeth, Storm Slayer": {
+"x": "Se uma ou mais fichas fossem ser criadas sob seu controle, em vez disso é criado o dobro daquelas fichas.\n+1: Crie uma ficha de criatura Soldado 1/1 branca.\n0: Coloque um marcador +1/+1 em cada criatura que você controla. Aquelas criaturas ganham voar até o seu próximo turno.\n−3: Destrua a criatura alvo com valor de mana 3 ou mais que um oponente controla."
+},
+"Caretaker's Talent": {
+"x": "Toda vez que uma ou mais fichas que você controla entram, compre um card. Esta habilidade só é desencadeada uma vez por turno.\n{W}: Nível 2\nQuando esta Classe se tornar nível 2, crie uma ficha que seja uma cópia da ficha alvo que você controla.\n{3}{W}: Nível 3\nAs fichas de criatura que você controla recebem +2/+2."
+},
+"Hushwood Verge": {
+"x": "{T}: Adicione {G}.\n{T}: Adicione {W}. Ative somente se você controlar uma Floresta ou uma Planície."
+},
+"Starting Town": {
+"t": "Terreno — Cidade",
+"x": "Starting Town entra virado, a menos que seja o seu primeiro, segundo ou terceiro turno do jogo.\n{T}: Adicione {C}.\n{T}, pague 1 ponto de vida: Adicione um mana de qualquer cor."
+},
+"Into the Flood Maw": {
+"x": "Presentear um Peixe virado\nDevolva a criatura alvo que um oponente controla para a mão de seu dono. Se o presente foi prometido, em vez disso devolva a permanente alvo que não seja terreno que um oponente controla para a mão de seu dono."
+},
+"Snuff Out": {
+"x": "Se você controla um Pântano, você pode pagar 4 pontos de vida em vez de pagar o custo de mana desta mágica.\nDestrua a criatura alvo que não seja preta. Ela não pode ser regenerada."
+},
+"Innkeeper's Talent": {
+"x": "No início do combate no seu turno, coloque um marcador +1/+1 na criatura alvo que você controla.\n{G}: Nível 2\nAs permanentes que você controla com marcadores têm salvaguarda {1}.\n{3}{G}: Nível 3\nSe você fosse colocar um ou mais marcadores em uma permanente ou jogador, em vez disso coloque o dobro de cada um daqueles tipos de marcador naquela permanente ou jogador."
+},
+"Thornspire Verge": {
+"x": "{T}: Adicione {R}.\n{T}: Adicione {G}. Ative somente se você controlar uma Montanha ou uma Floresta."
+},
+"Enduring Innocence": {
+"t": "Criatura Encantamento — Ovelha Vislumbre",
+"x": "Vínculo com a vida\nToda vez que uma ou mais outras criaturas com poder 2 ou menos que você controla entram, compre um card. Esta habilidade só é desencadeada uma vez por turno.\nQuando Enduring Innocence morrer, se era uma criatura, devolva-o ao campo de batalha sob o controle de seu dono. Ele é um encantamento."
+},
+"Mockingbird": {
+"x": "Voar\nVocê pode fazer com que Mockingbird entre como uma cópia de qualquer criatura no campo de batalha com valor de mana menor ou igual à quantidade de mana gasta para conjurar Mockingbird, exceto que ele é uma Ave além de seus outros tipos e tem voar."
+},
+"Champion's Helm": {
+"x": "A criatura equipada recebe +2/+2.\nEnquanto a criatura equipada for lendária, ela tem resistência a magia.\nEquipar {1}"
+},
+"Mossborn Hydra": {
+"x": "Atropelar\nMossborn Hydra entra com um marcador +1/+1.\nAterragem — Toda vez que um terreno que você controla entra, dobre o número de marcadores +1/+1 em Mossborn Hydra."
+},
+"Terrasymbiosis": {
+"x": "Toda vez que você coloca um ou mais marcadores +1/+1 em uma criatura que você controla, você pode comprar aquela quantidade de cards. Faça isso somente uma vez por turno."
+},
+"Bleachbone Verge": {
+"x": "{T}: Adicione {B}.\n{T}: Adicione {W}. Ative somente se você controlar uma Planície ou um Pântano."
+},
+"Twinflame Tyrant": {
+"x": "Voar\nSe uma fonte que você controla fosse causar dano a um oponente ou a uma permanente que um oponente controla, em vez disso ela causa o dobro daquele dano."
+},
+"Valley Floodcaller": {
+"x": "Lampejo\nVocê pode conjurar mágicas que não sejam de criatura como se tivessem lampejo.\nToda vez que você conjura uma mágica que não seja de criatura, as Aves, Sapos, Lontras e Ratos que você controla recebem +1/+1 até o final do turno. Desvire-os."
+},
+"Sunbillow Verge": {
+"x": "{T}: Adicione {W}.\n{T}: Adicione {R}. Ative somente se você controlar uma Montanha ou uma Planície."
+},
+"Enduring Tenacity": {
+"t": "Criatura Encantamento — Serpente Vislumbre",
+"x": "Toda vez que você ganha pontos de vida, o oponente alvo perde aquela quantidade de pontos de vida.\nQuando Enduring Tenacity morrer, se era uma criatura, devolva-o ao campo de batalha sob o controle de seu dono. Ele é um encantamento."
+},
+"Coruscation Mage": {
+"x": "Prole {2}\nToda vez que você conjura uma mágica que não seja de criatura, Coruscation Mage causa 1 ponto de dano a cada oponente."
+},
+"Riverpyre Verge": {
+"x": "{T}: Adicione {R}.\n{T}: Adicione {U}. Ative somente se você controlar uma Ilha ou uma Montanha."
+},
+"The Soul Stone": {
+"t": "Artefato Lendário — Joia do Infinito",
+"x": "Indestrutível\n{T}: Adicione {B}.\n{6}{B}, {T}, exile uma criatura que você controla: Domine The Soul Stone.\n∞ — No início de sua manutenção, devolva o card de criatura alvo de seu cemitério ao campo de batalha."
+},
+"Buster Sword": {
+"x": "A criatura equipada recebe +3/+2.\nToda vez que a criatura equipada causa dano de combate a um jogador, compre um card e depois você pode conjurar uma mágica de sua mão com valor de mana menor ou igual àquele dano sem pagar seu custo de mana.\nEquipar {2}"
+},
+"Enduring Curiosity": {
+"t": "Criatura Encantamento — Felino Vislumbre",
+"x": "Lampejo\nToda vez que uma criatura que você controla causa dano de combate a um jogador, compre um card.\nQuando Enduring Curiosity morrer, se era uma criatura, devolva-o ao campo de batalha sob o controle de seu dono. Ele é um encantamento."
+},
+"Nature's Rhythm": {
+"x": "Procure em seu grimório um card de criatura com valor de mana X ou menos, coloque-o no campo de batalha e depois embaralhe.\nHarmonizar {X}{G}{G}{G}{G}"
+},
+"Loot, Exuberant Explorer": {
+"x": "Você pode jogar um terreno adicional em cada um dos seus turnos.\n{4}{G}{G}, {T}: Olhe os seis cards do topo de seu grimório. Você pode revelar dentre eles um card de criatura com valor de mana menor ou igual ao número de terrenos que você controla e colocá-lo no campo de batalha. Coloque o restante no fundo em ordem aleatória."
+},
+"The Wind Crystal": {
+"x": "As mágicas brancas que você conjura custam {1} a menos para serem conjuradas.\nSe você fosse ganhar pontos de vida, em vez disso você ganha o dobro daquela quantidade.\n{4}{W}{W}, {T}: As criaturas que você controla ganham voar e vínculo com a vida até o final do turno."
+},
+"Evendo, Waking Haven": {
+"t": "Terreno — Planeta",
+"x": "Evendo, Waking Haven entra virado.\n{T}: Adicione {G}.\nEstação\n12+ | {G}, {T}: Adicione {G} para cada criatura que você controla."
+},
+"Reconnaissance": {
+"x": "{0}: Remova do combate a criatura atacante alvo que você controla e desvire-a."
+},
+"Monument to Endurance": {
+"x": "Toda vez que você descarta um card, escolha um que ainda não foi escolhido neste turno —\n• Compre um card.\n• Crie uma ficha de Tesouro.\n• Cada oponente perde 3 pontos de vida."
+},
+"Wastewood Verge": {
+"x": "{T}: Adicione {G}.\n{T}: Adicione {B}. Ative somente se você controlar um Pântano ou uma Floresta."
+},
+"Demonic Consultation": {
+"x": "Escolha um nome de card. Exile os seis cards do topo de seu grimório e depois revele cards do topo de seu grimório até revelar um card com o nome escolhido. Coloque aquele card em sua mão e exile todos os outros cards revelados dessa forma."
+},
+"Excalibur, Sword of Eden": {
+"x": "Esta mágica custa {X} a menos para ser conjurada, sendo X o valor de mana total das permanentes históricas que você controla.\nA criatura equipada recebe +10/+0 e tem vigilância.\nEquipar criatura lendária {2}"
+},
+"Fountainport": {
+"x": "{T}: Adicione {C}.\n{2}, {T}, sacrifique uma ficha: Compre um card.\n{3}, {T}, pague 1 ponto de vida: Crie uma ficha de criatura Peixe 1/1 azul.\n{4}, {T}: Crie uma ficha de Tesouro."
+},
+"Tataru Taru": {
+"x": "Quando Tataru Taru entrar, você compra um card e o oponente alvo pode comprar um card.\nSecretária dos Herdeiros — Toda vez que um oponente compra um card, se não for o turno daquele jogador, crie uma ficha de Tesouro virada. Esta habilidade só é desencadeada uma vez por turno."
+},
+"Willowrush Verge": {
+"x": "{T}: Adicione {U}.\n{T}: Adicione {G}. Ative somente se você controlar uma Floresta ou uma Ilha."
+},
+"Genji Glove": {
+"x": "A criatura equipada tem golpe duplo.\nToda vez que a criatura equipada ataca, se for a primeira fase de combate do turno, desvire-a. Depois desta fase, há uma fase de combate adicional.\nEquipar {3}"
+},
+"Razorkin Needlehead": {
+"x": "Razorkin Needlehead tem iniciativa durante o seu turno.\nToda vez que um oponente compra um card, Razorkin Needlehead causa 1 ponto de dano a ele."
+},
+"Restoration Magic": {
+"x": "Escalonada\n• Cure — {0} — A permanente alvo ganha resistência a magia e indestrutível até o final do turno.\n• Cura — {1} — A permanente alvo ganha resistência a magia e indestrutível até o final do turno. Você ganha 3 pontos de vida.\n• Curaga — {3}{W} — As permanentes que você controla ganham resistência a magia e indestrutível até o final do turno. Você ganha 6 pontos de vida."
+},
+"Arcane Lighthouse": {
+"x": "{T}: Adicione {C}.\n{1}, {T}: Até o final do turno, as criaturas que seus oponentes controlam perdem resistência a magia e manto e não podem ter resistência a magia nem manto."
+},
+"Necromancy": {
+"x": "Você pode conjurar esta mágica como se ela tivesse lampejo. Se você a conjurar em um momento em que um feitiço não poderia ser conjurado, o controlador da permanente em que ela se torna a sacrifica no início da próxima etapa de limpeza.\nQuando Necromancy entrar, se estiver no campo de batalha, ele se torna uma Aura com \"encantar criatura colocada no campo de batalha com Necromancy\". Coloque o card de criatura alvo de um cemitério no campo de batalha sob seu controle e anexe Necromancy a ele. Quando Necromancy deixar o campo de batalha, o controlador daquela criatura a sacrifica."
+},
+"Herd Heirloom": {
+"x": "{T}: Adicione um mana de qualquer cor. Gaste este mana somente para conjurar uma mágica de criatura.\n{T}: Até o final do turno, a criatura alvo com poder 4 ou mais que você controla ganha atropelar e \"Toda vez que esta criatura causa dano de combate a um jogador, compre um card.\""
+},
+"Spellseeker": {
+"x": "Quando Spellseeker entrar, você pode procurar em seu grimório um card de mágica instantânea ou feitiço com valor de mana 2 ou menos, revelá-lo, colocá-lo em sua mão e depois embaralhar."
+},
+"Abandoned Air Temple": {
+"x": "Abandoned Air Temple entra virado, a menos que você controle um terreno básico.\n{T}: Adicione {W}.\n{3}{W}, {T}: Coloque um marcador +1/+1 em cada criatura que você controla."
+},
+"Vivi Ornitier": {
+"x": "{0}: Adicione X manas em qualquer combinação de {U} e/ou {R}, sendo X o poder de Vivi Ornitier. Ative somente durante o seu turno e somente uma vez por turno.\nToda vez que você conjura uma mágica que não seja de criatura, coloque um marcador +1/+1 em Vivi Ornitier e ele causa 1 ponto de dano a cada oponente."
+},
+"Exemplar of Light": {
+"x": "Voar\nToda vez que você ganha pontos de vida, coloque um marcador +1/+1 em Exemplar of Light.\nToda vez que você coloca um ou mais marcadores +1/+1 em Exemplar of Light, compre um card. Esta habilidade só é desencadeada uma vez por turno."
+},
+"Marvin, Murderous Mimic": {
+"t": "Criatura Artefato Lendária — Brinquedo",
+"x": "Marvin tem todas as habilidades ativadas das criaturas que você controla que não tenham o mesmo nome que ele."
+},
+"Badgermole Cub": {
+"x": "Quando Badgermole Cub entrar, dobre terra 1.\nToda vez que você vira uma criatura para gerar mana, adicione um {G} adicional."
+},
+"The Darkness Crystal": {
+"x": "As mágicas pretas que você conjura custam {1} a menos para serem conjuradas.\nSe uma criatura que não seja ficha que um oponente controla fosse morrer, em vez disso exile-a e você ganha 2 pontos de vida.\n{4}{B}{B}, {T}: Coloque o card de criatura alvo exilado com The Darkness Crystal no campo de batalha virado sob seu controle com dois marcadores +1/+1 adicionais."
+},
+"Tezzeret, Cruel Captain": {
+"x": "Toda vez que um artefato que você controla entra, coloque um marcador de lealdade em Tezzeret.\n0: Desvire o artefato ou criatura alvo. Se for uma criatura artefato, coloque um marcador +1/+1 nela.\n−3: Procure em seu grimório um card de artefato com valor de mana 1 ou menos, revele-o, coloque-o em sua mão e depois embaralhe.\n−7: Você recebe um emblema com \"No início do combate no seu turno, coloque três marcadores +1/+1 no artefato alvo que você controla. Se ele não for uma criatura, ele se torna uma criatura artefato Robô 0/0.\""
+},
+"Lumra, Bellow of the Woods": {
+"x": "Alcance, vigilância\nO poder e a resistência de Lumra são iguais ao número de terrenos que você controla.\nQuando Lumra entrar, triture quatro cards. Depois, devolva todos os cards de terreno de seu cemitério ao campo de batalha virados."
+},
+"City of Traitors": {
+"x": "Quando você jogar outro terreno, sacrifique City of Traitors.\n{T}: Adicione {C}{C}."
+},
+"Enduring Courage": {
+"t": "Criatura Encantamento — Cão Vislumbre",
+"x": "Toda vez que outra criatura que você controla entra, ela recebe +2/+0 e ganha ímpeto até o final do turno.\nQuando Enduring Courage morrer, se era uma criatura, devolva-o ao campo de batalha sob o controle de seu dono. Ele é um encantamento."
+},
+"Windcrag Siege": {
+"x": "Conforme Windcrag Siege entra, escolha Mardu ou Jeskai.\n• Mardu — Se uma criatura atacando fizer com que uma habilidade desencadeada de uma permanente que você controla seja desencadeada, aquela habilidade é desencadeada uma vez adicional.\n• Jeskai — No início de sua manutenção, crie uma ficha de criatura Goblin 1/1 vermelha. Ela ganha vínculo com a vida e ímpeto até o final do turno."
+},
+"Summon: Bahamut": {
+"x": "I, II — Destrua até uma permanente alvo que não seja terreno.\nIII — Compre dois cards.\nIV — Mega Flare — Summon: Bahamut causa a cada oponente dano igual ao valor de mana total das outras permanentes que você controla.\nVoar"
+},
+"Midgar, City of Mako // Reactor Raid": {
+"t": "Terreno — Cidade // Feitiço — Aventura",
+"x": "Midgar, City of Mako\nEste terreno entra virado.\n{T}: Adicione {B}.\n—\nReactor Raid {2}{B}\nVocê pode sacrificar um artefato ou criatura. Se fizer isso, compre dois cards."
+},
+"Wan Shi Tong, Librarian": {
+"x": "Lampejo\nVoar, vigilância\nQuando Wan Shi Tong entrar, coloque X marcadores +1/+1 nele. Depois, compre metade de X cards, arredondado para baixo.\nToda vez que um oponente procura no próprio grimório, coloque um marcador +1/+1 em Wan Shi Tong e compre um card."
+},
+"Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel": {
+"f": [
+{
+"x": "Toda vez que Sephiroth entra ou ataca, você pode sacrificar outra criatura. Se fizer isso, compre um card.\nToda vez que outra criatura morre, o oponente alvo perde 1 ponto de vida e você ganha 1 ponto de vida. Se esta for a quarta vez que esta habilidade é resolvida neste turno, transforme Sephiroth."
+},
+{
+"x": "Voar\nSuper Nova — Conforme esta criatura se transforma em Sephiroth, One-Winged Angel, você recebe um emblema com \"Toda vez que uma criatura morre, o oponente alvo perde 1 ponto de vida e você ganha 1 ponto de vida.\"\nToda vez que Sephiroth ataca, você pode sacrificar qualquer número de outras criaturas. Se fizer isso, compre aquela quantidade de cards."
+}
+]
+},
+"Uthros, Titanic Godcore": {
+"t": "Terreno — Planeta",
+"x": "Uthros, Titanic Godcore entra virado.\n{T}: Adicione {U}.\nEstação\n12+ | {U}, {T}: Adicione {U} para cada artefato que você controla."
+},
+"Sphere Grid": {
+"x": "Toda vez que uma criatura que você controla causa dano de combate a um jogador, coloque um marcador +1/+1 naquela criatura.\nDesbloquear Habilidade — As criaturas que você controla com marcadores +1/+1 têm alcance e atropelar."
+},
+"Formidable Speaker": {
+"x": "Quando Formidable Speaker entrar, você pode descartar um card. Se fizer isso, procure em seu grimório um card de criatura, revele-o, coloque-o em sua mão e depois embaralhe.\n{1}, {T}: Desvire outra permanente alvo."
+},
+"Electro, Assaulting Battery": {
+"t": "Criatura Lendária — Humano Vilão",
+"x": "Voar\nVocê não perde mana vermelho não gasto quando as etapas e fases terminam.\nToda vez que você conjura uma mágica instantânea ou feitiço, adicione {R}.\nQuando Electro deixar o campo de batalha, você pode pagar {X}. Quando fizer isso, ele causa X pontos de dano ao jogador alvo."
+},
+"Arachnogenesis": {
+"x": "Crie X fichas de criatura Aranha 1/2 verdes com alcance, sendo X o número de criaturas atacando você. Previna todo o dano de combate que seria causado neste turno por criaturas que não sejam Aranhas."
+},
+"Bane of Progress": {
+"x": "Quando Bane of Progress entrar, destrua todos os artefatos e encantamentos. Coloque um marcador +1/+1 em Bane of Progress para cada permanente destruída dessa forma."
+},
+"Exalted Sunborn": {
+"x": "Voar, vínculo com a vida\nSe uma ou mais fichas fossem ser criadas sob seu controle, em vez disso é criado o dobro daquelas fichas.\nDobra {1}{W}"
+},
+"Secret Tunnel": {
+"x": "Secret Tunnel não pode ser bloqueado.\n{T}: Adicione {C}.\n{4}, {T}: Duas criaturas alvo que você controla que compartilham um tipo de criatura não podem ser bloqueadas neste turno."
+},
+"Agate Instigator": {
+"x": "Prole {1}{R}\nToda vez que outra criatura que você controla entra, Agate Instigator causa 1 ponto de dano a cada oponente."
+},
+"Sheltered by Ghosts": {
+"x": "Encantar criatura que você controla\nQuando Sheltered by Ghosts entrar, exile a permanente alvo que não seja terreno que um oponente controla até que Sheltered by Ghosts deixe o campo de batalha.\nA criatura encantada recebe +1/+0 e tem vínculo com a vida e salvaguarda {2}."
+},
+"Weftstalker Ardent": {
+"t": "Criatura — Drix Artífice",
+"x": "Toda vez que outra criatura ou artefato que você controla entra, Weftstalker Ardent causa 1 ponto de dano a cada oponente.\nDobra {R}"
+},
+"Pollywog Prodigy": {
+"x": "Evoluir\nToda vez que um oponente conjura uma mágica que não seja de criatura com valor de mana menor que o poder de Pollywog Prodigy, compre um card."
+},
+"Hedge Shredder": {
+"x": "Toda vez que Hedge Shredder ataca, você pode triturar dois cards.\nToda vez que um ou mais cards de terreno são colocados em seu cemitério vindos de seu grimório, coloque-os no campo de batalha virados.\nTripular 1"
+},
+"Full Throttle": {
+"x": "Depois desta fase principal, há duas fases de combate adicionais.\nNo início de cada combate neste turno, desvire todas as criaturas que atacaram neste turno."
+},
+"Valgavoth, Terror Eater": {
+"x": "Voar, vínculo com a vida\nSalvaguarda — Sacrifique três permanentes que não sejam terrenos.\nSe um card que você não controlava fosse ser colocado no cemitério de um oponente vindo de qualquer lugar, em vez disso exile-o.\nDurante o seu turno, você pode jogar os cards exilados com Valgavoth. Se você conjurar uma mágica dessa forma, pague pontos de vida iguais ao valor de mana dela em vez de pagar seu custo de mana."
+},
+"Alexios, Deimos of Kosmos": {
+"x": "Atropelar\nAlexios ataca a cada combate se estiver apto, não pode ser sacrificado e não pode atacar seu dono.\nNo início da manutenção de cada jogador, aquele jogador ganha o controle de Alexios, desvira-o e coloca um marcador +1/+1 nele. Ele ganha ímpeto até o final do turno."
+},
+"Haliya, Guided by Light": {
+"x": "Toda vez que Haliya ou outra criatura ou artefato que você controla entra, você ganha 1 ponto de vida.\nNo início de sua etapa final, compre um card se você ganhou 3 ou mais pontos de vida neste turno.\nDobra {W}"
+},
+"Carpet of Flowers": {
+"x": "No início de cada uma de suas fases principais, se você ainda não adicionou mana com esta habilidade neste turno, você pode adicionar X manas de uma cor qualquer, sendo X o número de Ilhas que o oponente alvo controla."
+},
+"Lindblum, Industrial Regency // Mage Siege": {
+"t": "Terreno — Cidade // Mágica Instantânea — Aventura",
+"x": "Lindblum, Industrial Regency\nEste terreno entra virado.\n{T}: Adicione {R}.\n—\nMage Siege {2}{R}\nCrie uma ficha de criatura Mago 0/1 preta com \"Toda vez que você conjura uma mágica que não seja de criatura, esta ficha causa 1 ponto de dano a cada oponente.\""
+},
+"Muraganda Raceway": {
+"x": "Liguem os motores!\n{T}: Adicione {C}.\nVelocidade máxima — {T}: Adicione {C}{C}."
+},
+"Ishgard, the Holy See // Faith & Grief": {
+"t": "Terreno — Cidade // Feitiço — Aventura",
+"x": "Ishgard, the Holy See\nEste terreno entra virado.\n{T}: Adicione {W}.\n—\nFaith & Grief {3}{W}{W}\nDevolva até dois cards alvo de artefato e/ou encantamento de seu cemitério para sua mão."
+},
+"Chronicle of Victory": {
+"x": "Conforme Chronicle of Victory entra, escolha um tipo de criatura.\nAs criaturas do tipo escolhido que você controla recebem +2/+2 e têm iniciativa e atropelar.\nToda vez que você conjura uma mágica do tipo escolhido, compre um card."
+},
+"The Water Crystal": {
+"x": "As mágicas azuis que você conjura custam {1} a menos para serem conjuradas.\nSe um oponente fosse triturar um ou mais cards, em vez disso ele tritura aquela quantidade de cards mais quatro.\n{4}{U}{U}, {T}: Cada oponente tritura cards iguais ao número de cards em sua mão."
+},
+"Legolas's Quick Reflexes": {
+"x": "Fração de segundo\nDesvire a criatura alvo. Até o final do turno, ela ganha alcance, resistência a magia e \"Toda vez que esta criatura é virada, ela causa dano igual ao seu poder a até uma criatura alvo.\""
+},
+"Silent Hallcreeper": {
+"x": "Silent Hallcreeper não pode ser bloqueado.\nToda vez que Silent Hallcreeper causa dano de combate a um jogador, escolha um que ainda não foi escolhido —\n• Coloque dois marcadores +1/+1 em Silent Hallcreeper.\n• Compre um card.\n• Silent Hallcreeper se torna uma cópia de outra criatura alvo que você controla."
+},
+"Caduceus, Staff of Hermes": {
+"x": "A criatura equipada tem vínculo com a vida.\nEnquanto você tiver 30 ou mais pontos de vida, a criatura equipada recebe +5/+5 e tem indestrutível e \"Previna todo o dano que seria causado a esta criatura.\"\nEquipar {W}{W}"
+},
+"Concordant Crossroads": {
+"x": "Todas as criaturas têm ímpeto."
+},
+"Avatar's Wrath": {
+"x": "Escolha até uma criatura alvo e depois dobre ar em todas as outras criaturas.\nAté o seu próximo turno, seus oponentes não podem conjurar mágicas de nenhum lugar que não seja a mão deles.\nExile Avatar's Wrath."
+},
+"Ouroboroid": {
+"x": "No início do combate no seu turno, coloque X marcadores +1/+1 em cada criatura que você controla, sendo X o poder de Ouroboroid."
+},
+"The Eternity Elevator": {
+"t": "Artefato Lendário — Espaçonave",
+"x": "{T}: Adicione {C}{C}{C}.\nEstação\n20+ | {T}: Adicione X manas de uma cor qualquer, sendo X o número de marcadores de carga em The Eternity Elevator."
+},
+"Grab the Prize": {
+"x": "Como custo adicional para conjurar esta mágica, descarte um card.\nCompre dois cards. Se o card descartado não era um card de terreno, Grab the Prize causa 2 pontos de dano a cada oponente."
+},
+"Long River's Pull": {
+"x": "Presentear um card\nAnule a mágica de criatura alvo. Se o presente foi prometido, em vez disso anule a mágica alvo."
+},
+"Stridehangar Automaton": {
+"x": "Os Tópteros que você controla recebem +1/+1.\nSe uma ou mais fichas de artefato fossem ser criadas sob seu controle, em vez disso são criadas aquelas fichas mais uma ficha de criatura artefato Tóptero 1/1 incolor com voar."
+},
+"Exploration Broodship": {
+"t": "Artefato — Espaçonave",
+"x": "Estação\n3+ | Você pode jogar um terreno adicional em cada um dos seus turnos.\n8+ | Voar\nUma vez durante cada um dos seus turnos, você pode conjurar uma mágica de permanente de seu cemitério sacrificando um terreno além de pagar seus outros custos."
+},
+"Twitching Doll": {
+"t": "Criatura Artefato — Aranha Brinquedo",
+"x": "{T}: Adicione um mana de qualquer cor. Coloque um marcador de ninho em Twitching Doll.\n{T}, sacrifique Twitching Doll: Crie uma ficha de criatura Aranha 2/2 verde com alcance para cada marcador em Twitching Doll. Ative somente como um feitiço."
+},
+"Meren of Clan Nel Toth": {
+"x": "Toda vez que outra criatura que você controla morre, você recebe um marcador de experiência.\nNo início de sua etapa final, escolha o card de criatura alvo em seu cemitério. Se o valor de mana daquele card for menor ou igual ao número de marcadores de experiência que você tem, devolva-o ao campo de batalha. Caso contrário, coloque-o em sua mão."
+},
+"Cloud, Midgar Mercenary": {
+"x": "Quando Cloud entrar, procure em seu grimório um card de Equipamento, revele-o, coloque-o em sua mão e depois embaralhe.\nEnquanto Cloud estiver equipado, se uma habilidade desencadeada de Cloud ou de um Equipamento anexado a ele for desencadeada, aquela habilidade é desencadeada uma vez adicional."
+},
+"Adagia, Windswept Bastion": {
+"t": "Terreno — Planeta",
+"x": "Adagia, Windswept Bastion entra virado.\n{T}: Adicione {W}.\nEstação\n12+ | {3}{W}, {T}: Crie uma ficha que seja uma cópia do artefato ou encantamento alvo que você controla, exceto que ela é lendária. Ative somente como um feitiço."
+},
+"Artist's Talent": {
+"x": "Toda vez que você conjura uma mágica que não seja de criatura, você pode descartar um card. Se fizer isso, compre um card.\n{2}{R}: Nível 2\nAs mágicas que não sejam de criatura que você conjura custam {1} a menos para serem conjuradas.\n{2}{R}: Nível 3\nSe uma fonte que você controla fosse causar dano que não seja de combate a um oponente ou a uma permanente que um oponente controla, em vez disso ela causa aquele dano mais 2."
+},
+"Dour Port-Mage": {
+"x": "Toda vez que uma ou mais outras criaturas que você controla deixam o campo de batalha sem morrer, compre um card.\n{1}{U}, {T}: Devolva outra criatura alvo que você controla para a mão de seu dono."
+},
+"Mazirek, Kraul Death Priest": {
+"x": "Voar\nToda vez que um jogador sacrifica outra permanente, coloque um marcador +1/+1 em cada criatura que você controla."
+},
+"Codsworth, Handy Helper": {
+"t": "Criatura Artefato Lendária — Robô",
+"x": "Os comandantes que você controla têm salvaguarda {2}.\n{T}: Adicione {W}{W}. Gaste este mana somente para conjurar mágicas de Aura e/ou Equipamento.\n{T}: Anexe a Aura ou Equipamento alvo que você controla à criatura alvo que você controla. Ative somente como um feitiço."
+},
+"Frostcliff Siege": {
+"x": "Conforme Frostcliff Siege entra, escolha Jeskai ou Temur.\n• Jeskai — Toda vez que uma ou mais criaturas que você controla causam dano de combate a um jogador, compre um card.\n• Temur — As criaturas que você controla recebem +1/+0 e têm atropelar e ímpeto."
+},
+"Unstoppable Slasher": {
+"x": "Toque mortífero\nToda vez que Unstoppable Slasher causa dano de combate a um jogador, ele perde metade dos pontos de vida, arredondado para cima.\nQuando Unstoppable Slasher morrer, se não tinha marcadores, devolva-o ao campo de batalha virado sob o controle de seu dono com dois marcadores de atordoamento."
+},
+"Ba Sing Se": {
+"x": "Ba Sing Se entra virado, a menos que você controle um terreno básico.\n{T}: Adicione {G}.\n{2}{G}, {T}: Dobre terra 2. Ative somente como um feitiço."
+},
+"Fire Nation Palace": {
+"x": "Fire Nation Palace entra virado, a menos que você controle um terreno básico.\n{T}: Adicione {R}.\n{1}{R}, {T}: A criatura alvo que você controla ganha dobra de fogo 4 até o final do turno."
+},
+"Uthros Research Craft": {
+"t": "Artefato — Espaçonave",
+"x": "Estação\n3+ | Toda vez que você conjura uma mágica de artefato, compre um card. Coloque um marcador de carga em Uthros Research Craft.\n12+ | Voar\nUthros Research Craft recebe +1/+0 para cada artefato que você controla."
+},
+"Desynchronization": {
+"x": "Devolva cada permanente que não seja terreno e que não seja histórica para a mão de seu dono."
+},
+"Goblin Welder": {
+"x": "{T}: Escolha o artefato alvo que um jogador controla e o card de artefato alvo no cemitério daquele jogador. Se ambos os alvos ainda forem válidos quando esta habilidade for resolvida, aquele jogador simultaneamente sacrifica o artefato e devolve o card de artefato ao campo de batalha."
+},
+"Overprotect": {
+"x": "A criatura alvo que você controla recebe +3/+3 e ganha atropelar, resistência a magia e indestrutível até o final do turno."
+},
+"Parting Gust": {
+"x": "Presentear um Peixe virado\nExile a criatura alvo que não seja ficha. Se o presente não foi prometido, devolva aquele card ao campo de batalha sob o controle de seu dono com um marcador +1/+1 no início da próxima etapa final."
+},
+"Galadriel's Dismissal": {
+"x": "Reforçar {2}{W}\nA criatura alvo sai de fase. Se esta mágica foi reforçada, em vez disso cada criatura que o jogador alvo controla sai de fase."
+},
+"Gleaming Splendor": {
+"x": "Toda vez que um oponente compra o segundo card dele em cada turno, você cria uma ficha de Tesouro.\n{2}{W}: Dois jogadores alvo compram um card cada."
+},
+"Ugin, Eye of the Storms": {
+"x": "Quando você conjurar esta mágica, exile até uma permanente alvo que tenha uma ou mais cores.\nToda vez que você conjura uma mágica incolor, exile até uma permanente alvo que tenha uma ou mais cores.\n+2: Você ganha 3 pontos de vida e compra um card.\n0: Adicione {C}{C}{C}.\n−11: Procure em seu grimório qualquer número de cards incolores que não sejam terrenos, exile-os e depois embaralhe. Até o final do turno, você pode conjurar aqueles cards sem pagar seus custos de mana."
+},
+"Alesha, Who Laughs at Fate": {
+"x": "Iniciativa\nToda vez que Alesha ataca, coloque um marcador +1/+1 nela.\nAtaque-surpresa — No início de sua etapa final, se você atacou neste turno, devolva o card de criatura alvo com valor de mana menor ou igual ao poder de Alesha de seu cemitério ao campo de batalha."
+},
+"Renewed Solidarity": {
+"x": "Conforme Renewed Solidarity entra, escolha um tipo de criatura.\nAs criaturas do tipo escolhido que você controla recebem +1/+0.\nNo início de sua etapa final, para cada ficha do tipo escolhido que você controla que entrou neste turno, crie uma ficha que seja uma cópia dela."
+},
+"Twenty-Toed Toad": {
+"x": "O tamanho máximo de sua mão é vinte.\nToda vez que você ataca com duas ou mais criaturas, coloque um marcador +1/+1 em Twenty-Toed Toad e compre um card.\nToda vez que Twenty-Toed Toad ataca, você vence o jogo se houver vinte ou mais marcadores nele ou se você tiver vinte ou mais cards na mão."
+},
+"Chameleon, Master of Disguise": {
+"t": "Criatura Lendária — Humano Metamorfo Vilão",
+"x": "Você pode fazer com que Chameleon entre como uma cópia de uma criatura que você controla, exceto que o nome dele é Chameleon, Master of Disguise.\nCaos {2}{U}"
+},
+"Grenzo, Havoc Raiser": {
+"x": "Toda vez que uma criatura que você controla causa dano de combate a um jogador, escolha um —\n• Incite a criatura alvo que aquele jogador controla.\n• Exile o card do topo do grimório daquele jogador. Até o final do turno, você pode conjurar aquele card e pode gastar mana como se fosse mana de qualquer cor para conjurar aquela mágica."
+},
+"Teval's Judgment": {
+"x": "Toda vez que um ou mais cards deixam seu cemitério, escolha um que ainda não foi escolhido neste turno —\n• Compre um card.\n• Crie uma ficha de Tesouro.\n• Crie uma ficha de criatura Zumbi Druida 2/2 preta."
+},
+"Allosaurus Shepherd": {
+"x": "Esta mágica não pode ser anulada.\nAs mágicas verdes que você controla não podem ser anuladas.\n{4}{G}{G}: Até o final do turno, cada criatura Elfo que você controla tem poder e resistência básicos 5/5 e se torna um Dinossauro além de seus outros tipos de criatura."
+},
+"Horizon Explorer": {
+"x": "Os terrenos que você controla entram desvirados.\nToda vez que você ataca um jogador, crie uma ficha de Lander."
+},
+"Ondu Spiritdancer": {
+"x": "Toda vez que um encantamento que você controla entra, você pode criar uma ficha que seja uma cópia dele. Faça isso somente uma vez por turno."
+},
+"Springleaf Parade": {
+"x": "Quando Springleaf Parade entrar, crie X fichas de criatura Metamorfo 1/1 incolores com morfolóide.\nAs fichas de criatura que você controla têm \"{T}: Adicione um mana de qualquer cor.\""
+},
+"Tannuk, Memorial Ensign": {
+"x": "Aterragem — Toda vez que um terreno que você controla entra, Tannuk causa 1 ponto de dano a cada oponente. Se esta for a segunda vez que esta habilidade é resolvida neste turno, compre um card."
+},
+"Quantum Misalignment": {
+"x": "Crie uma ficha que seja uma cópia da criatura alvo que você controla, exceto que ela não é lendária.\nRicochetear"
+},
+"Susur Secundi, Void Altar": {
+"t": "Terreno — Planeta",
+"x": "Susur Secundi, Void Altar entra virado.\n{T}: Adicione {B}.\nEstação\n12+ | {1}{B}, {T}, pague 2 pontos de vida, sacrifique uma criatura: Compre cards iguais ao poder da criatura sacrificada. Ative somente como um feitiço."
+},
+"Bitterbloom Bearer": {
+"x": "Lampejo\nVoar\nNo início de sua manutenção, você perde 1 ponto de vida e cria uma ficha de criatura Fada 1/1 azul e preta com voar."
+},
+"Overlord of the Hauntwoods": {
+"x": "Iminente 4—{1}{G}{G}\nToda vez que Overlord of the Hauntwoods entra ou ataca, crie uma ficha de terreno incolor virada chamada Everywhere que é de todos os tipos de terreno básico."
+},
+"Knuckles the Echidna": {
+"t": "Criatura Lendária — Equidna Guerreiro",
+"x": "Golpe duplo, atropelar, ímpeto\nToda vez que uma ou mais criaturas que você controla causam dano de combate a um jogador, crie uma ficha de Tesouro.\nCaçador de Tesouros — No início de sua manutenção, se você controla trinta ou mais artefatos, você vence o jogo."
+},
+"Starfield Vocalist": {
+"x": "Se uma permanente entrando no campo de batalha fizer com que uma habilidade desencadeada de uma permanente que você controla seja desencadeada, aquela habilidade é desencadeada uma vez adicional.\nDobra {1}{U}"
+},
+"Season of Gathering": {
+"x": "Escolha até cinco {P} em modos. Você pode escolher o mesmo modo mais de uma vez.\n{P} — Coloque um marcador +1/+1 em uma criatura que você controla. Ela ganha vigilância e atropelar até o final do turno.\n{P}{P} — Escolha artefato ou encantamento. Destrua todas as permanentes do tipo escolhido.\n{P}{P}{P} — Compre cards iguais ao maior poder entre as criaturas que você controla."
+},
+"Adaptive Omnitool": {
+"x": "A criatura equipada recebe +1/+1 para cada artefato que você controla.\nToda vez que a criatura equipada ataca, olhe os seis cards do topo de seu grimório. Você pode revelar um card de artefato dentre eles e colocá-lo em sua mão. Coloque o restante no fundo de seu grimório em ordem aleatória.\nEquipar {3}"
+},
+"Call Forth the Tempest": {
+"x": "Cascata, cascata\nCall Forth the Tempest causa a cada criatura que seus oponentes controlam dano igual ao valor de mana total das outras mágicas que você conjurou neste turno."
+},
+"The Aetherspark": {
+"t": "Artefato Lendário Planeswalker — Equipamento",
+"x": "Enquanto The Aetherspark estiver anexado a uma criatura, The Aetherspark não pode ser atacado e tem \"Toda vez que a criatura equipada causa dano de combate durante o seu turno, coloque aquela quantidade de marcadores de lealdade em The Aetherspark.\"\n+1: Anexe The Aetherspark a até uma criatura alvo que você controla. Coloque um marcador +1/+1 naquela criatura.\n−5: Compre dois cards.\n−10: Adicione dez manas de uma cor qualquer."
+},
+"The Walls of Ba Sing Se": {
+"x": "Defensor\nAs outras permanentes que você controla têm indestrutível."
+},
+"Silver Shroud Costume": {
+"x": "Lampejo\nQuando Silver Shroud Costume entrar, anexe-o à criatura alvo que você controla. Aquela criatura ganha manto até o final do turno.\nA criatura equipada não pode ser bloqueada.\nEquipar {3}"
+},
+"Korvold, Fae-Cursed King": {
+"x": "Voar\nToda vez que Korvold entra ou ataca, sacrifique outra permanente.\nToda vez que você sacrifica uma permanente, coloque um marcador +1/+1 em Korvold e compre um card."
+},
+"Colossal Grave-Reaver": {
+"x": "Voar\nToda vez que Colossal Grave-Reaver entra ou ataca, triture três cards.\nToda vez que um ou mais cards de criatura são colocados em seu cemitério vindos de seu grimório, coloque um deles no campo de batalha."
+},
+"Demonic Counsel": {
+"x": "Procure em seu grimório um card de Demônio, revele-o, coloque-o em sua mão e depois embaralhe.\nDelírio — Se houver quatro ou mais tipos de card entre os cards em seu cemitério, em vez disso procure em seu grimório qualquer card, coloque-o em sua mão e depois embaralhe."
+},
+"Traveling Chocobo": {
+"x": "Você pode olhar o card do topo de seu grimório a qualquer momento.\nVocê pode jogar terrenos e conjurar mágicas de Ave do topo de seu grimório.\nSe um terreno ou Ave que você controla entrando no campo de batalha fizer com que uma habilidade desencadeada de uma permanente que você controla seja desencadeada, aquela habilidade é desencadeada uma vez adicional."
+},
+"Power Fist": {
+"x": "A criatura equipada tem atropelar e \"Toda vez que esta criatura causa dano de combate a um jogador, coloque aquela quantidade de marcadores +1/+1 nela.\"\nEquipar {2}"
+},
+"Song of the Dryads": {
+"x": "Encantar permanente\nA permanente encantada é um terreno Floresta incolor."
+},
+"Anticausal Vestige": {
+"x": "Quando Anticausal Vestige deixar o campo de batalha, compre um card e depois você pode colocar no campo de batalha, virado, um card de permanente de sua mão com valor de mana menor ou igual ao número de terrenos que você controla.\nDobra {4}"
+},
+"Lazotep Quarry": {
+"x": "{T}: Adicione {C}.\n{T}, sacrifique uma criatura: Adicione um mana de qualquer cor.\n{X}{2}, {T}, sacrifique um Deserto: Exile o card de criatura alvo com valor de mana X de seu cemitério. Crie uma ficha que seja uma cópia dele, exceto que ela é um Zumbi 4/4 preto. Ative somente como um feitiço."
+},
+"Walk-In Closet // Forgotten Cellar": {
+"t": "Encantamento — Sala // Encantamento — Sala",
+"x": "Walk-In Closet {2}{G}\nVocê pode jogar terrenos de seu cemitério.\n—\nForgotten Cellar {3}{G}{G}\nQuando você destrancar esta porta, você pode conjurar mágicas de seu cemitério neste turno e, se um card fosse ser colocado em seu cemitério vindo de qualquer lugar neste turno, em vez disso exile-o."
+},
+"Eldritch Immunity": {
+"x": "A criatura alvo que você controla ganha proteção contra cada cor até o final do turno.\nSobrecarga {4}{C}"
+},
+"Summon: Titan": {
+"x": "I — Triture cinco cards.\nII — Devolva todos os cards de terreno de seu cemitério ao campo de batalha virados.\nIII — Até o final do turno, outra criatura alvo que você controla ganha atropelar e recebe +X/+X, sendo X o número de terrenos que você controla.\nAlcance, atropelar"
+},
+"Summon: Fenrir": {
+"x": "I — Presa Crescente — Procure em seu grimório um card de terreno básico, coloque-o no campo de batalha virado e depois embaralhe.\nII — Uivo aos Céus — Quando você conjurar a próxima mágica de criatura neste turno, aquela criatura entra com um marcador +1/+1 adicional.\nIII — Rosnado Eclíptico — Compre um card se você controla a criatura com o maior poder ou empatada com o maior poder."
+},
+"For the Common Good": {
+"x": "Crie X fichas que sejam cópias da ficha alvo que você controla. Depois, as fichas que você controla ganham indestrutível até o seu próximo turno. Você ganha 1 ponto de vida para cada ficha que você controla."
+},
+"The Last Agni Kai": {
+"x": "A criatura alvo que você controla luta com a criatura alvo que um oponente controla. Se a criatura que o oponente controla sofrer dano excedente dessa forma, adicione aquela quantidade de {R}.\nAté o final do turno, você não perde mana vermelho não gasto quando as etapas e fases terminam."
+},
+"Split Up": {
+"x": "Escolha um —\n• Destrua todas as criaturas viradas.\n• Destrua todas as criaturas desviradas."
+},
+"Insidious Fungus": {
+"x": "{2}, sacrifique Insidious Fungus: Escolha um —\n• Destrua o artefato alvo.\n• Destrua o encantamento alvo.\n• Compre um card. Depois, você pode colocar um card de terreno de sua mão no campo de batalha virado."
+},
+"Dazzling Theater // Prop Room": {
+"t": "Encantamento — Sala // Encantamento — Sala",
+"x": "Dazzling Theater {3}{W}\nAs mágicas de criatura que você conjura têm convocar.\n—\nProp Room {2}{W}\nDesvire cada criatura que você controla durante a etapa de desvirar de cada outro jogador."
+},
+"Patrolling Peacemaker": {
+"t": "Criatura Artefato — Robô Soldado",
+"x": "Patrolling Peacemaker entra com dois marcadores +1/+1.\nToda vez que um oponente comete um crime, prolifere."
+}
+}

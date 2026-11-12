@@ -1,0 +1,127 @@
+MESA ARCANA - simulador offline de Commander (programa para Windows)
+====================================================================
+
+COMO USAR
+1. Copie a pasta "MesaArcana" inteira para o pendrive.
+2. Clique duas vezes em MesaArcana.exe. Nao precisa instalar nada nem ter internet.
+   (Se o Windows mostrar o aviso "O Windows protegeu o computador", clique em
+   "Mais informacoes" e depois em "Executar assim mesmo". O aviso aparece porque
+   o programa nao tem assinatura digital.)
+
+O QUE JA VEM DENTRO
+- O texto de todas as cartas de Magic (33 mil cartas e 1.500 fichas, dados do
+  Scryfall de 11/11/2026) esta embutido no programa. Qualquer lista funciona
+  sem internet, com as cartas no estilo proxy de playtest (nome, custo, tipo,
+  texto e poder/resistencia).
+- decks/Gabranth.txt: o deck do Gabranth, pronto para jogar.
+
+ADICIONAR OU EDITAR UM DECK
+- Clique em "Novo deck / importar lista". Se voce ja copiou a lista (Ctrl+C),
+  ela entra direto no editor; senao, use "Colar lista copiada" ou Ctrl+V.
+- Aceita listas do Moxfield, Archidekt, Arena, MTGO e do bloco de notas
+  ("1 Nome da carta", "1x Nome", com ou sem edicao). Nomes em ingles.
+- O editor mostra o que foi reconhecido, separado por tipo. Nomes errados
+  aparecem em vermelho com sugestoes: clique na sugestao para corrigir.
+- "Adicionar carta pelo nome" busca no banco local (33 mil cartas).
+- Botoes - e + mudam a quantidade; "Cmd" marca o comandante.
+- "Salvar deck" grava um .txt na pasta "decks". "Editar deck" na tela
+  inicial reabre o editor. Arrastar um .txt para a janela tambem funciona.
+
+BRACKET E COMBOS (funciona sem internet)
+- Ao colar ou abrir um deck, o programa mostra a bracket estimada. O botao
+  "Bracket e combos" abre a analise completa.
+- Criterios: os oficiais das brackets de Commander (Game Changers, destruicao
+  em massa de terrenos, turnos extras e combos de 2 cartas).
+- Combos: banco do Commander Spellbook com 61 mil combos, guardado localmente.
+  Mostra os combos completos no deck e os que estao a 1 carta de distancia.
+- A bracket 5 (cEDH) depende da intencao do jogador e nao e detectada.
+- Em casa, o botao "Conferir online" compara com o Commander Spellbook.
+
+IMAGENS DAS CARTAS (opcional)
+- Em casa, com internet, clique em "Baixar imagens deste deck". Elas ficam em
+  dados/imagens, dentro do pendrive, e passam a aparecer no lugar dos proxies
+  em qualquer computador, mesmo sem internet.
+- Terrenos basicos usam sempre a arte do Bob Ross (Secret Lair), uma imagem
+  por terreno, e cada tipo de ficha usa uma unica imagem.
+- Em redes que bloqueiam o Scryfall (como a da faculdade) o botao so avisa que
+  nao conseguiu; o jogo continua funcionando com os proxies.
+
+CONTROLES
+- Arrastar: move cartas entre mao, campo, cemiterio, exilio, grimorio e comando.
+- Clique no campo: vira/desvira. Clique duplo na mao: joga a carta.
+- Clique no grimorio: compra. Clique no cemiterio ou exilio: abre a lista.
+- "Proximo turno" so desvira tudo: a compra e manual (clique no grimorio ou D),
+  para dar tempo aos gatilhos da manutencao.
+- "Proxima fase" (ou a faixa de fases em cima do campo) anuncia a fase:
+  Manutencao, Compra, Principal 1, Combate, Principal 2, Final.
+- Equipar/anexar: botao direito na carta, "Equipar / anexar em...", e clique
+  na carta que vai receber. A carta anexada anda junto com a outra.
+  Para soltar: arraste ela para outro lugar ou use "Desanexar".
+- Imposto do comandante: e manual. Botao direito no comandante, linha
+  "Imposto", botoes - e +.
+- Botao direito: menu completo (contadores, fichas, transformar, videncia,
+  buscar no grimorio, moer, mover para qualquer zona).
+- Atalhos: D comprar, F proxima fase, N proximo turno, U desvirar tudo, S embaralhar,
+  T fichas, Ctrl+Z desfazer, Esc fecha janelas. Shift ao soltar no grimorio
+  = fundo. Shift nos botoes de vida = 5 de cada vez.
+
+MULTIJOGADOR (rede local)
+- Na tela inicial, botao "Multijogador (rede local)".
+- Um jogador clica em "Criar mesa". Aparece o endereco dele (ex.: 192.168.0.12).
+- Os outros digitam esse endereco e clicam em "Entrar". Ate 6 jogadores.
+- Todos precisam estar na mesma rede (mesmo Wi-Fi, ou roteador do celular).
+  Na primeira vez o Windows pergunta sobre o firewall: clique em "Permitir".
+- Cada um abre o proprio deck. Em cima do campo aparecem os jogadores: clique
+  no nome para ver a mesa dele (campo, cemiterio, exilio, comando, vida, fase).
+  A mao e o grimorio dos outros aparecem so como quantidade de cartas.
+- Fases, turnos e jogadas publicas de cada um aparecem no registro de todos.
+
+COMBOS
+- Em "Bracket e combos", cada combo completo do deck vem com o passo a passo.
+- Os combos que faltam 1 carta ficam escondidos: botao "Mostrar o que falta 1 carta".
+
+CARTAS EM PORTUGUES
+- As cartas aparecem em portugues. O botao "Cartas em: Portugues" na tela
+  inicial troca para ingles e volta.
+- De onde vem o texto: cerca de 22 mil cartas tem o texto oficial em portugues
+  (Scryfall); 2,4 mil foram montadas com frases oficiais de outras cartas; as do
+  deck Gabranth e as mais jogadas de Commander que nunca sairam em portugues
+  foram traduzidas a mao. Quando a traducao nao e oficial, isso aparece embaixo
+  da carta. O que ainda nao tem traducao continua em ingles.
+- Listas de deck com o nome da carta em portugues tambem sao aceitas.
+- Para corrigir ou adicionar uma traducao: crie o arquivo dados/traducoes.json
+  assim (o nome em ingles e a chave):
+  { "Nome em Ingles": { "x": "texto em portugues", "t": "Tipo", "n": "Nome" } }
+- As fotos das cartas (quando baixadas) continuam em ingles; o texto em
+  portugues aparece na coluna da esquerda ao passar o mouse.
+
+PLAYMATS E SLEEVES
+- Botao "Aparencia" na tela inicial, ou botao direito no campo durante o jogo.
+- Para usar os seus: coloque imagens PNG ou JPG nas pastas playmats e sleeves,
+  ao lado do programa, e clique em "Atualizar". Playmat fica melhor deitado
+  (16:9); sleeve fica melhor em pe, no formato da carta.
+
+MAO REVELADA E CHAT (multijogador)
+- Com a mesa em rede, aparece o botao "Revelar mao" em cima da sua mao. Enquanto
+  estiver ligado, os outros veem as suas cartas ao abrir a sua mesa. Clique de
+  novo para esconder.
+- Chat: caixa de mensagem embaixo do registro, a esquerda. Enter envia.
+
+ESCOLHER A ARTE
+- Botao direito na carta ou na ficha, "Escolher a arte... (internet)". Aparecem
+  todas as impressoes do Scryfall; clique em uma e ela e baixada no lugar da
+  imagem atual. Vale para todos os decks. So funciona com o Scryfall liberado
+  (em casa).
+
+CRIAR CARTAS
+- Botao "Criar carta" na tela inicial (ou botao direito no campo, "Minhas
+  cartas"). Preencha nome, custo, tipo, texto e P/R e clique em Salvar. No
+  texto, use " / " (barra com espacos) para pular linha.
+- A carta fica guardada em dados/minhas-cartas.json. Para usar, escreva o nome
+  dela na lista do deck ou procure no editor de decks. Durante a partida, o
+  botao "Por na minha mao" coloca uma copia direto na mao.
+- Imagem (opcional): com a carta salva e aberta nessa janela, arraste um
+  arquivo PNG ou JPG para dentro do programa.
+
+Projeto pessoal, nao oficial. Dados de cartas: Scryfall.
+Magic: The Gathering e marca da Wizards of the Coast.

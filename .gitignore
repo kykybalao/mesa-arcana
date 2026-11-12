@@ -1,0 +1,13 @@
+*.exe
+build/mesa-linux
+build/run/
+build/net*/
+build/wrun/
+build/pkg/
+build/__pycache__/
+*.log
+dados/config.json
+dados/imagens/
+dados/minhas-cartas.json
+playmats/
+sleeves/

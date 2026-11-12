@@ -1,0 +1,62 @@
+MESA ARCANA - simulador offline de Commander
+============================================
+
+COMO USAR
+1. Copie a pasta "MesaArcana" inteira para o pendrive.
+2. Abra o arquivo MesaArcana.html com Chrome, Edge ou Firefox (clique duplo).
+   Nao precisa instalar nada.
+
+TUDO SEM INTERNET
+- O texto de todas as cartas (33 mil cartas e fichas) esta no arquivo
+  dados/cartas.js. Cole qualquer lista e clique em "Importar deck": as cartas
+  aparecem como proxy de playtest, sem precisar do Scryfall.
+- Aceita listas do Moxfield, Archidekt, Arena e MTGO, e corrige sozinho erros
+  pequenos de digitacao nos nomes.
+- Os decks ficam guardados no navegador daquele computador. Para levar um
+  deck pronto para outro computador, use "Salvar pacote" e depois "Abrir
+  pacote offline" (ou simplesmente importe a lista de novo, que e rapido).
+
+BRACKET E COMBOS (funciona sem internet)
+- Ao colar ou abrir um deck, a pagina mostra a bracket estimada. O botao
+  "Bracket e combos" abre a analise completa.
+- Criterios: os oficiais das brackets de Commander (Game Changers, destruicao
+  em massa de terrenos, turnos extras e combos de 2 cartas).
+- Combos: banco do Commander Spellbook com 61 mil combos, guardado localmente.
+  Mostra os combos completos no deck e os que estao a 1 carta de distancia.
+- A bracket 5 (cEDH) depende da intencao do jogador e nao e detectada.
+
+IMAGENS (opcional)
+- Com internet e Scryfall liberado, o "Importar deck" (ou "Atualizar") baixa
+  tambem as imagens. Se quiser leva-las para outro computador, use "Salvar
+  pacote", que guarda o deck com as imagens.
+- Mantenha a pasta "dados" junto do MesaArcana.html.
+
+CONTROLES
+- Arrastar: move cartas entre mao, campo, cemiterio, exilio, grimorio e comando.
+- Clique no campo: vira/desvira. Clique duplo na mao: joga a carta.
+- Clique no grimorio: compra. Clique no cemiterio ou exilio: abre a lista.
+- "Proximo turno" so desvira tudo: a compra e manual (clique no grimorio ou D),
+  para dar tempo aos gatilhos da manutencao.
+- "Proxima fase" (ou a faixa de fases em cima do campo) anuncia a fase:
+  Manutencao, Compra, Principal 1, Combate, Principal 2, Final.
+- Equipar/anexar: botao direito na carta, "Equipar / anexar em...", e clique
+  na carta que vai receber. A carta anexada anda junto com a outra.
+  Para soltar: arraste ela para outro lugar ou use "Desanexar".
+- Imposto do comandante: e manual. Botao direito no comandante, linha
+  "Imposto", botoes - e +.
+- Botao direito: menu completo (contadores,
+  fichas, transformar, videncia, buscar no grimorio, moer...).
+- Atalhos: D comprar, F proxima fase, N proximo turno, U desvirar tudo, S embaralhar,
+  T fichas, Ctrl+Z desfazer. Shift ao soltar no grimorio = fundo.
+
+CARTAS EM PORTUGUES E APARENCIA
+- Botao "Cartas em: Portugues" na tela inicial troca o idioma das cartas
+  (precisa do arquivo dados/pt.js). Traducoes nao oficiais vem marcadas.
+- Botao "Aparencia" (ou a paleta no topo do jogo): playmats e sleeves prontos,
+  e "Usar imagem minha" para colocar os seus. Ficam guardados no navegador.
+
+ESCOLHER A ARTE
+- Botao direito na carta ou ficha, "Escolher a arte... (internet)". Precisa do
+  Scryfall liberado.
+
+Projeto pessoal, nao oficial. Dados e imagens de cartas: Scryfall.
