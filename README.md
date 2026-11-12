@@ -27,6 +27,12 @@ Simulador offline de Commander (Magic: The Gathering) para testar decks sozinho 
 
 O jeito de jogar e os atalhos estão no [LEIA-ME.txt](LEIA-ME.txt).
 
+### Baixar pronto (Windows)
+
+**[Baixar o MesaArcana-Windows.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Windows.zip)** (19 MB). Extraia a pasta onde quiser (pode ser no pendrive) e abra o `MesaArcana.exe`. Não precisa instalar nada.
+
+Na primeira vez o Windows pode mostrar o aviso "O Windows protegeu o computador", porque o programa não é assinado. Clique em "Mais informações" e depois em "Executar assim mesmo".
+
 ### Compilar o programa (Windows)
 
 Precisa do [Go](https://go.dev/dl/) 1.26 ou mais novo. Na pasta do projeto:
