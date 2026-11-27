@@ -57,6 +57,16 @@ Copie o `MesaArcana.exe` para onde quiser. Ele cria ao lado as pastas `decks`, `
 
 Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H=windowsgui" -o MesaArcana.exe .`
 
+### Celular (Android)
+
+**[Baixar o MesaArcana-Android.apk](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Android.apk)** (13 MB). Abra o arquivo no celular e permita "instalar apps desconhecidos" quando o Android pedir.
+
+Já vem com os 5 decks de Commander de Foundations. Feito para toque: toque vira/desvira, toque duplo na mão joga a carta, arrastar move, **segurar** a carta abre o menu (com "Ampliar carta"). O texto das cartas funciona sem internet; as imagens vêm do Scryfall quando há conexão.
+
+<img src="docs/celular.png" width="260" alt="Mesa Arcana no celular">
+
+O código fica em `mobile/` (a página) e `android/` (o app; `android/build.sh` gera o APK com o Android SDK).
+
 ### PSP
 
 **[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (10 MB). Precisa de um PSP com firmware customizado.

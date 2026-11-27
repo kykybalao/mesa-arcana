@@ -11,3 +11,7 @@ dados/imagens/
 dados/minhas-cartas.json
 playmats/
 sleeves/
+android/build/
+android/MesaArcana.apk
+*.keystore
+android/*.idsig
