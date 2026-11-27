@@ -155,12 +155,51 @@ func (g *Game) playing() bool {
 	return g.screen == "game" && g.S.Phase == "play" && g.modal == nil && !g.lockedOut()
 }
 
+var fotoT0 time.Time
+var fotoStep int
+
 func (g *Game) Update() error {
 	g.frame++
 	if f := os.Getenv("MESA_FOTO"); f != "" { // só para tirar a foto de divulgação: MESA_FOTO=deck|arquivo.png
 		dn, out, _ := strings.Cut(f, "|")
+		rede := os.Getenv("MESA_FOTO_REDE") // "host:Nome" ou "join:Nome": foto da mesa com vários jogadores
+		if rede != "" {
+			if g.frame == 1 {
+				fotoT0 = time.Now()
+			}
+			el := time.Since(fotoT0)
+			switch {
+			case el > 30*time.Second && fotoStep == 0:
+				fotoStep = 1
+				if strings.HasPrefix(rede, "host") {
+					g.setMode(4)
+				}
+			case el > 33*time.Second && fotoStep == 1:
+				fotoStep = 2
+				for _, id := range g.S.Z["battlefield"] {
+					if g.S.Cards[id].Cmdr {
+						g.pv = g.card(g.S.Cards[id])
+					}
+				}
+				if out != "" {
+					g.shot = out
+				}
+			case el > 36*time.Second && fotoStep == 2 && strings.HasPrefix(rede, "host"):
+				return ebiten.Termination
+			case el > 45*time.Second:
+				return ebiten.Termination
+			}
+		}
 		switch g.frame {
 		case 2:
+			if rede != "" {
+				mode, nome, _ := strings.Cut(rede, ":")
+				if mode == "host" {
+					nw.host(nome)
+				} else {
+					nw.join(nome, "127.0.0.1")
+				}
+			}
 			g.reloadDecks(dn)
 			g.startGame(g.decks[g.sel])
 			g.keep()
@@ -188,8 +227,13 @@ func (g *Game) Update() error {
 				}
 			}
 		case 245:
-			g.shot = out
+			if rede == "" {
+				g.shot = out
+			}
 		case 250:
+			if rede != "" {
+				break
+			}
 			return ebiten.Termination
 		}
 	}
