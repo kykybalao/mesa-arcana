@@ -299,19 +299,23 @@ func (d *Deck) imageKeys() []string {
 }
 
 type Config struct {
-	Cmd      map[string][]string `json:"comandantes"`
-	Size     float64             `json:"tamanho"`
-	Name     string              `json:"nome,omitempty"`
-	Addr     string              `json:"mesa,omitempty"`
-	Lang     string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
-	Mat      string              `json:"playmat,omitempty"`
-	Sleeve   string              `json:"sleeve,omitempty"`
-	HideLeft bool                `json:"sem_painel,omitempty"`     // painel da esquerda escondido
-	Field    int                 `json:"campo,omitempty"`          // 0 faixas, 1 zonas, 2 limpo
-	NoAuto   bool                `json:"sem_poder_auto,omitempty"` // não calcular poder/resistência
-	NoSnap   bool                `json:"sem_encaixe,omitempty"`
-	NoBands  bool                `json:"sem_faixas,omitempty"`
-	Proxy    string              `json:"proxy,omitempty"` // estilo das cartas sem imagem na mesa ("" = playtest)
+	Cmd        map[string][]string `json:"comandantes"`
+	Size       float64             `json:"tamanho"`
+	Name       string              `json:"nome,omitempty"`
+	Addr       string              `json:"mesa,omitempty"`
+	Lang       string              `json:"idioma,omitempty"` // "pt" (padrão) ou "en"
+	Mat        string              `json:"playmat,omitempty"`
+	Sleeve     string              `json:"sleeve,omitempty"`
+	HideLeft   bool                `json:"sem_painel,omitempty"`            // painel da esquerda escondido
+	Field      int                 `json:"campo,omitempty"`                 // 0 faixas, 1 zonas, 2 limpo
+	Table      string              `json:"cartas_na_mesa,omitempty"`        // "" imagem oficial, moldura, estendida, cena, simples
+	NoPeerLook bool                `json:"sem_visual_dos_outros,omitempty"` // não mostrar playmat e sleeve dos outros jogadores
+	NoShare    bool                `json:"sem_troca_imagens,omitempty"`     // não pedir nem mandar imagens na rede
+	NoAuto     bool                `json:"sem_poder_auto,omitempty"`        // não calcular poder/resistência
+	NoSnap     bool                `json:"sem_encaixe,omitempty"`
+	NoBands    bool                `json:"sem_faixas,omitempty"`
+	Proxy      string              `json:"proxy,omitempty"`  // estilo das cartas sem imagem na mesa ("" = playtest)
+	Keys       map[string]string   `json:"teclas,omitempty"` // atalhos trocados pelo usuário (ação → tecla)
 }
 
 var cfg = Config{Cmd: map[string][]string{}, Size: 112}

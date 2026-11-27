@@ -15,8 +15,11 @@ Simulador offline de Commander (Magic: The Gathering) para testar decks sozinho 
 - **Cartas em português**: texto oficial quando existe, tradução não oficial (marcada) para parte das outras, e botão para voltar ao inglês.
 - **Bracket e combos**: estima a bracket do deck pelos critérios oficiais e lista os combos, com o passo a passo de cada um.
 - **Mesa de jogo**: mulligan, fases anunciadas, fichas, contadores, equipar/anexar, imposto de comandante manual, vidência, desfazer.
-- **Multijogador em rede local**: um cria a mesa, os outros entram pelo endereço. Tem chat e dá para revelar a mão.
-- **Aparência**: playmats e sleeves prontos, e os seus próprios (pastas `playmats` e `sleeves`).
+- **Multijogador em rede local**: um cria a mesa, os outros entram pelo endereço. Tem chat, mão revelada, ordem dos turnos no d20, vida de cada oponente em tempo real, zoom e cemitério/exílio das cartas dos outros, e cada um vê o playmat e a sleeve que os outros escolheram.
+- **Aparência**: playmat padrão, 5 playmats de cor e 10 de duas cores desenhados pelo programa, sleeves prontas e as suas próprias (pastas `playmats` e `sleeves`). As cartas na mesa podem aparecer como imagem oficial, moldura + ilustração, arte estendida, arte inteira ou proxy simples (tecla E).
+- **Busca no grimório** com filtros de tipo, custo de mana e cor.
+- **Atalhos trocáveis** (F1), mover a carta com o mouse em cima (G, X, H, B), menu da pilha inteira no cemitério e no exílio, e **histórico de partidas** com taxa de vitória por deck (botão "Resultado").
+- **Versão para PSP** (veja abaixo).
 - **Criador de cartas** próprias, que entram nos decks pelo nome.
 - **Fazedor de proxies**: qualquer carta (ou as suas) no formato de carta de Magic, em três estilos (moldura, arte estendida e arte inteira), baixando só a ilustração. Grava PNG no tamanho de impressão ou folhas A4 com 9 cartas. Moldura e símbolos são desenhados pelo programa e toda carta sai marcada como proxy.
 
@@ -25,6 +28,8 @@ Simulador offline de Commander (Magic: The Gathering) para testar decks sozinho 
 | Aparência | Criar carta | Bracket e combos |
 |---|---|---|
 | ![Playmats e sleeves](docs/aparencia.png) | ![Criador de cartas](docs/criar-carta.png) | ![Análise do deck](docs/analise.png) |
+
+![Playmats](docs/playmats.png)
 
 ## Como usar
 
@@ -48,6 +53,28 @@ Copie o `MesaArcana.exe` para onde quiser. Ele cria ao lado as pastas `decks`, `
 
 Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -H=windowsgui" -o MesaArcana.exe .`
 
+### PSP
+
+**[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (3 MB). Precisa de um PSP com firmware customizado.
+
+1. Copie a pasta `PSP` do zip para a raiz do Memory Stick.
+2. No programa do PC, escolha o deck e clique em **PSP**. Ele grava `PSP/GAME/MesaArcana/decks/<deck>` ao lado do programa; copie essa pasta para o Memory Stick também.
+3. No PSP, R + SELECT mostra todos os atalhos.
+
+Joga sozinho ou em rede entre até 4 PSPs (Wi-Fi ad hoc). Tem painel da carta com texto grande, nome e custo nas cartas, equipar/prender, mulligan, fichas, marcadores, busca no grimório e histórico de partidas. Mais detalhes no [LEIA-ME do PSP](psp/LEIA-ME.txt).
+
+| Mesa | Atalhos |
+|---|---|
+| ![Mesa no PSP](docs/psp.png) | ![Atalhos no PSP](docs/psp-atalhos.png) |
+
+Para compilar: instale o [pspdev](https://github.com/pspdev/pspdev) (traz SDL2, SDL2_ttf e SDL2_image) e, na pasta `psp`:
+
+```
+mkdir build && cd build && psp-cmake .. && make
+```
+
+Junte o `EBOOT.PBP` com as fontes `ui.ttf` e `uib.ttf` (Go Regular e Go Bold) na pasta `PSP/GAME/MesaArcana`.
+
 ### Versão HTML
 
 A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`), sem multijogador, sem o criador de cartas e sem o fazedor de proxies. Baixe a pasta inteira, porque ela precisa dos arquivos de `html/dados`.
@@ -60,6 +87,8 @@ A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`)
 | `dados/` | Bancos embutidos: cartas, combos e textos em português |
 | `build/` | Scripts que montam esses bancos e os roteiros de teste |
 | `html/` | Versão para navegador |
+| `psp/` | Versão para PSP (C + SDL2) |
+| `download/` | Programas prontos (Windows e PSP) |
 | `decks/` | Deck de exemplo |
 
 Os scripts de `build/` foram escritos para a máquina onde o projeto nasceu e têm caminhos fixos (`/home/user/mesa`); ajuste antes de rodar.
@@ -70,6 +99,7 @@ Os scripts de `build/` foram escritos para a máquina onde o projeto nasceu e t�
 - Combos, passo a passo e classificação de bracket: [Commander Spellbook](https://commanderspellbook.com/). A popularidade usada para ordenar vem do [EDHREC](https://edhrec.com/).
 - Fonte das cartas: [Caladea](https://github.com/huertatipografica/Caladea), de Carolina Giovagnoli e Andrés Torresi (SIL Open Font License 1.1).
 - Motor gráfico: [Ebitengine](https://ebitengine.org/), de Hajime Hoshi.
+- Versão PSP: [pspdev](https://github.com/pspdev/pspdev) e [SDL2](https://www.libsdl.org/). Fontes da versão PSP: [Go fonts](https://go.dev/blog/go-fonts), da Bigelow & Holmes (licença BSD).
 - Código escrito com o [Claude](https://claude.ai/), da Anthropic, a partir das ideias e dos testes do Kyky.
 
 Projeto de fã, não oficial, sem fins lucrativos. Magic: The Gathering, os nomes e os textos das cartas são propriedade da Wizards of the Coast. Este projeto não é afiliado, endossado nem patrocinado pela Wizards of the Coast, pelo Scryfall, pelo Commander Spellbook ou pelo EDHREC.

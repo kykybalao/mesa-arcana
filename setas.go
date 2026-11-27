@@ -276,8 +276,18 @@ func (g *Game) pubClick(p *Peer, pi PubInst, menu bool) {
 		mk(g.au.src)
 		return
 	}
+	if c := g.pubCard(p, pi); !menu && c != nil && !pi.Down {
+		g.openZoom(c, pi.Face)
+		g.zoom.cnt = pi.Counters
+		return
+	}
 	if menu && g.S != nil && g.S.Phase == "play" {
-		items := []item{{hd: name + " (" + p.Name + ")"}, {label: "Apontar uma seta para esta carta", fn: func() { mk(0) }}}
+		items := []item{{hd: name + " (" + p.Name + ")"}}
+		if c := g.pubCard(p, pi); c != nil && !pi.Down {
+			items = append(items, item{label: "Ver a carta grande", key: keyName("zoom"), fn: func() { g.openZoom(c, pi.Face); g.zoom.cnt = pi.Counters }})
+		}
+		items = append(items, item{label: "Ver o cemitério de " + p.Name, fn: func() { g.peerZone(p.ID, "CEMITÉRIO") }})
+		items = append(items, []item{{label: "Apontar uma seta para esta carta", fn: func() { mk(0) }}}...)
 		has := false
 		for _, a := range g.arrows {
 			has = has || (a.Peer == p.Name && a.To == pi.ID)

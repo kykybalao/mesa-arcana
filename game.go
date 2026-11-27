@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Inst struct {
@@ -156,6 +157,7 @@ func (g *Game) startGame(d *Deck) {
 		g.drawRaw()
 	}
 	g.log("Nova partida. Mão inicial de 7.")
+	g.started, g.saved = time.Now(), false
 	g.screen = "game"
 	g.modal, g.ctx = nil, nil
 }
@@ -171,6 +173,9 @@ func (g *Game) drawRaw() bool {
 	return true
 }
 func (g *Game) drawN(n int) {
+	if g.denied() {
+		return
+	}
 	g.snap()
 	k := 0
 	for i := 0; i < n; i++ {
@@ -289,6 +294,9 @@ func (g *Game) move(id int, zone string, o moveOpt) {
 	}
 }
 func (g *Game) untapAll() {
+	if g.denied() {
+		return
+	}
 	g.snap()
 	for _, id := range g.S.Z["battlefield"] {
 		g.S.Cards[id].Tapped = false
@@ -299,6 +307,20 @@ func (g *Game) nextTurn() {
 	if g.S.Phase != "play" {
 		return
 	}
+	if g.hasOrder() { // com a ordem da mesa decidida, o botão passa a vez; o meu turno começa quando ela volta
+		if g.myTurn() {
+			g.passTurn()
+		} else {
+			g.announce("Vez de " + g.table.active())
+		}
+		return
+	}
+	g.beginTurn()
+}
+
+// beginTurn começa um turno meu: desvira tudo e anuncia a manutenção (nada mais acontece sozinho)
+func (g *Game) beginTurn() {
+	g.turnStart = time.Now()
 	g.snap()
 	for _, id := range g.S.Z["battlefield"] {
 		g.S.Cards[id].Tapped = false
@@ -311,7 +333,7 @@ func (g *Game) nextTurn() {
 
 // as fases são só anunciadas: nada acontece sozinho (nem a compra), por causa dos gatilhos
 func (g *Game) setStep(k int) {
-	if g.S.Phase != "play" || k == g.S.Step || k < 0 || k >= len(stepNames) {
+	if g.S.Phase != "play" || k == g.S.Step || k < 0 || k >= len(stepNames) || g.denied() {
 		return
 	}
 	g.snap()

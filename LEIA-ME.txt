@@ -207,5 +207,89 @@ FAZER PROXIES
 - Os simbolos e a moldura sao desenhados pelo programa e toda carta leva a
   marca "PROXY - nao e carta oficial" no rodape. E para jogo casual e teste.
 
+VEZ, TRANCA E TEMPO (em rede)
+- Botao "Vez..." na faixa dos jogadores: "Sortear quem comeca" joga um d20
+  para cada um e monta a ordem da mesa (maior primeiro). O numero da ordem
+  aparece ao lado do nome de cada jogador e quem esta na vez fica com a
+  borda dourada.
+- Com a ordem montada, "Passar a vez" (ou N) entrega a vez ao proximo.
+  Quando a vez volta para voce, o programa comeca o seu turno (desvira e
+  avanca o numero do turno). Ele nao compra carta.
+- Tranca: ligada na mesma janela. Fora da sua vez voce nao mexe nas cartas;
+  o botao "Responder" libera para jogar algo na vez do outro.
+- Tempo por turno: sem limite, 1, 2, 3, 5 ou 10 minutos. O relogio so avisa
+  ("tempo esgotado"); nada passa sozinho.
+- Vida: em cima, "Sua vida" e uma caixa para cada oponente, com o nome e a
+  vida de verdade dele, atualizada sozinha.
+
+VER AS CARTAS DOS OUTROS
+- Carta grande: clique em uma carta do campo do oponente, ou aperte Z (ou o
+  botao do meio do mouse) com o cursor em cima de qualquer carta, sua ou
+  dele. Mostra a carta grande, o texto e os contadores. Esc, Z ou clique
+  fora fecha.
+- Cemiterio e exilio: na placa de cada oponente ha os botoes "cemiterio N"
+  e "exilio N". Tambem da para clicar com o botao direito no nome dele na
+  faixa de jogadores. O seu cemiterio abre clicando na pilha, a direita.
+  Dentro da janela, clique em uma carta para ver grande.
+- Contadores das cartas dos oponentes aparecem em cima delas.
+- Imagens: se um jogador tem a imagem de uma carta baixada e voce nao, o
+  programa pede a imagem pela rede e guarda em dados/imagens (fica valendo
+  depois, mesmo sem internet). So vale para cartas que estao a vista na
+  mesa. Para desligar: Multijogador > "Trocar imagens das cartas com a mesa".
+
+CARTAS NA MESA: MOLDURA DO PROGRAMA OU PROXY SIMPLES
+- Na tela do deck, "Baixar so as ilustracoes (leve)" baixa apenas a arte de
+  cada carta (dados/artes), sem a carta inteira. A mesa passa a desenhar as
+  cartas na moldura do programa, com o texto em portugues.
+- "Cartas na mesa" troca o estilo: imagem oficial (se baixada), moldura +
+  ilustracao, arte estendida, arte inteira ou proxy simples (so texto). No
+  jogo, a tecla E ou o menu do botao direito na mesa fazem a mesma troca.
+- Sem a ilustracao baixada, a moldura aproveita o recorte da imagem
+  oficial, se voce ja tiver ela; senao a carta sai sem arte.
+- Em rede, com a moldura ligada, o programa pede aos outros so a ilustracao.
+
+BUSCAR NO GRIMORIO COM FILTROS
+- A janela de buscar no grimorio (e as de cemiterio e exilio) tem filtros
+  no topo: nome, tipo, custo (0 a 7+) e cor. "Ordem" alterna entre nome e
+  custo, e "Limpar filtros" volta tudo. A cor olha o custo de mana, entao
+  terrenos contam como incolor.
+
+PLAYMATS NOVOS
+- O playmat padrao agora e o "Mesa Arcana" (feltro azul-petroleo com a
+  estrela do programa). O "Feltro liso" continua na lista.
+- Conjunto das cores: Branco, Azul, Preto, Vermelho e Verde, cada um com o
+  seu emblema (sol, gota, lua, chama, folha), e as dez duplas de cores.
+  Tudo em Aparencia, na tela inicial.
+
+PLAYMAT E SLEEVE DOS OUTROS JOGADORES (em rede)
+- A mesa de cada oponente aparece com o playmat que ele escolheu, e as
+  cartas viradas, a mao e o grimorio dele aparecem com a sleeve dele.
+- Vale tambem para imagens que ele pos nas pastas playmats e sleeves: o
+  programa recebe uma copia reduzida pela rede e guarda em dados/rede.
+- Para desligar: Multijogador > "Ver o playmat e a sleeve dos outros
+  jogadores". Todos precisam estar na mesma versao do programa.
+
+PSP (botao "PSP" na tela do deck)
+- Exporta o deck para a pasta PSP/GAME/MesaArcana/decks/<deck>, ao lado
+  do programa, com a lista e imagens pequenas das cartas.
+- Copie para o Memory Stick junto com o MesaArcana-PSP.zip (veja o
+  LEIA-ME de dentro dele). So faz algo quando voce clica no botao.
+
+ATALHOS NOVOS
+- F1 mostra a lista de todos os atalhos.
+- Com o mouse em cima de uma carta: G manda para o cemiterio, X para o
+  exilio, H para a mao, B para o fundo do grimorio (Ctrl+Z desfaz).
+- Rodinha do mouse sobre a sua caixa de vida: +1/-1 (com Shift, 5).
+
+IDEIAS DO EDHPLAY (visual e codigo nossos)
+- F1: lista de atalhos. Clique na tecla de uma acao e aperte outra para
+  trocar; "Voltar ao padrao" desfaz. Fica salvo em dados/config.json.
+- Contador na carta: clique no numero soma 1, botao direito tira 1.
+- Botao direito no cemiterio ou no exilio (fora da carta): menu da pilha
+  inteira (ver, embaralhar no grimorio, fundo, mao, exilar/cemiterio).
+- Botao "Resultado" na barra: registra Venci/Perdi/Empate/So teste com
+  turno, minutos e comandantes em dados/historico.json, e mostra as
+  ultimas partidas e o resumo por deck. Nada e registrado sozinho.
+
 Projeto pessoal, nao oficial. Dados de cartas: Scryfall.
 Magic: The Gathering e marca da Wizards of the Coast.

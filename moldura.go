@@ -50,6 +50,31 @@ func styleLabel(k string) string {
 	}
 	return "Playtest"
 }
+
+// como as cartas aparecem na mesa (cfg.Table)
+var tableNames = [][2]string{{"", "Imagem oficial (se baixada)"}, {"moldura", "Moldura + ilustração"}, {"estendida", "Arte estendida"}, {"cena", "Arte inteira"}, {"simples", "Proxy simples"}}
+
+func tableLabel() string {
+	for _, s := range tableNames {
+		if s[0] == cfg.Table {
+			return s[1]
+		}
+	}
+	return tableNames[0][1]
+}
+func (g *Game) cycleTable() {
+	n := 0
+	for i, s := range tableNames {
+		if s[0] == cfg.Table {
+			n = i + 1
+		}
+	}
+	cfg.Table = tableNames[n%len(tableNames)][0]
+	saveCfg()
+	g.clearProxies()
+	g.announce("Cartas na mesa: " + tableLabel())
+}
+
 func nextStyle(k string) string {
 	for i, s := range styleNames {
 		if s[0] == k {
@@ -184,12 +209,21 @@ type artSlot struct {
 var artCache = map[string]*artSlot{}
 
 // artTex abre a arte de uma carta (reduzida) e guarda; devolve nil se o arquivo não existe
-func artTex(path string) *ebiten.Image {
+func artTex(path string) *ebiten.Image { return artLoad(path, false) }
+
+// artCrop: sem a ilustração baixada, recorta a janela da arte da imagem da carta inteira (moldura moderna)
+func artCrop(path string) *ebiten.Image { return artLoad(path, true) }
+
+func artLoad(path string, crop bool) *ebiten.Image {
 	st, err := os.Stat(path)
 	if err != nil || st.Size() < 100 {
 		return nil
 	}
-	if s := artCache[path]; s != nil && s.mod == st.ModTime().UnixNano() {
+	ck := path
+	if crop {
+		ck += "#recorte"
+	}
+	if s := artCache[ck]; s != nil && s.mod == st.ModTime().UnixNano() {
 		return s.tex
 	}
 	f, err := os.Open(path)
@@ -205,6 +239,10 @@ func artTex(path string) *ebiten.Image {
 	if b.Dx() < 2 || b.Dy() < 2 {
 		return nil
 	}
+	if crop {
+		w, h := float64(b.Dx()), float64(b.Dy())
+		b = image.Rect(b.Min.X+int(w*0.082), b.Min.Y+int(h*0.118), b.Min.X+int(w*0.918), b.Min.Y+int(h*0.552))
+	}
 	k := min(1, 1500/float64(max(b.Dx(), b.Dy())))
 	dst := image.NewRGBA(image.Rect(0, 0, max(1, int(float64(b.Dx())*k)), max(1, int(float64(b.Dy())*k))))
 	xdraw.CatmullRom.Scale(dst, dst.Bounds(), src, b, xdraw.Src, nil)
@@ -215,7 +253,7 @@ func artTex(path string) *ebiten.Image {
 		}
 	}
 	s := &artSlot{st.ModTime().UnixNano(), ebiten.NewImageFromImage(dst)}
-	artCache[path] = s
+	artCache[ck] = s
 	return s.tex
 }
 

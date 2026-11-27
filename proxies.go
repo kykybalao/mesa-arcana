@@ -46,7 +46,13 @@ func styleOf(c *Card) string {
 	if c.Custom {
 		return ""
 	}
-	return cfg.Proxy
+	switch cfg.Table {
+	case "":
+		return cfg.Proxy
+	case "simples":
+		return ""
+	}
+	return cfg.Table
 }
 
 func specOf(c *Card, fi int, style string) cardSpec {
@@ -61,6 +67,9 @@ func specOf(c *Card, fi int, style string) cardSpec {
 		sp.art = artTex(imgPath(key))
 	} else {
 		sp.art = artTex(artPath(key))
+		if sp.art == nil && style != "cena" {
+			sp.art = artCrop(imgPath(key))
+		}
 		if a := looks.Alias[c.ID]; a != "" && fi == 0 {
 			sp.sub, sp.f.N = f.N, a
 		}
@@ -314,13 +323,13 @@ func (g *Game) printable(c *Card, fi int, style string) *ebiten.Image {
 		sp.tall = isTall(c)
 		return renderCard(sp, 1)
 	}
-	saveProxy, saveEst := cfg.Proxy, c.Est
-	cfg.Proxy, c.Est = "", ""
+	saveProxy, saveEst, saveTable := cfg.Proxy, c.Est, cfg.Table
+	cfg.Proxy, c.Est, cfg.Table = "", "", "simples"
 	key := c.ID + ":" + string(rune('0'+fi)) + cfg.Lang
 	delete(g.proxies, key)
 	src := g.proxy(c, fi)
 	delete(g.proxies, key)
-	cfg.Proxy, c.Est = saveProxy, saveEst
+	cfg.Proxy, c.Est, cfg.Table = saveProxy, saveEst, saveTable
 	out := ebiten.NewImage(int(cdW), int(cdH))
 	op := &ebiten.DrawImageOptions{Filter: ebiten.FilterLinear}
 	op.GeoM.Scale(cdW/pw, cdH/ph)
@@ -357,6 +366,7 @@ type artDL struct {
 }
 
 var adl artDL
+var artDirty atomic.Bool // chegou arte nova: as cartas desenhadas precisam ser refeitas
 
 func (a *artDL) start(keys []string, done func()) {
 	if a.running.Load() {
@@ -401,6 +411,7 @@ func (a *artDL) start(keys []string, done func()) {
 		} else {
 			a.msg.Store(fmt.Sprintf("Pronto: %d arte(s) guardadas em dados/artes.", ok))
 		}
+		artDirty.Store(true)
 		if done != nil {
 			done()
 		}
@@ -880,6 +891,8 @@ func (g *Game) proxyModal() {
 		dy += 44
 		txt(g.dst, "Na mesa", dx, dy, fBold, 14.5, cAcc)
 		dy += 24
+		g.button(dx, dy, dw, 28, fit(tableLabel(), fBold, 14, dw-20), 0, g.cycleTable)
+		dy += 32
 		g.button(dx, dy, dw, 28, "Sem imagem: "+styleLabel(cfg.Proxy), 0, func() {
 			cfg.Proxy = nextStyle(cfg.Proxy)
 			saveCfg()

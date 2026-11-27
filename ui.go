@@ -76,39 +76,50 @@ type Game struct {
 		sx, sy    int
 		ox, oy    float64
 	}
-	lastID   int
-	lastT    time.Time
-	pv       *Card
-	pvFace   int
-	pvHide   bool
-	focus    string
-	fields   map[string]string
-	onEnter  func()
-	msg      string
-	imgHave  int
-	imgTot   int
-	imgTick  int
-	listScr  float64
-	frame    int
-	test     *tester
-	inModal  bool
-	inCtx    bool
-	shot     string
-	banner   string
-	bannerT  int
-	ed       *Editor
-	showHand bool     // minha mão está revelada para a mesa
-	chat     []string // mensagens do chat da mesa
-	arrows   []Arrow
-	pvNow    bool // o cursor está em cima de uma carta agora
-	viewMode int  // 1 uma mesa, 2 lado a lado, 3 empilhado, 4 quadrante
-	clampBF  bool // conferir se alguma carta ficou fora do campo
-	au       arrowUI
-	viewPeer int // 0 = minha mesa; senão, o jogador cuja mesa está na tela
-	anKey    string
-	anRes    *Analysis
-	equip    int // carta esperando o clique no alvo para ser anexada
-	drawn    bool
+	lastID    int
+	lastT     time.Time
+	pv        *Card
+	pvFace    int
+	pvHide    bool
+	focus     string
+	fields    map[string]string
+	onEnter   func()
+	msg       string
+	imgHave   int
+	imgTot    int
+	imgTick   int
+	artHave   int
+	zf        *zoneFilter
+	backOver  *ebiten.Image
+	listScr   float64
+	frame     int
+	test      *tester
+	inModal   bool
+	inCtx     bool
+	shot      string
+	rebind    string // ação esperando a tecla nova (janela de atalhos)
+	started   time.Time
+	saved     bool // esta partida já foi registrada no histórico
+	banner    string
+	bannerT   int
+	ed        *Editor
+	showHand  bool     // minha mão está revelada para a mesa
+	chat      []string // mensagens do chat da mesa
+	arrows    []Arrow
+	table     *TableTurn // ordem da mesa em rede (quem começa, vez, tranca, tempo)
+	unlocked  bool       // pediu para responder na vez de outro
+	tableOff  bool       // só para o roteiro de teste
+	turnStart time.Time
+	zoom      *zoomView
+	pvNow     bool // o cursor está em cima de uma carta agora
+	viewMode  int  // 1 uma mesa, 2 lado a lado, 3 empilhado, 4 quadrante
+	clampBF   bool // conferir se alguma carta ficou fora do campo
+	au        arrowUI
+	viewPeer  int // 0 = minha mesa; senão, o jogador cuja mesa está na tela
+	anKey     string
+	anRes     *Analysis
+	equip     int // carta esperando o clique no alvo para ser anexada
+	drawn     bool
 }
 
 func (g *Game) Layout(w, h int) (int, int) {
@@ -139,7 +150,9 @@ func (g *Game) hit(ok func(r *region) bool) *region {
 	return nil
 }
 
-func (g *Game) playing() bool { return g.screen == "game" && g.S.Phase == "play" && g.modal == nil }
+func (g *Game) playing() bool {
+	return g.screen == "game" && g.S.Phase == "play" && g.modal == nil && !g.lockedOut()
+}
 
 func (g *Game) Update() error {
 	g.frame++
@@ -157,6 +170,10 @@ func (g *Game) Update() error {
 		}
 	}
 	g.importDropped()
+	if artDirty.Swap(false) {
+		g.clearProxies()
+		g.imgTick = 0
+	}
 	if g.S != nil {
 		g.syncAtt()
 	}
@@ -185,7 +202,9 @@ func (g *Game) Update() error {
 	}
 	if lp {
 		if r := g.hit(func(r *region) bool { return r.click != nil || r.inst != 0 }); r != nil {
-			if r.inst != 0 {
+			if r.inst != 0 && g.denied() {
+				// tranca: a vez é de outro jogador
+			} else if r.inst != 0 {
 				g.drag.on, g.drag.moved, g.drag.id = true, false, r.inst
 				g.drag.sx, g.drag.sy = g.mx, g.my
 				g.drag.ox = min(g.cw, max(0, float64(g.mx)-r.x))
@@ -237,8 +256,20 @@ func (g *Game) Update() error {
 
 func (g *Game) keys() {
 	jp := inpututil.IsKeyJustPressed
+	if g.rebind != "" { // trocando um atalho: a próxima tecla vira o atalho
+		for _, k := range inpututil.AppendJustPressedKeys(nil) {
+			if k != ebiten.KeyEscape {
+				setKey(g.rebind, k)
+			}
+			g.rebind = ""
+			break
+		}
+		return
+	}
 	if jp(ebiten.KeyEscape) {
-		if g.au.pick {
+		if g.zoom != nil {
+			g.zoom = nil
+		} else if g.au.pick {
 			g.au.pick = false
 		} else if g.equip != 0 {
 			g.equip = 0
@@ -249,7 +280,15 @@ func (g *Game) keys() {
 		}
 		return
 	}
-	if g.screen != "game" || g.focus != "" {
+	if g.focus == "" && !ebiten.IsKeyPressed(ebiten.KeyControl) && !ebiten.IsKeyPressed(ebiten.KeyMeta) && (jpA("zoom") || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonMiddle)) {
+		g.zoomHover()
+		return
+	}
+	if g.focus == "" && jp(ebiten.KeyF1) {
+		g.shortcutsModal()
+		return
+	}
+	if g.screen != "game" || g.focus != "" || g.zoom != nil {
 		return
 	}
 	ctrl := ebiten.IsKeyPressed(ebiten.KeyControl) || ebiten.IsKeyPressed(ebiten.KeyMeta)
@@ -258,6 +297,16 @@ func (g *Game) keys() {
 		return
 	}
 	if ctrl || !g.playing() {
+		return
+	}
+	// mouse sobre uma carta + tecla: move sem abrir o menu
+	if z, lab := hoverMoveKey(); z != "" {
+		if r := g.hit(func(r *region) bool { return r.inst != 0 }); r != nil && g.S.Phase == "play" && !g.denied() {
+			if i := g.S.Cards[r.inst]; i != nil && !(i.Zone == z && !strings.HasPrefix(lab, "fundo")) {
+				g.snap()
+				g.move(r.inst, z, moveOpt{bottom: lab == "fundo"})
+			}
+		}
 		return
 	}
 	switch {
@@ -279,19 +328,21 @@ func (g *Game) keys() {
 		g.cw = max(70, min(190, g.cw+d))
 		cfg.Size = g.cw
 		saveCfg()
-	case jp(ebiten.KeyP):
+	case jpA("painel"):
 		g.togglePanel()
-	case jp(ebiten.KeyD):
+	case jpA("estilo"):
+		g.cycleTable()
+	case jpA("comprar"):
 		g.drawN(1)
-	case jp(ebiten.KeyN):
+	case jpA("turno"):
 		g.nextTurn()
-	case jp(ebiten.KeyF), jp(ebiten.KeySpace):
+	case jpA("fase"), jp(ebiten.KeySpace):
 		g.nextStep()
-	case jp(ebiten.KeyU):
+	case jpA("desvirar"):
 		g.untapAll()
-	case jp(ebiten.KeyS):
+	case jpA("embaralhar"):
 		g.shuffleLib()
-	case jp(ebiten.KeyT):
+	case jpA("ficha"):
 		g.tokenModal()
 	}
 }
@@ -550,6 +601,7 @@ func (g *Game) drawInst(i *Inst, x, y, w float64, forceDown, forceUp bool, alpha
 			txtC(g.dst, "+", bx+bw-7, cy+1.5, fBold, 13, cAcc)
 			id := i.ID
 			g.au.btns = append(g.au.btns,
+				region{x: bx + 23, y: cy, w: bw - 40, h: 19, click: func() { g.bump(id, k, 1) }, rclick: func() { g.bump(id, k, -1) }}, // corpo: clique +1, direito -1
 				region{x: bx + 3, y: cy, w: 20, h: 19, click: func() { g.bump(id, k, -1) }},
 				region{x: bx + 3 + bw - 20, y: cy, w: 20, h: 19, click: func() { g.bump(id, k, 1) }})
 		}
@@ -714,7 +766,8 @@ func (g *Game) moveBtns(id int) []cellBtn {
 func (g *Game) cellCard(id int, cx, cy, cw float64) {
 	i := g.S.Cards[id]
 	g.drawInst(i, cx, cy, cw, false, true, 1)
-	g.add(region{x: cx, y: cy, w: cw, h: cw * ratio, pv: g.card(i), pvFace: i.Face})
+	c, fi := g.card(i), i.Face
+	g.add(region{x: cx, y: cy, w: cw, h: cw * ratio, pv: c, pvFace: fi, click: func() { g.openZoom(c, fi) }})
 }
 
 func (g *Game) viewZone(zone string, search bool) {
@@ -724,8 +777,12 @@ func (g *Game) viewZone(zone string, search bool) {
 		title = "Buscar no grimório"
 	}
 	m := &Modal{title: title, w: 1180, h: 760}
+	flt := &zoneFilter{cmc: -1, cols: map[string]bool{}}
+	g.zf = flt
+	g.fields["vzq"] = ""
 	m.draw = func(x, y, w, h float64) {
 		ids := append([]int{}, g.S.Z[zone]...)
+		total := len(ids)
 		if search {
 			sort.SliceStable(ids, func(a, b int) bool { return g.card(g.S.Cards[ids[a]]).N < g.card(g.S.Cards[ids[b]]).N })
 		} else if zone != "library" {
@@ -733,10 +790,30 @@ func (g *Game) viewZone(zone string, search bool) {
 				ids[a], ids[b] = ids[b], ids[a]
 			}
 		}
-		if len(ids) == 0 {
-			txt(g.dst, "Vazio.", x, y, fReg, 14, cMut)
+		top := 0.0
+		if search || zone != "library" { // filtros: nome, tipo, custo e cor
+			top = flt.bar(g, m, x, y, w)
+			keep := ids[:0]
+			for _, id := range ids {
+				if flt.match(g.card(g.S.Cards[id]), strings.TrimSpace(g.fields["vzq"])) {
+					keep = append(keep, id)
+				}
+			}
+			ids = keep
+			if flt.byCMC {
+				sort.SliceStable(ids, func(a, b int) bool {
+					return manaValue(g.card(g.S.Cards[ids[a]]).FaceAt(0).C) < manaValue(g.card(g.S.Cards[ids[b]]).FaceAt(0).C)
+				})
+			}
 		}
-		g.grid(m, x, y, w-8, h-44, len(ids), 2, func(k int, cx, cy, cw float64) []cellBtn {
+		if len(ids) == 0 {
+			msg := "Vazio."
+			if total > 0 {
+				msg = "Nenhuma carta com esses filtros."
+			}
+			txt(g.dst, msg, x, y+top, fReg, 14, cMut)
+		}
+		g.grid(m, x, y+top, w-8, h-44-top, len(ids), 2, func(k int, cx, cy, cw float64) []cellBtn {
 			g.cellCard(ids[k], cx, cy, cw)
 			return g.moveBtns(ids[k])
 		})
@@ -747,7 +824,11 @@ func (g *Game) viewZone(zone string, search bool) {
 			}
 			g.button(x, y+h-32, 0, 30, lab, 0, func() { shuf = !shuf })
 		}
-		txt(g.dst, fmt.Sprintf("%d cartas", len(ids)), x+w-190, y+h-25, fReg, 13, cMut)
+		cnt := fmt.Sprintf("%d cartas", len(ids))
+		if len(ids) != total {
+			cnt = fmt.Sprintf("%d de %d cartas", len(ids), total)
+		}
+		txt(g.dst, cnt, x+w-110-tw(cnt, fReg, 13), y+h-25, fReg, 13, cMut)
 		g.button(x+w-90, y+h-32, 90, 30, "Fechar", 1, g.closeModal)
 	}
 	m.onClose = func() {
@@ -985,10 +1066,16 @@ func (g *Game) tableMenu() []item {
 		{label: "Criar ficha…", key: "T", fn: g.tokenModal},
 		{label: "Desvirar tudo", key: "U", fn: g.untapAll},
 		{label: "Próxima fase", key: "F", fn: g.nextStep},
-		{label: "Próximo turno", key: "N", fn: g.nextTurn},
+		{label: "Próximo turno / passar a vez", key: "N", fn: g.nextTurn},
+		{label: "Ordem da mesa, tranca e tempo (rede)…", fn: func() {
+			if nw.active() {
+				g.tableModal()
+			}
+		}},
 		{label: "Arrumar o campo", fn: g.tidy},
 		{label: "Apagar minhas setas", fn: func() { g.clearArrows(0) }},
 		{label: "Meus marcadores (veneno, energia…)", fn: g.trackerMenu},
+		{label: "Cartas na mesa: " + tableLabel() + " (trocar)", key: "E", fn: g.cycleTable},
 		{label: "Poder automático nas cartas: " + simNao(!cfg.NoAuto), fn: func() { cfg.NoAuto = !cfg.NoAuto; saveCfg() }},
 		{label: "Campo: " + fieldNames[fieldMode()] + " (trocar)", fn: g.cycleField},
 		{label: "Encaixar cartas nas zonas: " + simNao(!cfg.NoSnap), fn: func() { cfg.NoSnap = !cfg.NoSnap; saveCfg() }},
@@ -1005,7 +1092,7 @@ func (g *Game) tableMenu() []item {
 }
 
 func (g *Game) cardMenu(id int) {
-	if g.S.Phase != "play" {
+	if g.S.Phase != "play" || g.denied() {
 		return
 	}
 	i := g.S.Cards[id]
@@ -1023,6 +1110,9 @@ func (g *Game) cardMenu(id int) {
 		title = "Carta virada para baixo"
 	}
 	items := []item{{hd: title}}
+	if !i.Down {
+		items = append(items, item{label: "Ver a carta grande", key: keyName("zoom"), fn: func() { g.openZoom(c, get().Face); g.zoom.cnt = get().Counters }})
+	}
 	if i.Zone == "battlefield" {
 		lab := "Virar"
 		if i.Tapped {
@@ -1118,8 +1208,9 @@ func (g *Game) cardMenu(id int) {
 		items = append(items, item{hd: "Imagem"}, item{label: "Escolher a arte… (internet)", fn: func() { g.artModal(c) }})
 	}
 	items = append(items, item{hd: "Mover para"})
+	mvKeys := map[string]string{"Mão": keyName("mao"), "Cemitério": keyName("cemiterio"), "Exílio": keyName("exilio"), "Fundo do grimório": keyName("fundo")}
 	mv := func(z, lab string, o moveOpt) {
-		items = append(items, item{label: lab, fn: func() { g.snap(); g.move(id, z, o) }})
+		items = append(items, item{label: lab, key: mvKeys[lab], fn: func() { g.snap(); g.move(id, z, o) }})
 	}
 	if i.Zone != "battlefield" {
 		mv("battlefield", "Campo de batalha", moveOpt{})
@@ -1188,4 +1279,143 @@ func (g *Game) bump(id int, k string, d int) {
 	if o.Counters[k] == 0 {
 		delete(o.Counters, k)
 	}
+}
+
+// hoverMoveKey: tecla de mover a carta que está embaixo do mouse
+func hoverMoveKey() (zone, lab string) {
+	switch {
+	case jpA("cemiterio"):
+		return "graveyard", "cemitério"
+	case jpA("exilio"):
+		return "exile", "exílio"
+	case jpA("mao"):
+		return "hand", "mão"
+	case jpA("fundo"):
+		return "library", "fundo"
+	}
+	return "", ""
+}
+
+// atalhos que o usuário pode trocar (janela F1). Ctrl+Z, Esc, Espaço e F1 ficam fixos.
+var keyActions = []struct{ id, desc, def string }{
+	{"comprar", "comprar 1", "D"},
+	{"fase", "próxima fase (Espaço também)", "F"},
+	{"turno", "próximo turno (desvira, não compra)", "N"},
+	{"desvirar", "desvirar tudo", "U"},
+	{"embaralhar", "embaralhar o grimório", "S"},
+	{"ficha", "criar ficha", "T"},
+	{"zoom", "ver a carta grande (mouse em cima)", "Z"},
+	{"cemiterio", "mouse sobre a carta: para o cemitério", "G"},
+	{"exilio", "mouse sobre a carta: para o exílio", "X"},
+	{"mao", "mouse sobre a carta: para a mão", "H"},
+	{"fundo", "mouse sobre a carta: fundo do grimório", "B"},
+	{"estilo", "estilo das cartas na mesa", "E"},
+	{"painel", "esconder/mostrar o painel", "P"},
+}
+
+func keyName(id string) string {
+	if k, ok := cfg.Keys[id]; ok && k != "" {
+		return k
+	}
+	for _, a := range keyActions {
+		if a.id == id {
+			return a.def
+		}
+	}
+	return ""
+}
+func keyOf(id string) (ebiten.Key, bool) {
+	var k ebiten.Key
+	if err := k.UnmarshalText([]byte(keyName(id))); err != nil {
+		return 0, false
+	}
+	return k, true
+}
+func jpA(id string) bool {
+	k, ok := keyOf(id)
+	return ok && inpututil.IsKeyJustPressed(k)
+}
+
+// setKey dá a tecla à ação; se outra ação usava essa tecla, as duas trocam
+func setKey(id string, k ebiten.Key) {
+	if cfg.Keys == nil {
+		cfg.Keys = map[string]string{}
+	}
+	name := k.String()
+	old := keyName(id)
+	for _, a := range keyActions {
+		if a.id != id && keyName(a.id) == name {
+			cfg.Keys[a.id] = old
+		}
+	}
+	cfg.Keys[id] = name
+	saveCfg()
+}
+
+// shortcutsModal: lista de todos os atalhos (F1); os de tecla única podem ser trocados
+func (g *Game) shortcutsModal() {
+	fixed := [][2]string{
+		{"F1", "esta lista de atalhos"},
+		{"Clique / duplo clique", "vira no campo, compra / joga da mão"},
+		{"Botão direito", "menu da carta; no cemitério/exílio, menu da pilha"},
+		{"Ctrl+Z", "desfazer"},
+		{"[  ]   1-4   Tab", "tamanho das cartas, visão em rede, troca de mesa"},
+		{"Rodinha na vida", "vida +1/-1 (Shift: 5)"},
+	}
+	const rh = 21.0
+	h := float64(len(fixed)+len(keyActions))*rh + 120
+	g.openModal(&Modal{title: "Atalhos", w: 640, h: h, draw: func(x, y, w, h float64) {
+		for k, l := range fixed {
+			yy := y + float64(k)*rh
+			txt(g.dst, l[0], x, yy, fBold, 12.5, cAcc)
+			txt(g.dst, l[1], x+190, yy, fReg, 12.5, cTxt)
+		}
+		y0 := y + float64(len(fixed))*rh + 8
+		txt(g.dst, "Clique na tecla para trocar e aperte a nova (Esc cancela):", x, y0, fReg, 11.5, cMut)
+		y0 += 22
+		for k, a := range keyActions {
+			a := a
+			yy := y0 + float64(k)*rh
+			lab := keyName(a.id)
+			st := 0
+			if g.rebind == a.id {
+				lab, st = "aperte…", 1
+			}
+			g.button(x, yy-2, 110, 19, lab, st, func() { g.rebind = a.id })
+			txt(g.dst, a.desc, x+190, yy, fReg, 12.5, cTxt)
+		}
+		g.button(x+w-150, y0+float64(len(keyActions))*rh+2, 150, 24, "Voltar ao padrão", 0, func() { cfg.Keys = nil; saveCfg() })
+	}})
+}
+
+// pileMenu: ações para a pilha inteira (botão direito no cemitério ou no exílio)
+func (g *Game) pileMenu(z string) []item {
+	name := map[string]string{"graveyard": "Cemitério", "exile": "Exílio"}[z]
+	n := len(g.S.Z[z])
+	items := []item{{hd: fmt.Sprintf("%s (%d)", name, n)}, {label: "Ver as cartas", fn: func() { g.viewZone(z, false) }}}
+	if n == 0 {
+		return items
+	}
+	all := func(to string, o moveOpt, msg string) func() {
+		return func() {
+			g.snap()
+			for _, id := range append([]int{}, g.S.Z[z]...) {
+				g.move(id, to, o)
+			}
+			if to == "library" && !o.bottom {
+				shuffle(g.S.Z["library"])
+			}
+			g.announce(msg)
+		}
+	}
+	items = append(items, item{hd: "Todas as cartas"},
+		item{label: "Embaralhar no grimório", fn: all("library", moveOpt{}, name+" embaralhado no grimório")},
+		item{label: "Para o fundo do grimório", fn: all("library", moveOpt{bottom: true}, name+" no fundo do grimório")},
+		item{label: "Para a mão", fn: all("hand", moveOpt{}, name+" voltou para a mão")})
+	if z == "graveyard" {
+		items = append(items, item{label: "Exilar o cemitério", fn: all("exile", moveOpt{}, "Cemitério exilado")})
+	} else {
+		items = append(items, item{label: "Para o cemitério", fn: all("graveyard", moveOpt{}, "Exílio foi para o cemitério")})
+	}
+	return items
 }

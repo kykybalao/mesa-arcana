@@ -110,6 +110,9 @@ func (g *Game) drawPeerPane(pn pane) {
 	st := p.State
 	const ph = 26.0
 	rect(g.dst, x, y, w, h, color.RGBA{0x1c, 0x2f, 0x3d, 0xff})
+	if mt := g.peerMat(st); mt != nil {
+		drawCover(g.dst, mt, x, y+ph, w, h-ph, 0.82)
+	}
 	g.add(region{x: x, y: y, w: w, h: h, block: true, click: func() {}, rclick: func() {}})
 	if st != nil && st.InGame {
 		f := 1.0
@@ -132,17 +135,27 @@ func (g *Game) drawPeerPane(pn pane) {
 	// placa do jogador
 	rect(g.dst, x, y, w, ph, cPanel)
 	rect(g.dst, x, y+ph-1, w, 1, cLine)
-	txt(g.dst, p.Name, x+10, y+5, fBold, 13.5, cAcc2)
+	tag, act := g.turnTag(p.Name)
+	plate := tag + p.Name
+	if act {
+		plate += " · na vez"
+		rect(g.dst, x, y, w, ph, color.RGBA{0x3a, 0x2f, 0x12, 0xff})
+	}
+	txt(g.dst, plate, x+10, y+5, fBold, 13.5, cAcc2)
 	if st != nil && st.InGame {
 		info := fmt.Sprintf("vida %d · mão %d · grimório %d · turno %d", st.Life, st.Hand, st.Library, st.Turn)
 		if t := trkText(st.Trk); t != "" {
 			info += " · " + t
 		}
-		nx := x + 10 + tw(p.Name, fBold, 13.5) + 12
-		txt(g.dst, fit(info, fReg, 12.5, x+w-nx-8), nx, y+6, fReg, 12.5, cTxt)
+		nx := x + 10 + tw(plate, fBold, 13.5) + 12
+		id := p.ID
+		g.add(region{x: x, y: y, w: w, h: ph, click: func() { g.viewMode, g.viewPeer, g.clampBF = 1, id, true }, rclick: func() { g.peerMenu(p) }})
+		zx := g.plateZones(p, x+w, y)
+		txt(g.dst, fit(info, fReg, 12.5, zx-nx-8), nx, y+6, fReg, 12.5, cTxt)
+	} else {
+		id := p.ID
+		g.add(region{x: x, y: y, w: w, h: ph, click: func() { g.viewMode, g.viewPeer, g.clampBF = 1, id, true }})
 	}
-	id := p.ID
-	g.add(region{x: x, y: y, w: w, h: ph, click: func() { g.viewMode, g.viewPeer, g.clampBF = 1, id, true }})
 	rstroke(g.dst, x+0.5, y+0.5, w-1, h-1, 0, 1, cLine)
 }
 

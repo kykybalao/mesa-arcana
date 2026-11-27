@@ -52,6 +52,9 @@ type PubState struct {
 	Shown   []PubInst        `json:"shown,omitempty"` // mão revelada para a mesa
 	Arrows  []Arrow          `json:"setas,omitempty"`
 	Trk     map[string]int   `json:"marc,omitempty"`
+	Table   *TableTurn       `json:"vez,omitempty"`
+	Mat     string           `json:"playmat,omitempty"`
+	Sleeve  string           `json:"sleeve,omitempty"`
 }
 type Msg struct {
 	T     string    `json:"t"` // hello, state, log, bye, full
@@ -59,6 +62,9 @@ type Msg struct {
 	Name  string    `json:"name,omitempty"`
 	State *PubState `json:"state,omitempty"`
 	Text  string    `json:"text,omitempty"`
+	To    string    `json:"to,omitempty"`   // só para este jogador (imagens)
+	Keys  []string  `json:"keys,omitempty"` // imagens pedidas ou enviada
+	Data  []byte    `json:"data,omitempty"`
 }
 type Peer struct {
 	ID    int
@@ -85,6 +91,8 @@ type Net struct {
 	peers    map[int]*Peer
 	events   []netEvent
 	lastSent []byte
+	imgReq   []imgReq
+	imgIn    []imgIn
 	tick     int
 }
 
@@ -269,7 +277,15 @@ func (n *Net) readLoop(c net.Conn, id int) {
 		}
 		n.handle(&m)
 		var others []net.Conn
-		if isHost {
+		if isHost && m.To != "" { // mensagem para um jogador só
+			if m.To != n.name {
+				for oid, oc := range n.conns {
+					if p := n.peers[oid]; oid != id && p != nil && p.Name == m.To {
+						others = append(others, oc)
+					}
+				}
+			}
+		} else if isHost {
 			for oid, oc := range n.conns {
 				if oid != id {
 					others = append(others, oc)
@@ -322,7 +338,18 @@ func (n *Net) handle(m *Msg) {
 			n.events = append(n.events, netEvent{from: m.From, name: m.Name, text: "entrou na mesa"})
 		}
 	}
+	if m.To != "" && m.To != n.name {
+		return
+	}
 	switch m.T {
+	case "imgreq":
+		if len(n.imgReq) < 32 && p.Name != "" {
+			n.imgReq = append(n.imgReq, imgReq{p.Name, m.Keys})
+		}
+	case "img":
+		if len(n.imgIn) < 32 && len(m.Keys) == 1 {
+			n.imgIn = append(n.imgIn, imgIn{p.Name, m.Keys[0], m.Data})
+		}
 	case "hello":
 		p.Name = m.Name
 	case "state":
@@ -434,6 +461,8 @@ func (g *Game) pubState() *PubState {
 	}
 	p.Arrows = g.arrows
 	p.Trk = s.Trk
+	p.Table = g.table
+	p.Mat, p.Sleeve = cfg.Mat, cfg.Sleeve
 	return p
 }
 
@@ -455,6 +484,9 @@ func (g *Game) netSync() {
 		if changed {
 			nw.send(&Msg{T: "state", State: st})
 		}
+	}
+	if nw.tick%20 == 0 {
+		g.imgSync()
 	}
 	for _, ev := range nw.takeEvents() {
 		if ev.chat {
@@ -543,7 +575,7 @@ func (g *Game) netModal() {
 		saveCfg()
 		return name
 	}
-	g.openModal(&Modal{title: "Multijogador em rede local", w: 640, h: 470, draw: func(x, y, w, h float64) {
+	g.openModal(&Modal{title: "Multijogador em rede local", w: 640, h: 560, draw: func(x, y, w, h float64) {
 		mode, status := nw.info()
 		txt(g.dst, "Seu nome na mesa", x, y+6, fReg, 13.5, cMut)
 		g.field("netname", x+150, y, 240, "Seu nome")
@@ -586,6 +618,23 @@ func (g *Game) netModal() {
 			txt(g.dst, strings.Join(ls, "\n"), x, y, fReg, 13, cMut)
 			y += float64(len(ls))*16.5 + 8
 		}
+		{
+			lk := "[x] Ver o playmat e a sleeve dos outros jogadores"
+			if cfg.NoPeerLook {
+				lk = "[  ] Ver o playmat e a sleeve dos outros jogadores"
+			}
+			g.button(x, y, 0, 28, lk, 0, func() { cfg.NoPeerLook = !cfg.NoPeerLook; saveCfg() })
+			y += 34
+			lab := "[x] Trocar imagens das cartas com a mesa"
+			if cfg.NoShare {
+				lab = "[  ] Trocar imagens das cartas com a mesa"
+			}
+			g.button(x, y, 0, 28, lab, 0, func() { cfg.NoShare = !cfg.NoShare; saveCfg() })
+			if ish.got+ish.sent > 0 {
+				txt(g.dst, fmt.Sprintf("recebidas %d · enviadas %d", ish.got, ish.sent), x+tw(lab, fBold, 14)+40, y+6, fReg, 12.5, cMut)
+			}
+			y += 38
+		}
 		if status != "" {
 			ls := wrap(status, fBold, 13.5, w)
 			txt(g.dst, strings.Join(ls, "\n"), x, y, fBold, 13.5, cAcc2)
@@ -604,9 +653,15 @@ func (g *Game) drawPlayers(x, y, w float64) {
 	rect(g.dst, x, y+27, w, 1, cLine)
 	px := x + 8
 	chipName := ""
+	var chipMenu func()
 	chip := func(label string, on bool, fn func()) {
+		tag, act := g.turnTag(chipName)
+		label = tag + label
 		cw := tw(label, fReg, 12.5) + 20
 		g.au.chips[chipName] = [2]float64{px + cw/2, y + 24}
+		if act { // de quem é a vez
+			rrect(g.dst, px-2, y+1, cw+4, 25, 12, cAcc)
+		}
 		if on {
 			rrect(g.dst, px, y+3, cw, 21, 10, cAcc2)
 			txtC(g.dst, label, px+cw/2, y+6, fBold, 12.5, color.RGBA{0x08, 0x1b, 0x16, 0xff})
@@ -614,11 +669,20 @@ func (g *Game) drawPlayers(x, y, w float64) {
 			rrect(g.dst, px, y+3, cw, 21, 10, cPanel2)
 			txtC(g.dst, label, px+cw/2, y+6, fReg, 12.5, cTxt)
 		}
-		g.add(region{x: px, y: y + 3, w: cw, h: 21, click: fn})
+		g.add(region{x: px, y: y + 3, w: cw, h: 21, click: fn, rclick: chipMenu})
 		px += cw + 6
 	}
 	g.drawModes(x+w-8, y)
 	multi := g.viewMode > 1
+	{
+		lab := "Vez…"
+		cw := tw(lab, fBold, 12.5) + 20
+		rrect(g.dst, px, y+3, cw, 21, 10, cAcc)
+		rrect(g.dst, px+1, y+4, cw-2, 19, 9, cPanel)
+		txtC(g.dst, lab, px+cw/2, y+6, fBold, 12.5, cAcc)
+		g.add(region{x: px, y: y + 3, w: cw, h: 21, click: g.tableModal})
+		px += cw + 8
+	}
 	chip("Minha mesa", g.viewPeer == 0 && !multi, func() { g.viewPeer = 0; g.setMode(1) })
 	for _, p := range nw.peerList() {
 		lab := p.Name + " (sem deck)"
@@ -627,6 +691,7 @@ func (g *Game) drawPlayers(x, y, w float64) {
 		}
 		id := p.ID
 		chipName = p.Name
+		chipMenu = func() { g.peerMenu(p) }
 		chip(lab, g.viewPeer == id && g.viewMode <= 2, func() {
 			g.viewPeer = id
 			if g.viewMode > 2 {
@@ -655,7 +720,9 @@ func (g *Game) drawPubInst(p *Peer, pi PubInst, x, y, w float64, flat bool) {
 	if c != nil && g.customs[pi.Cid] == nil && cardByID[pi.Cid] == nil {
 		g.customs[pi.Cid] = c // ficha personalizada do outro jogador
 	}
+	g.backOver = g.peerSleeve(p.State)
 	g.drawInst(i, x, y, w, false, false, 1)
+	g.backOver = nil
 	h := w * ratio
 	r := region{x: x, y: y, w: w, h: h, pv: c, pvFace: pi.Face, pvHidden: c == nil || pi.Down}
 	if c == nil {
@@ -668,6 +735,8 @@ func (g *Game) drawPubInst(p *Peer, pi PubInst, x, y, w float64, flat bool) {
 		g.au.pub[[2]int{p.ID, pi.ID}] = [4]float64{r.x, r.y, r.w, r.h}
 		r.click = func() { g.pubClick(p, pi, false) }
 		r.rclick = func() { g.pubClick(p, pi, true) }
+	} else if c != nil && !pi.Down {
+		r.click = func() { g.openZoom(c, pi.Face) }
 	}
 	g.add(r)
 	if pi.Cmdr && p.State.Tax[pi.Cid] > 0 {
@@ -682,6 +751,9 @@ func (g *Game) drawPubInst(p *Peer, pi PubInst, x, y, w float64, flat bool) {
 func (g *Game) drawPeerBoard(p *Peer, bx, by, bw, bh, top, handH, H float64) {
 	st := p.State
 	rect(g.dst, bx, by, bw, bh, color.RGBA{0x1c, 0x2f, 0x3d, 0xff})
+	if mt := g.peerMat(st); mt != nil {
+		drawCover(g.dst, mt, bx, by, bw, bh, 0.82)
+	}
 	rect(g.dst, bx, top, bw, 30, cPanel)
 	rect(g.dst, bx, top+29, bw, 1, cLine)
 	g.add(region{x: bx, y: by, w: bw, h: bh + handH, block: true, click: func() {}, rclick: func() {}})
@@ -730,7 +802,7 @@ func (g *Game) drawPeerBoard(p *Peer, bx, by, bw, bh, top, handH, H float64) {
 			}
 		} else {
 			for k := 0; k < n; k++ {
-				drawTex(g.dst, g.backTex(), bx+10+float64(k)*step, hy+10, g.cw, false, 1)
+				drawTex(g.dst, g.peerSleeve(st), bx+10+float64(k)*step, hy+10, g.cw, false, 1)
 			}
 		}
 		lab := fmt.Sprintf("%d carta(s) na mão de %s", n, p.Name)
@@ -768,7 +840,7 @@ func (g *Game) drawPeerPiles(p *Peer, rx, top, rightW, pileW, H float64) {
 			c := fmt.Sprint(st.Library)
 			txt(g.dst, c, rx+rightW-10-tw(c, fBold, 11.5), y+2, fBold, 11.5, cTxt)
 			if st.Library > 0 {
-				drawTex(g.dst, g.backTex(), rx+14, cy, pileW, false, 1)
+				drawTex(g.dst, g.peerSleeve(st), rx+14, cy, pileW, false, 1)
 			}
 			continue
 		}
@@ -784,20 +856,8 @@ func (g *Game) drawPeerPiles(p *Peer, rx, top, rightW, pileW, H float64) {
 			g.drawPubInst(p, pi, rx+14, cy+float64(n)*24, pileW, true)
 		}
 		if k > 0 && len(list) > 0 {
-			title, l := z, list
-			g.add(region{x: rx + 4, y: y, w: rightW - 8, h: slotH - 4, click: func() { g.peerZoneModal(p, title, l) }})
+			title := z
+			g.add(region{x: rx + 4, y: y, w: rightW - 8, h: slotH - 4, click: func() { g.peerZone(p.ID, title) }})
 		}
 	}
-}
-
-func (g *Game) peerZoneModal(p *Peer, title string, list []PubInst) {
-	m := &Modal{title: strings.Title(strings.ToLower(title)) + " de " + p.Name, w: 1100, h: 700}
-	m.draw = func(x, y, w, h float64) {
-		g.grid(m, x, y, w-8, h-44, len(list), 0, func(k int, cx, cy, cw float64) []cellBtn {
-			g.drawPubInst(p, list[len(list)-1-k], cx, cy, cw, true)
-			return nil
-		})
-		g.button(x+w-90, y+h-32, 90, 30, "Fechar", 1, g.closeModal)
-	}
-	g.openModal(m)
 }

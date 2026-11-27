@@ -1,0 +1,113 @@
+MESA ARCANA PARA PSP
+====================
+
+O que e: a mesa de teste de Commander, versao PSP. Joga sozinho e
+tambem em rede entre PSPs (Wi-Fi ad hoc, sem roteador, ate 4 PSPs).
+
+PRECISA de PSP com firmware customizado (CFW), por exemplo PRO ou ARK.
+
+COMO INSTALAR
+1. Copie a pasta PSP deste zip para a raiz do Memory Stick
+   (fica PSP/GAME/MesaArcana/EBOOT.PBP).
+2. No PC, abra o Mesa Arcana, escolha um deck e clique no botao "PSP".
+   Ele cria a pasta PSP/GAME/MesaArcana/decks/<nome do deck> ao lado
+   do programa, com a lista e as imagens das cartas ja reduzidas.
+3. Copie essa pasta decks para PSP/GAME/MesaArcana/ no Memory Stick.
+   Pode exportar varios decks; todos aparecem na lista do PSP.
+
+CONTROLES
+X        acao principal (jogar carta, virar/desvirar, comprar)
+O        menu da carta ou do monte
+TRIANGULO  ampliar a carta (zoom com o texto)
+QUADRADO comprar uma carta
+SELECT   proxima fase
+START    menu geral (turno, compra, fichas, vida, desfazer,
+         embaralhar, rede, novo jogo, trocar deck, sair)
+L        desfazer
+R + cima/baixo     vida +1 / -1
+R + esquerda/direita vida +5 / -5
+R + L    alterna entre a sua mesa e a dos amigos (em rede)
+R + SELECT  lista de TODOS os atalhos, em qualquer tela; abre na
+         pagina da tela atual, e L/R ou esquerda/direita trocam de pagina
+         (tambem em START > "Atalhos e controles")
+
+NOME E CUSTO NAS CARTAS
+- Cada carta na mesa e na mao mostra uma faixa com o nome e, logo
+  abaixo, o custo de mana em bolinhas coloridas (branco, azul, preto,
+  vermelho, verde; cinza com numero para mana generica).
+- O zoom (TRIANGULO) mostra o custo em bolinhas tambem.
+- Para tirar a faixa: menu START, "Nome e custo nas cartas: sim/nao".
+
+FACILIDADES
+- Nova partida, Trocar de deck e Sair (menu START) pedem confirmacao.
+- O programa grava config.txt na pasta dele com o ultimo deck aberto
+  e a opcao da faixa de nome; a lista de decks ja abre nesse deck.
+- Nas listas (grimorio, cemiterio, exilio, fichas), L e R pulam uma
+  pagina. Na busca do grimorio (ordem alfabetica), pulam de letra.
+- O no cemiterio ou no exilio abre o menu da pilha inteira: ver,
+  embaralhar tudo no grimorio, tudo no fundo, tudo para a mao, exilar
+  o cemiterio (ou mandar o exilio para o cemiterio).
+- START > "Resultado e historico": voce registra Venci/Perdi/Empate
+  (com turno e minutos) em historico.txt e ve as ultimas partidas.
+  Nada e registrado sozinho.
+
+NO PSP DE VERDADE
+- A alavanca analogica funciona como os direcionais (menos na mesa
+  com o painel ligado, onde ela rola o texto do painel).
+- Bateria e relogio ficam no canto de cima (fica vermelho com 15%).
+- Quando nada muda na tela, o programa para de redesenhar: gasta
+  menos bateria. Qualquer botao volta ao normal na hora.
+- O processador vai a 333 MHz so enquanto abre o deck (tela com barra
+  de progresso) e volta a 222 MHz na partida, para poupar bateria.
+  Para deixar sempre em 333: START > "Processador".
+- As fontes sao lidas do Memory Stick uma vez so, no inicio.
+- Durante a partida o programa nao le nem grava no cartao. Ele so le
+  ao abrir um deck, ao ver a carta grande e ao ver cartas novas de um
+  amigo na rede; so grava config.txt e historico.txt quando voce muda
+  uma opcao ou registra um resultado. O canto de baixo da tela de
+  atalhos mostra "arquivos lidos": se a luz do cartao piscar e esse
+  numero nao mudar, a leitura nao vem do Mesa Arcana.
+
+EQUIPAR / PRENDER CARTAS
+- O numa carta do campo > "Equipar / prender em...", depois escolha a
+  carta dona com os direcionais e aperte X (O cancela). Da mao:
+  "Jogar prendendo em...".
+- A carta presa fica atras da dona, aparecendo uma tira a direita; a
+  dona ganha um icone de elos. Os direcionais tambem escolhem a presa.
+- "Soltar (desequipar)" na presa, ou "Soltar tudo" na dona.
+- Se a dona sai do campo, as presas ficam soltas no campo (nao vao
+  sozinhas para o cemiterio). O zoom (TRIANGULO) lista as presas.
+
+PAINEL DA CARTA (estilo jogos de cartas de portatil)
+- A esquerda fica a carta escolhida: imagem pequena, nome, custo em
+  bolinhas, P/R, tipo e o texto em letra grande (a maior que couber;
+  se nao couber, a alavanca rola o texto; aparece uma barrinha).
+- Na barra de cima aparece o nome e o custo da carta escolhida.
+- Na mao, cada carta mostra o custo e o P/R (ou a lealdade); a carta
+  escolhida sobe e fica por cima das vizinhas.
+- R + QUADRADO esconde/mostra o painel (ou START > "Painel da carta
+  a esquerda").
+- Alavanca analogica para cima/baixo rola o texto do painel (quanto
+  mais empurra, mais rapido). Na mesa com o painel ligado, a alavanca
+  nao anda mais entre as cartas para cima/baixo; os direcionais sim.
+  Nos menus e listas ela continua funcionando como direcional.
+
+REDE ENTRE PSPs
+- Liga o Wi-Fi (chave do PSP) e, no menu START, entre em "Jogar em rede".
+  Na lista de decks, START tambem abre a rede.
+- Todos escolhem a MESMA sala (1 a 4).
+- A faixa de cima mostra nome e vida de cada um. R+L mostra a mesa
+  do amigo; TRIANGULO amplia a carta dele (texto lido pelo nome, se a
+  carta existir em algum deck seu no Memory Stick).
+- Um amigo sem sinal por 8 segundos sai da lista.
+
+O QUE E AUTOMATICO
+- Ao entrar na rede, sua vida, fase e cartas no campo sao enviadas
+  sozinhas para quem esta na mesma sala. Para parar, use "Sair da rede"
+  no menu da rede.
+- A primeira mulligan e gratis.
+
+AVISO: testado so numa versao para PC do mesmo codigo. Nao foi testado
+em PSP de verdade nem no emulador PPSSPP.
+
+Projeto pessoal, nao oficial.

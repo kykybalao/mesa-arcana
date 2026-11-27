@@ -33,6 +33,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if g.ctx != nil {
 		g.drawCtx()
 	}
+	if g.zoom != nil {
+		g.drawZoom()
+	}
 	if g.drag.on && g.drag.moved && g.S != nil {
 		if i := g.S.Cards[g.drag.id]; i != nil {
 			g.drawInst(i, float64(g.mx)-g.drag.ox, float64(g.my)-g.drag.oy, g.cw, i.Zone == "library", false, 0.9)
@@ -216,28 +219,56 @@ func (g *Game) drawHome() {
 	// imagens
 	if g.imgTick <= 0 {
 		keys := d.imageKeys()
-		g.imgTot, g.imgHave = len(keys), 0
+		g.imgTot, g.imgHave, g.artHave = len(keys), 0, 0
 		for _, k := range keys {
 			if hasImg(k) {
 				g.imgHave++
+			}
+			if hasArt(k) {
+				g.artHave++
 			}
 		}
 		g.imgTick = 90
 	}
 	g.imgTick--
-	st := fmt.Sprintf("Imagens no pendrive: %d de %d.", g.imgHave, g.imgTot)
-	if g.imgHave < g.imgTot {
-		st += " As cartas sem imagem aparecem como proxy de texto, e o jogo funciona igual."
+	st := fmt.Sprintf("No pendrive: %d de %d ilustrações · %d de %d cartas inteiras.", g.artHave, g.imgTot, g.imgHave, g.imgTot)
+	if g.artHave < g.imgTot || g.imgHave < g.imgTot {
+		st += " O que faltar aparece sem imagem, e o jogo funciona igual."
 	}
 	ls := wrap(st, fReg, 13.5, tw0)
 	txt(g.dst, strings.Join(ls, "\n"), rx+18, y, fReg, 13.5, cTxt)
 	y += float64(len(ls))*17 + 10
 	if dl.running.Load() {
 		g.button(rx+18, y, 0, 32, fmt.Sprintf("Baixando… %d/%d (clique para parar)", dl.done.Load(), dl.total.Load()), 0, func() { dl.stop.Store(true) })
-	} else if g.imgHave < g.imgTot {
-		g.button(rx+18, y, 0, 32, "Baixar imagens deste deck (em casa, com internet)", 0, func() { dl.start(d.imageKeys()) })
+		y += 40
+	} else if adl.running.Load() {
+		m, _ := adl.msg.Load().(string)
+		g.button(rx+18, y, 0, 32, m, 3, func() {})
+		y += 40
+	} else {
+		if g.artHave < g.imgTot {
+			g.button(rx+18, y, 0, 32, "Baixar só as ilustrações (leve)", 1, func() {
+				if cfg.Table == "" { // pediu as ilustrações: a mesa passa a usar a moldura
+					cfg.Table = "moldura"
+					saveCfg()
+					g.clearProxies()
+				}
+				adl.start(d.imageKeys(), nil)
+			})
+			y += 38
+		}
+		if g.imgHave < g.imgTot {
+			g.button(rx+18, y, 0, 30, "Baixar as cartas inteiras (imagem oficial)", 0, func() { dl.start(d.imageKeys()) })
+			y += 38
+		}
 	}
+	g.button(rx+18, y, 0, 30, "Cartas na mesa: "+tableLabel()+" (trocar)", 0, g.cycleTable)
 	y += 40
+	if m, _ := adl.msg.Load().(string); m != "" && !adl.running.Load() {
+		ls := wrap(m, fReg, 13, tw0)
+		txt(g.dst, strings.Join(ls, "\n"), rx+18, y, fReg, 13, cAcc2)
+		y += float64(len(ls))*16.5 + 8
+	}
 	if m, _ := dl.msg.Load().(string); m != "" {
 		ls := wrap(m, fReg, 13, tw0)
 		txt(g.dst, strings.Join(ls, "\n"), rx+18, y, fReg, 13, cAcc)
@@ -249,6 +280,7 @@ func (g *Game) drawHome() {
 		cards, cmd := deckCards(d)
 		a := g.cachedAnalysis(cards, cmd)
 		g.button(rx+348, ly+lh-60, 190, 44, "Bracket e combos", 0, func() { g.analysisModal(d.Name, cards, cmd) })
+		g.button(rx+548, ly+lh-60, 0, 44, "PSP", 0, func() { g.pspModal(d) })
 		bcol := color.Color(cAcc2)
 		if a.Bracket >= 4 {
 			bcol = cBad
@@ -316,6 +348,7 @@ func (g *Game) drawGame() {
 	}
 	g.arrowReset()
 	g.pruneArrows()
+	g.syncTable()
 	g.bf = image.Rect(int(bx), int(by), int(bx+bw), int(by+bh))
 	if g.clampBF {
 		g.clampBF = false
@@ -493,6 +526,8 @@ func (g *Game) drawGame() {
 	if s.Phase == "play" {
 		g.drawArrows()
 		g.arrowBanner(bx, by, bw, bh)
+		g.lockBanner(bx, by, bw, bh)
+		g.drawTimer(fx+fw-12, top+8)
 	}
 
 	// painel esquerdo: prévia, texto e registro
@@ -592,8 +627,8 @@ func (g *Game) drawGame() {
 				}
 			} else if z != "command" {
 				reg.rclick = func() {
-					if s.Phase == "play" {
-						g.viewZone(z, false)
+					if s.Phase == "play" && !g.denied() {
+						g.openCtx(g.pileMenu(z))
 					}
 				}
 			}
@@ -631,29 +666,57 @@ func (g *Game) drawGame() {
 		}
 		return 1
 	}
-	stat := func(label string, val int, col color.Color, dec, inc func()) {
-		if label != "" {
-			txt(g.dst, label, x, 15, fReg, 12.5, cMut)
-			x += tw(label, fReg, 12.5) + 6
+	// vida: uma caixa por jogador, com o nome em cima; a caixa de quem está na vez ganha contorno
+	stat := func(label string, val string, col color.Color, dec, inc func(), hl bool) {
+		w := 104.0
+		if dec == nil {
+			w = max(70, min(120, tw(label, fReg, 10.5)+18))
 		}
-		x += g.button(x, 11, 22, 24, "-", 0, dec) + 2
-		v := fmt.Sprint(val)
-		txtC(g.dst, v, x+17, 10, fBold, 19, col)
-		x += 36
-		x += g.button(x, 11, 22, 24, "+", 0, inc) + 10
+		if hl {
+			rrect(g.dst, x-1.5, 2.5, w+3, 41, 9, cAcc)
+		}
+		rrect(g.dst, x, 4, w, 38, 8, cPanel2)
+		txtC(g.dst, fit(label, fReg, 10.5, w-8), x+w/2, 5.5, fReg, 10.5, cMut)
+		if dec != nil {
+			g.add(region{x: x, y: 4, w: w, h: 38, wheel: func(dy float64) {
+				if dy > 0 {
+					inc()
+				} else {
+					dec()
+				}
+			}})
+			g.button(x+5, 19, 20, 20, "-", 0, dec)
+			g.button(x+w-25, 19, 20, 20, "+", 0, inc)
+		}
+		txtC(g.dst, val, x+w/2, 17.5, fBold, 17, col)
+		x += w + 6
 	}
-	stat("Vida", s.Life, cAcc2, func() { g.snap(); g.S.Life -= shift() }, func() { g.snap(); g.S.Life += shift() })
-	for k := range s.Opp {
-		lab := ""
-		if k == 0 {
-			lab = "Oponentes"
+	lifeCol := func(v int) color.Color {
+		if v <= 0 {
+			return cBad
 		}
-		col := color.Color(cTxt)
-		if s.Opp[k] <= 0 {
-			col = cBad
-		}
-		stat(lab, s.Opp[k], col, func() { g.snap(); g.S.Opp[k] -= shift() }, func() { g.snap(); g.S.Opp[k] += shift() })
+		return cTxt
 	}
+	myLab := "Sua vida"
+	if _, act := g.turnTag(""); act {
+		myLab = "Sua vida · na vez"
+	}
+	stat(myLab, fmt.Sprint(s.Life), cAcc2, func() { g.snap(); g.S.Life -= shift() }, func() { g.snap(); g.S.Life += shift() }, g.myTurn())
+	if nw.active() { // em rede: a vida de verdade de cada jogador, com o nome dele
+		for _, p := range nw.peerList() {
+			tag, act := g.turnTag(p.Name)
+			if p.State != nil && p.State.InGame {
+				stat(tag+p.Name, fmt.Sprint(p.State.Life), lifeCol(p.State.Life), nil, nil, act)
+			} else {
+				stat(tag+p.Name, "—", cMut, nil, nil, act)
+			}
+		}
+	} else {
+		for k := range s.Opp {
+			stat(fmt.Sprintf("Oponente %d", k+1), fmt.Sprint(s.Opp[k]), lifeCol(s.Opp[k]), func() { g.snap(); g.S.Opp[k] -= shift() }, func() { g.snap(); g.S.Opp[k] += shift() }, false)
+		}
+	}
+	x += 4
 	txt(g.dst, "Turno", x, 15, fReg, 12.5, cMut)
 	x += 40
 	txtC(g.dst, fmt.Sprint(s.Turn), x+12, 10, fBold, 19, cTxt)
@@ -665,8 +728,16 @@ func (g *Game) drawGame() {
 			}
 		}
 	}
+	nextLab := "Próximo turno"
+	if g.hasOrder() {
+		nextLab = "Passar a vez"
+	}
 	x += g.button(x, 8, 0, 30, "Próxima fase", 1, on(g.nextStep)) + 6
-	x += g.button(x, 8, 0, 30, "Próximo turno", 0, on(g.nextTurn)) + 6
+	x += g.button(x, 8, 0, 30, nextLab, 0, func() {
+		if g.S.Phase == "play" && g.modal == nil {
+			g.nextTurn()
+		}
+	}) + 6
 	x += g.button(x, 8, 0, 30, "Desvirar", 0, on(g.untapAll)) + 6
 	x += g.button(x, 8, 0, 30, "Fichas", 0, on(g.tokenModal)) + 6
 	x += g.button(x, 8, 0, 30, "Dado", 0, g.diceModal) + 6
@@ -681,6 +752,7 @@ func (g *Game) drawGame() {
 	rb("Sair", 2, func() {
 		g.confirm("Sair da partida e voltar para a lista de decks?", func() { g.screen, g.S = "home", nil; g.pv = nil })
 	})
+	rb("Resultado", 0, g.historyModal)
 	rb("Reiniciar", 0, func() { g.confirm("Começar uma partida nova com este deck?", func() { g.startGame(g.deck) }) })
 	st := 0
 	if len(g.undo) == 0 {
@@ -707,6 +779,19 @@ func main() {
 		log.SetOutput(f)
 	}
 	loadCfg()
+	if d := os.Getenv("MESA_MATS"); d != "" { // teste: grava todos os playmats em PNG e sai
+		buildMats()
+		for k, l := range matsBuilt {
+			if l.gen == nil {
+				continue
+			}
+			if f, err := os.Create(filepath.Join(d, fmt.Sprintf("%02d %s.png", k, l.name))); err == nil {
+				png.Encode(f, genRaw(l.gen, 640, 360))
+				f.Close()
+			}
+		}
+		return
+	}
 	initFonts()
 	if err := loadDB(); err != nil {
 		log.Fatal("banco de cartas: ", err)

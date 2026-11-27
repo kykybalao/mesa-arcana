@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.10)
+project(mesaarcana C)
+add_executable(mesaarcana src/main.c src/net.c)
+include(FindPkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+pkg_search_module(SDL2TTF REQUIRED SDL2_ttf)
+pkg_search_module(SDL2IMG REQUIRED SDL2_image)
+target_compile_options(mesaarcana PRIVATE -O2 -Wall)
+target_include_directories(mesaarcana PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS} ${SDL2IMG_INCLUDE_DIRS})
+target_link_libraries(mesaarcana PRIVATE ${SDL2TTF_LIBRARIES} ${SDL2IMG_LIBRARIES} ${SDL2_LIBRARIES}
+  pspnet_adhocctl pspnet_adhoc pspnet psputility pspwlan psppower)
+create_pbp_file(TARGET mesaarcana ICON_PATH ${CMAKE_SOURCE_DIR}/icon0.png BACKGROUND_PATH NULL PREVIEW_PATH NULL TITLE "Mesa Arcana")

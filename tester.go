@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/draw"
+	"image/jpeg"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +22,7 @@ type tester struct {
 	ld, pld, rp bool
 	id, cnt     int
 	pxWait      int
+	w           int
 }
 
 // centro da região de uma carta em jogo
@@ -189,11 +194,51 @@ func (t *tester) step(g *Game) error {
 		g.closeModal()
 	case 34:
 		g.viewZone("library", true)
+		if dir, n, err := g.exportPSP(g.deck); err != nil || n < 50 {
+			chk(false, fmt.Sprint("exportar para PSP: ", n, err))
+		} else {
+			fmt.Println("psp:", dir, n)
+		}
+		g.zf.typ, g.zf.cmc = "Creature", 2
+		g.zf.cols["B"] = true
+		chk(manaValue("{2}{W/B}{X}") == 3 && manaValue("{2/W}{G}") == 3, "valor de mana")
+		n := 0
+		for _, id := range g.S.Z["library"] {
+			if g.zf.match(g.card(g.S.Cards[id]), "") {
+				n++
+			}
+		}
+		fmt.Println("busca: criaturas pretas de custo 2 no grimório:", n)
+		chk(n > 0 && n < len(g.S.Z["library"]), "filtro do grimório")
 		shot("4-buscar")
 	case 38:
 		g.closeModal()
 		g.scry(3)
 		shot("5-videncia")
+	case 39: // histórico e menu da pilha
+		g.closeModal()
+		g.recordGame("venci")
+		chk(len(loadHist()) > 0 && g.saved, "histórico registrado")
+		items := g.pileMenu("graveyard")
+		chk(len(items) >= 2, "menu da pilha do cemitério")
+		setKey("comprar", ebiten.KeyR)
+		chk(keyName("comprar") == "R", "trocar atalho")
+		cfg.Keys = nil
+		g.historyModal()
+		shot("5a-historico")
+	case 40:
+		g.closeModal()
+		g.shortcutsModal()
+		shot("5b-atalhos")
+	case 41: // tecla de mover com o mouse em cima: mesma função que G usa
+		g.closeModal()
+		if h := g.S.Z["hand"]; len(h) > 0 {
+			id := h[0]
+			g.snap()
+			g.move(id, "graveyard", moveOpt{})
+			chk(g.S.Cards[id] != nil && g.S.Cards[id].Zone == "graveyard", "mover para o cemitério pelo atalho")
+			g.undoLast()
+		}
 	case 42:
 		g.closeModal()
 		g.tokenModal()
@@ -255,11 +300,26 @@ func (t *tester) step(g *Game) error {
 			g.startArrow(g.S.Z["battlefield"][0])
 			g.pubClick(ps[0], ps[0].State.BF[0], false)
 			chk(len(g.arrows) == 1 && g.arrows[0].Peer == ps[0].Name && !g.au.pick, "seta para outra mesa")
+			if os.Getenv("MESA_NET") == "host" {
+				g.rollFirst()
+				g.setTable(func(t *TableTurn) { t.Lock, t.Limit = true, 120 })
+			}
 			g.viewPeer = ps[0].ID
 			shot("7b-rede")
 		}
 	case 48:
 		if os.Getenv("MESA_NET") != "" {
+			if !g.hasOrder() || !g.table.Lock {
+				t.n--
+				t.cnt++
+				chk(t.cnt < 6000, "rede: a ordem da mesa não chegou")
+				return nil
+			}
+			fmt.Println("rede: ordem", g.table.Order, "dados", g.table.Rolls, "| vez de", g.table.active(), "| minha vez", g.myTurn(), "| trancado", g.lockedOut())
+			chk(len(g.table.Order) == 2 && g.myTurn() != g.lockedOut(), "rede: tranca")
+			turn := g.S.Turn
+			g.nextTurn()
+			chk(g.S.Turn == turn, "passar a vez não começa turno meu")
 			g.setMode(4)
 			g.bumpTrk("Veneno", 1)
 			g.bumpTrk("Veneno", 1)
@@ -314,6 +374,29 @@ func (t *tester) step(g *Game) error {
 			t.cnt = 0
 		}
 	case 49:
+		if tb := os.Getenv("MESA_TABLE"); tb != "" && t.w < 12 { // cartas da mesa na nossa moldura
+			t.w++
+			switch t.w {
+			case 1:
+				art, _ := os.ReadFile(os.Getenv("MESA_PXART"))
+				ids := append(append([]int{}, g.S.Z["battlefield"]...), g.S.Z["hand"]...)
+				for k, id := range ids {
+					if p := artPath(g.S.Cards[id].Cid + ":0"); len(art) > 0 && k%3 != 2 {
+						os.MkdirAll(filepath.Dir(p), 0o755)
+						os.WriteFile(p, art, 0o644)
+					}
+				}
+				cfg.Table = tb
+				g.clearProxies()
+			case 8:
+				shot("7i-" + tb)
+			case 11:
+				cfg.Table = ""
+				g.clearProxies()
+			}
+			t.n--
+			return nil
+		}
 		if os.Getenv("MESA_ARTE") != "" {
 			if t.cnt++; t.cnt < 90 {
 				t.n--
@@ -335,12 +418,83 @@ func (t *tester) step(g *Game) error {
 			g.setMode(3)
 		}
 	case 50: // daqui em diante, mouse simulado: arrastar da mão para o campo
+		if os.Getenv("MESA_NET") != "" && t.w < 74 {
+			t.w++
+			ps := nw.peerList()
+			switch t.w {
+			case 1: // finge que as cartas do meu campo têm imagem baixada
+				if os.Getenv("MESA_NET") == "host" { // playmat e sleeve de arquivo: o visitante precisa receber
+					cfg.Mat, cfg.Sleeve = "f:teste.png", "f:verso.png"
+				} else {
+					cfg.Mat, cfg.Sleeve = "b:Vermelho e Verde", "b:Ametista"
+				}
+				g.back = nil
+				col := color.RGBA{0x30, 0x80, 0xb0, 0xff}
+				if os.Getenv("MESA_NET") == "host" {
+					col = color.RGBA{0xb0, 0x50, 0x30, 0xff}
+				}
+				im := image.NewRGBA(image.Rect(0, 0, 488, 680))
+				draw.Draw(im, im.Bounds(), &image.Uniform{col}, image.Point{}, draw.Src)
+				for _, id := range g.S.Z["battlefield"] {
+					if os.Getenv("MESA_NET") != "host" {
+						break
+					}
+					p := imgPath(g.S.Cards[id].Cid + ":0")
+					os.MkdirAll(filepath.Dir(p), 0o755)
+					if f, err := os.Create(p); err == nil {
+						jpeg.Encode(f, im, nil)
+						f.Close()
+					}
+				}
+				forgetMissing()
+			case 54:
+				if len(ps) > 0 {
+					g.viewPeer = ps[0].ID
+					g.setMode(1)
+				}
+			case 57:
+				shot("7j-visual")
+			case 59:
+				if os.Getenv("MESA_NET") == "join" {
+					_, e1 := os.Stat(sharePath("p|teste.png"))
+					_, e2 := os.Stat(sharePath("s|verso.png"))
+					chk(e1 == nil && e2 == nil, "playmat e sleeve do outro jogador")
+				}
+				g.viewPeer = 0
+				g.setMode(3)
+			case 60:
+				fmt.Println("rede: imagens recebidas", ish.got, "enviadas", ish.sent)
+				chk(ish.got > 0 || ish.sent > 0, "imagem da carta do outro jogador")
+				if len(ps) > 0 && ps[0].State != nil && len(ps[0].State.BF) > 0 {
+					g.pubClick(ps[0], ps[0].State.BF[0], false)
+				}
+				chk(g.zoom != nil, "carta grande do oponente")
+			case 64:
+				shot("7g-zoom")
+			case 66:
+				g.zoom = nil
+				if len(ps) > 0 {
+					g.peerZone(ps[0].ID, "CEMITÉRIO")
+				}
+				chk(g.modal != nil, "cemitério do oponente")
+			case 70:
+				shot("7h-cemiterio")
+			case 72:
+				g.closeModal()
+			}
+			t.n--
+			return nil
+		}
 		g.ctx = nil
 		shot("7d-setas")
 		t.fake = true
 		t.mx, t.my = 5, 300
 	case 51:
 		g.setMode(1)
+		if g.hasOrder() {
+			fmt.Println("rede: depois de passar, vez de", g.table.active(), "nº", g.table.N, "| meu turno", g.S.Turn)
+		}
+		g.tableOff = true
 		t.id = g.S.Z["hand"][0]
 		t.cnt = len(g.S.Z["battlefield"])
 		t.mx, t.my = t.at(g, t.id)

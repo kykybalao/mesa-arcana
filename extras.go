@@ -180,6 +180,9 @@ func (g *Game) toggleLang() {
 type look struct {
 	key, name string
 	tex       *ebiten.Image
+	gen       func(u, v float64) [3]float64 // playmat desenhado pelo programa: só é pintado quando é usado
+	thumb     *ebiten.Image
+	raw       chan *image.RGBA
 }
 
 var (
@@ -216,14 +219,18 @@ func mix(a, b [3]float64, t float64) [3]float64 {
 	return [3]float64{a[0] + (b[0]-a[0])*t, a[1] + (b[1]-a[1])*t, a[2] + (b[2]-a[2])*t}
 }
 
-const matW, matH = 960, 540
+const matW, matH = 1280, 720
 
 // genMat pinta um playmat por pixel; f recebe coordenadas de 0 a 1 e devolve a cor
-func genMat(f func(u, v float64) [3]float64) *ebiten.Image {
+func genMat(f func(u, v float64) [3]float64, matW, matH int) *ebiten.Image {
+	return ebiten.NewImageFromImage(genRaw(f, matW, matH))
+}
+
+func genRaw(f func(u, v float64) [3]float64, matW, matH int) *image.RGBA {
 	im := image.NewRGBA(image.Rect(0, 0, matW, matH))
 	for y := 0; y < matH; y++ {
 		for x := 0; x < matW; x++ {
-			u, v := float64(x)/matW, float64(y)/matH
+			u, v := (float64(x)+0.5)/float64(matW), (float64(y)+0.5)/float64(matH)
 			c := f(u, v)
 			vg := 1 - 0.55*math.Pow(math.Hypot(u-0.5, (v-0.5)*0.8)*1.5, 2.2) // escurece as bordas
 			o := im.PixOffset(x, y)
@@ -233,7 +240,7 @@ func genMat(f func(u, v float64) [3]float64) *ebiten.Image {
 			im.Pix[o+3] = 255
 		}
 	}
-	return ebiten.NewImageFromImage(im)
+	return im
 }
 
 func buildMats() {
@@ -241,9 +248,10 @@ func buildMats() {
 		return
 	}
 	add := func(name string, f func(u, v float64) [3]float64) {
-		matsBuilt = append(matsBuilt, &look{key: "b:" + name, name: name, tex: genMat(f)})
+		matsBuilt = append(matsBuilt, &look{key: "b:" + name, name: name, gen: f})
 	}
-	matsBuilt = append(matsBuilt, &look{key: "", name: "Feltro liso"})
+	matsBuilt = append(matsBuilt, &look{key: "", name: "Mesa Arcana (padrão)", gen: arcanaMat}, &look{key: "b:liso", name: "Feltro liso"})
+	manaMats(add)
 	add("Nebulosa", func(u, v float64) [3]float64 {
 		n := fbm(u*5, v*3, 1)
 		m := fbm(u*9+n*2, v*6-n, 7)
@@ -474,7 +482,30 @@ func scanLooks() {
 	}
 }
 
+// lookThumb: miniatura para a janela de aparência (os playmats do programa são pintados pequenos, na hora)
+func lookThumb(kind string, l *look) *ebiten.Image {
+	if l.gen == nil {
+		return lookImage(kind, l)
+	}
+	if l.thumb == nil {
+		l.thumb = genMat(l.gen, 256, 144)
+	}
+	return l.thumb
+}
+
 func lookImage(kind string, l *look) *ebiten.Image {
+	if l.gen != nil && l.tex == nil { // pinta em segundo plano; até ficar pronto, vale a miniatura ampliada
+		if l.raw == nil {
+			l.raw = make(chan *image.RGBA, 1)
+			go func(f func(u, v float64) [3]float64, ch chan *image.RGBA) { ch <- genRaw(f, matW, matH) }(l.gen, l.raw)
+		}
+		select {
+		case im := <-l.raw:
+			l.tex = ebiten.NewImageFromImage(im)
+		default:
+			return lookThumb(kind, l)
+		}
+	}
 	if l.tex != nil || !strings.HasPrefix(l.key, "f:") {
 		return l.tex
 	}
@@ -503,9 +534,6 @@ func findLook(kind, key string) *look {
 // matTex devolve o playmat escolhido (nil = feltro liso)
 func (g *Game) matTex() *ebiten.Image {
 	buildMats()
-	if cfg.Mat == "" {
-		return nil
-	}
 	if !looksScanned {
 		scanLooks()
 	}
@@ -546,7 +574,7 @@ func (g *Game) looksModal() {
 	buildMats()
 	buildSleeves()
 	scanLooks()
-	m := &Modal{title: "Aparência: playmat e sleeve", w: 940, h: 700}
+	m := &Modal{title: "Aparência: playmat e sleeve", w: 940, h: 790}
 	m.draw = func(x, y, w, h float64) {
 		section := func(title, kind string, cur *string, tw0, th0 float64, y0 float64) float64 {
 			txt(g.dst, title, x, y0, fBold, 15.5, cAcc)
@@ -568,7 +596,7 @@ func (g *Game) looksModal() {
 					rrect(g.dst, cx-4, cy-4, tw0+8, th0+8, 9, cAcc)
 				}
 				rrect(g.dst, cx, cy, tw0, th0, 6, cFelt)
-				if im := lookImage(kind, l); im != nil {
+				if im := lookThumb(kind, l); im != nil {
 					if kind == "sleeves" {
 						drawTex(g.dst, im, cx, cy, tw0, false, 1)
 					} else {
@@ -592,7 +620,7 @@ func (g *Game) looksModal() {
 			}
 			return cy + th0 + 40
 		}
-		ny := section("Playmat (fundo do campo de batalha)", "playmats", &cfg.Mat, 150, 84, y)
+		ny := section("Playmat (fundo do campo de batalha)", "playmats", &cfg.Mat, 112, 63, y)
 		section("Sleeve (verso das cartas)", "sleeves", &cfg.Sleeve, 78, 78*ratio, ny)
 		hint := "Para usar os seus: coloque imagens PNG ou JPG nas pastas playmats e sleeves, ao lado do programa, e clique em Atualizar."
 		txt(g.dst, fit(hint, fReg, 12.5, w), x, y+h-58, fReg, 12.5, cMut)

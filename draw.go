@@ -249,6 +249,9 @@ func (g *Game) proxy(c *Card, fi int) *ebiten.Image {
 }
 
 func (g *Game) backTex() *ebiten.Image {
+	if g.backOver != nil { // desenhando a carta de outro jogador: vale a sleeve dele
+		return g.backOver
+	}
 	if g.back == nil {
 		g.back = g.sleeveTex()
 	}
@@ -282,7 +285,7 @@ func (g *Game) backTex() *ebiten.Image {
 
 // cardTex escolhe a imagem real (se já estiver no pendrive) ou o proxy de texto
 func (g *Game) cardTex(c *Card, fi int) *ebiten.Image {
-	if !c.Custom || (c.Mine && c.Est == "") {
+	if (!c.Custom && cfg.Table == "") || (c.Mine && c.Est == "") {
 		if im := photo(c.ID + ":" + string(rune('0'+fi))); im != nil {
 			return im
 		}
