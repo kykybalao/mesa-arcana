@@ -449,8 +449,48 @@ void net_cycle(void) {
     }
 }
 
+/* ---------------- partida contra a IA: ela ocupa o lugar de um jogador da rede ---------------- */
+static int aiMode;
+void net_ai_begin(const char *name) {
+    if (state && !aiMode) net_shutdown();
+    memset(peers, 0, sizeof peers);
+    buildRefs();
+    state = 2, aiMode = 1, viewing = 0, nlog = 0;
+    peers[0].id = 1;
+    peers[0].phase = 2;
+    snprintf(peers[0].name, sizeof peers[0].name, "%s", name);
+}
+void net_ai_end(void) {
+    if (!aiMode) return;
+    aiMode = 0, state = 0, viewing = 0;
+    memset(peers, 0, sizeof peers);
+}
+void net_ai_say(const char *s) {
+    char t[120];
+    snprintf(t, sizeof t, "[IA] %s", s);
+    addLog(t);
+    net_dirty = 1;
+}
+void net_ai_card(int k, const char *name, const char *pt, int tapped, int row) {
+    if (k >= MAXPC) return;
+    PCard *c = &peers[0].c[k];
+    memset(c, 0, sizeof *c);
+    snprintf(c->name, sizeof c->name, "%s", name);
+    snprintf(c->pt, sizeof c->pt, "%s", pt);
+    c->flags = tapped ? 1 : 0;
+    c->row = row;
+    c->ref = findRef(name);
+}
+void net_ai_stats(int life, int turn, int hand, int lib, int gy, int ex, int ncard) {
+    Peer *p = &peers[0];
+    p->life = life, p->turn = turn, p->hand = hand, p->lib = lib, p->gy = gy, p->ex = ex;
+    p->ncard = ncard < MAXPC ? ncard : MAXPC;
+    p->phase = 2, p->step = 0;
+    net_dirty = 1;
+}
+
 void net_log(const char *fmt, ...) {
-    if (state != 2) return;
+    if (state != 2 || aiMode) return;
     char t[110];
     va_list ap;
     va_start(ap, fmt);
@@ -480,6 +520,10 @@ void net_tick(void) {
         return;
     }
     if (state != 2) return;
+    if (aiMode) {
+        peers[0].last = frameN;
+        return;
+    }
     unsigned char raw[1500];
     int n, guard = 0;
     while (guard++ < 32 && (n = trRecv(raw, sizeof raw)) > 0) handle(raw, n), net_dirty = 1;
@@ -495,6 +539,10 @@ void net_tick(void) {
 }
 
 void net_shutdown(void) {
+    if (aiMode) {
+        net_ai_end();
+        return;
+    }
     if (state == 2) {
         unsigned char raw[16];
         Buf b = {raw, raw + sizeof raw};

@@ -106,6 +106,24 @@ REDE ENTRE PSPs
   carta existir em algum deck seu no Memory Stick).
 - Um amigo sem sinal por 8 segundos sai da lista.
 
+CONTRA A IA (partida local para testar o deck)
+- Na lista de decks, QUADRADO marca o deck da IA (fica com a etiqueta
+  vermelha "deck da IA"). Depois X abre o seu deck e comeca a partida.
+- START > "Passar a vez (a IA joga o turno dela)": a IA joga o turno
+  inteiro e volta para voce.
+- START > "Atacar a IA": marque os atacantes e escolha "Atacar".
+- Quando a IA ataca, abre o menu de bloqueio: esquerda/direita troca
+  quem bloqueia cada atacante; "Confirmar bloqueios" resolve.
+- R + L mostra a mesa da IA. O que ela faz aparece no registro com [IA].
+- O que a IA faz sozinha: desvira, compra, joga um terreno, conjura o
+  comandante ou a carta mais cara que puder pagar, ataca quando vale a
+  pena e bloqueia trocas boas (ou para nao morrer).
+- O que e automatico: o dano do combate entre voce e a IA (atropelar,
+  vinculo com a vida, toque mortifero, vigilancia) ja muda a vida dos
+  dois, e criaturas mortas vao para o cemiterio.
+- A IA e simples: le so alguns efeitos (destruir todas as criaturas,
+  destruir/exilar uma criatura, comprar cartas). Serve para treinar.
+
 O QUE E AUTOMATICO
 - Ao entrar na rede, sua vida, fase e cartas no campo sao enviadas
   sozinhas para quem esta na mesma sala. Para parar, use "Sair da rede"

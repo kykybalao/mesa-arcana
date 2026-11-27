@@ -318,6 +318,10 @@ func (g *Game) nextTurn() {
 		}
 		return
 	}
+	if aiActive() { // contra a IA: ela joga o turno dela e depois começa o meu
+		g.aiTurn()
+		return
+	}
 	g.beginTurn()
 }
 

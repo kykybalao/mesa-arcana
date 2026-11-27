@@ -130,6 +130,12 @@ input,textarea,select{background:#0e1316;border:1px solid var(--line);border-rad
 .cell .card{position:relative;cursor:default}
 .cell .acts{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
 
+#aizone{background:#101a1f;border-bottom:1px solid var(--line);padding:4px 6px;--cw:46px;max-height:38vh;overflow:auto}
+#aizone .aih{font-size:12px;color:var(--mut);margin-bottom:3px}#aizone .aih b{color:var(--bad);margin-right:4px}
+#aizone .air{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:3px}
+#aizone .card{position:relative;cursor:pointer}#aizone .card.tapped{transform:rotate(90deg);margin:0 calc(var(--cw)*.2)}
+#aizone small{color:var(--mut);font-size:10px;margin-right:4px}
+#mid:has(#aizone){grid-template-rows:auto auto 1fr}
 /* ---------- celular ---------- */
 #zoom{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 #zoom .zc{--cw:min(300px,80vw);width:var(--cw);aspect-ratio:488/680;border-radius:14px;overflow:hidden}
@@ -539,7 +545,8 @@ function renderDecks(){
      noimg?el('div',{class:'warn'},`${noimg} imagens ainda não estão guardadas offline.`):el('div',{},el('small',{},'Completo para jogar offline.'))),
    el('div',{class:'row'},el('small',{},'Comandante'),mk(0),d.cmd.length?mk(1):null),
    el('div',{class:'row'},
-    el('button',{class:'pri',onclick:()=>startGame(d)},'Jogar'),
+    el('button',{class:'pri',onclick:()=>{AI=null;startGame(d);}},'Jogar'),
+    el('button',{onclick:()=>aiPickModal(d)},'Contra a IA'),
     el('button',{onclick:()=>analysisModal(d)},'Bracket e combos'),
     el('button',{onclick:()=>exportPack(d)},'Salvar pacote'),
     el('button',{onclick:()=>{$('#dname').value=d.name;$('#list').value=d.text||'';}},'Editar lista'),
@@ -916,8 +923,8 @@ $('#buntap').onclick=()=>playing()&&untapAll();
 $('#btok').onclick=()=>playing()&&tokenModal();
 $('#bdice').onclick=()=>G&&diceModal();
 $('#bundo').onclick=undo;
-$('#brestart').onclick=async()=>{if(await confirmBox('Começar uma partida nova com este deck?'))startGame(DECK);};
-$('#bexit').onclick=async()=>{if(await confirmBox('Sair da partida e voltar para a lista de decks?')){G=null;$('#game').hidden=true;$('#home').hidden=false;renderDecks();}};
+$('#brestart').onclick=async()=>{if(await confirmBox('Começar uma partida nova com este deck?')){if(AI)aiStart(DECK,AI.deck);else startGame(DECK);}};
+$('#bexit').onclick=async()=>{if(await confirmBox('Sair da partida e voltar para a lista de decks?')){G=null;AI=null;renderAI();$('#game').hidden=true;$('#home').hidden=false;renderDecks();}};
 $('#size').oninput=e=>{document.documentElement.style.setProperty('--cw',e.target.value+'px');try{localStorage.setItem('ma-size',e.target.value);}catch(_){}};
 document.addEventListener('keydown',e=>{
  if(!G||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
@@ -993,6 +1000,126 @@ function looksModal(){
 function langLabel(){$('#blang').textContent='Cartas em: '+(LANG==='pt'?'Português':'Inglês');}
 $('#blang').onclick=()=>{LANG=LANG==='pt'?'en':'pt';try{localStorage.setItem('ma-lang',LANG);}catch(_){}langLabel();if(G)render();};
 $('#blooks').onclick=looksModal;$('#blooks2').onclick=looksModal;
+
+/* ====================== PARTIDA CONTRA A IA ======================
+   A IA não lê o efeito das cartas: joga um terreno por turno, conjura pela curva, ataca quando é
+   seguro e bloqueia para não morrer. Entende as palavras-chave de combate e alguns feitiços simples
+   (destruir/exilar criatura, destruir todas as criaturas, comprar cartas). */
+let AI=null;
+const kw=(t,k)=>(t||'').toLowerCase().includes(k.toLowerCase());
+function mvOf(cost){let n=0;for(const m of (cost||'').matchAll(/\{([^}]+)\}/g)){const s=m[1];if(/^\d+$/.test(s))n+=+s;else if(!/^[XYZ]$/.test(s))n++;}return n;}
+const aF=a=>a.c.faces[0];
+const aIs=(a,t)=>(aF(a).type||'').includes(t);
+const aName=a=>loc(a.c,aF(a)).name;
+function fight(f,name,extra){const t=f.text||'';return{name,pow:parseInt(f.pow)||0,tou:parseInt(f.tou)||0,fly:kw(t,'Flying'),reach:kw(t,'Reach'),trample:kw(t,'Trample'),death:kw(t,'Deathtouch'),life:kw(t,'Lifelink'),vig:kw(t,'Vigilance'),defen:kw(t,'Defender'),...extra};}
+const fAI=a=>fight(aF(a),aName(a),{a});
+function fMine(iid){const i=G.cards[iid],c=cardOf(i),f=c.faces[i.face]||c.faces[0],x=fight(f,loc(c,f).name,{iid});const p=(i.counters['+1/+1']||0)-(i.counters['-1/-1']||0);x.pow+=p;x.tou+=p;return x;}
+const canBlk=(a,b)=>!a.fly||b.fly||b.reach;
+const kills=(s,d)=>s.pow>0&&(s.death||s.pow>=d.tou);
+const myCreatures=untap=>G.z.battlefield.filter(id=>{const i=G.cards[id];return !i.faceDown&&(!untap||!i.tapped)&&/Creature/.test(faceOf(i).type||'');});
+function aiSay(t){log('[IA] '+t);}
+function aiStart(mine,theirs){
+ startGame(mine);
+ AI={deck:theirs,life:0,turn:0,tax:0,over:false,lib:[],hand:[],bf:[],gy:[],cmd:[]};
+ const cmd=new Set(theirs.cmd);
+ for(const e of theirs.list){const c=CARDS.get(e.cid);if(!c)continue;for(let k=0;k<e.qty;k++){const a={c,tap:false,sick:false,cmdr:cmd.has(e.cid)&&k===0};(a.cmdr?AI.cmd:AI.lib).push(a);}}
+ AI.life=AI.cmd.length?40:20;shuffleArr(AI.lib);aiDraw(7);
+ aiSay('vai jogar com '+theirs.name);render();
+}
+function aiDraw(n){let k=0;for(;k<n&&AI.lib.length;k++)AI.hand.push(AI.lib.shift());return k;}
+function aiMana(){return AI.bf.filter(a=>!a.tap&&(aIs(a,'Land')||(kw(aF(a).text,'{T}: Add')&&!(aIs(a,'Creature')&&a.sick))));}
+function myBest(){const ids=myCreatures(false);ids.sort((x,y)=>{const a=fMine(x),b=fMine(y);return b.pow+b.tou-a.pow-a.tou;});return ids[0];}
+function aiWorth(a){if(!(aIs(a,'Instant')||aIs(a,'Sorcery')))return true;const t=aF(a).text||'';
+ if(kw(t,'Destroy all creatures'))return myCreatures(false).length>=AI.bf.filter(b=>aIs(b,'Creature')).length+2;
+ if(kw(t,'target creature'))return myCreatures(false).length>0;return true;}
+function aiDies(a){AI.bf=AI.bf.filter(b=>b!==a);(a.cmdr?AI.cmd:AI.gy).push(a);}
+function aiSpell(a){const t=aF(a).text||'',n=aName(a),b=myBest();
+ if(kw(t,'Destroy all creatures')){myCreatures(false).forEach(id=>move(id,'graveyard'));AI.bf.filter(x=>aIs(x,'Creature')).forEach(aiDies);aiSay(`conjurou ${n}: destruiu todas as criaturas`);announce('IA: '+n);}
+ else if(b&&kw(t,'Exile target creature')){aiSay(`conjurou ${n} e exilou ${fMine(b).name}`);announce('IA exilou '+fMine(b).name);move(b,'exile');}
+ else if(b&&kw(t,'Destroy target creature')){aiSay(`conjurou ${n} e destruiu ${fMine(b).name}`);announce('IA destruiu '+fMine(b).name);move(b,'graveyard');}
+ else if(kw(t,'Draw three cards')){aiDraw(3);aiSay(`conjurou ${n} e comprou 3`);}
+ else if(kw(t,'Draw two cards')){aiDraw(2);aiSay(`conjurou ${n} e comprou 2`);}
+ else if(kw(t,'Draw a card')){aiDraw(1);aiSay(`conjurou ${n} e comprou 1`);}
+ else aiSay(`conjurou ${n} (efeito não simulado)`);}
+function aiCast(){for(let g=0;g<30;g++){const src=aiMana(),pay=n=>src.slice(0,n).forEach(a=>a.tap=true);
+  if(AI.cmd.length){const a=AI.cmd[0],cost=mvOf(aF(a).cost)+2*AI.tax;if(cost<=src.length){pay(cost);AI.cmd.shift();AI.tax++;a.sick=true;AI.bf.push(a);aiSay('conjurou o comandante '+aName(a));continue;}}
+  const opts=AI.hand.filter(a=>!aIs(a,'Land')&&mvOf(aF(a).cost)<=src.length&&aiWorth(a)).sort((x,y)=>mvOf(aF(y).cost)-mvOf(aF(x).cost));
+  if(!opts.length)return;const a=opts[0];AI.hand=AI.hand.filter(x=>x!==a);pay(mvOf(aF(a).cost));
+  if(aIs(a,'Instant')||aIs(a,'Sorcery')){AI.gy.push(a);aiSpell(a);}else{a.sick=true;AI.bf.push(a);aiSay('conjurou '+aName(a));}}}
+function aiCheck(){if(AI.over)return;if(AI.life<=0){AI.over=true;aiSay('perdeu a partida');announce('Você venceu a IA!');}else if(G.life<=0){AI.over=true;aiSay('venceu a partida');announce('A IA venceu');}}
+function aiTurn(done){
+ snap();AI.turn++;AI.bf.forEach(a=>{a.tap=false;a.sick=false;});
+ if(!aiDraw(1)){aiSay('não tinha carta para comprar');AI.life=0;aiCheck();return done();}
+ aiSay(`— turno ${AI.turn}`);
+ const land=AI.hand.find(a=>aIs(a,'Land'));
+ if(land){AI.hand=AI.hand.filter(x=>x!==land);land.tap=kw(aF(land).text,'enters tapped')||kw(aF(land).text,'battlefield tapped');AI.bf.push(land);aiSay('jogou '+aName(land));}
+ aiCast();
+ const mine=myCreatures(true).map(fMine),att=[];
+ for(const a of AI.bf){if(!aIs(a,'Creature')||a.tap||(a.sick&&!kw(aF(a).text,'Haste')))continue;const f=fAI(a);if(f.pow<=0||f.defen)continue;
+  if(!mine.length||!mine.some(b=>canBlk(f,b)&&kills(b,f)&&!kills(f,b)))att.push(f);}
+ const end=()=>{while(AI.hand.length>7){AI.hand.sort((x,y)=>mvOf(aF(x).cost)-mvOf(aF(y).cost));const a=AI.hand.pop();AI.gy.push(a);aiSay('descartou '+aName(a));}aiCheck();done();};
+ if(!att.length){render();return end();}
+ const sum=att.reduce((s,f)=>s+f.pow,0);aiSay(`ataca com ${att.map(f=>f.name).join(', ')} (${sum} de dano)`);render();
+ const blk=att.map(()=>''),body=el('div',{});
+ body.append(el('p',{class:'help'},'Escolha quem bloqueia cada atacante. Fechar a janela conta como sem bloqueios.'));
+ att.forEach((f,k)=>{const sel=el('select',{onchange:e=>{blk[k]=e.target.value;}},el('option',{value:''},'Sem bloqueio'),
+   myCreatures(true).filter(id=>canBlk(f,fMine(id))).map(id=>{const b=fMine(id);return el('option',{value:id},`${b.name} ${b.pow}/${b.tou}`);}));
+  body.append(el('div',{class:'row'},el('b',{class:'grow'},`${f.name} ${f.pow}/${f.tou}${f.fly?' · voa':''}${f.trample?' · atropela':''}`),sel));});
+ let fin=false;const resolve=()=>{if(fin)return;fin=true;
+  const used=new Set();let dmg=0,gain=0;
+  att.forEach((f,k)=>{let b=blk[k]&&!used.has(blk[k])&&G.cards[blk[k]]?fMine(blk[k]):null;if(b)used.add(blk[k]);
+   f.a.tap=!f.vig;if(f.life)gain+=f.pow;
+   if(!b){dmg+=f.pow;return;}
+   if(f.trample&&!b.death)dmg+=Math.max(0,f.pow-b.tou);
+   if(kills(f,b)){move(b.iid,'graveyard');aiSay(b.name+' morreu bloqueando');}
+   if(kills(b,f)){aiDies(f.a);aiSay(f.name+' (IA) morreu');}});
+  G.life-=dmg;AI.life+=gain;aiSay(`você recebeu ${dmg} de dano`);announce(`Combate: ${dmg} de dano em você`);end();};
+ openModal(`A IA ataca: ${sum} de dano`,body,[el('button',{class:'pri',onclick:closeModal},'Confirmar bloqueios')],resolve);
+}
+function attackModal(){
+ if(!AI||AI.over||!playing())return;const mine=myCreatures(true);
+ if(!mine.length){announce('Nenhuma criatura desvirada');return;}
+ const pick=new Set(),body=el('div',{});body.append(el('p',{class:'help'},'Marque quem ataca. As atacantes viram; a IA decide os bloqueios.'));
+ mine.forEach(id=>{const f=fMine(id),cb=el('input',{type:'checkbox',onchange:e=>{e.target.checked?pick.add(id):pick.delete(id);}});body.append(el('label',{class:'row'},cb,`${f.name} ${f.pow}/${f.tou}`));});
+ openModal('Atacar a IA',body,[el('button',{class:'pri',onclick:()=>{closeModal();playerAttack([...pick]);}},'Atacar')]);
+}
+function playerAttack(ids){
+ if(!ids.length||AI.over)return;snap();
+ const att=ids.map(fMine).sort((a,b)=>b.pow-a.pow);let total=att.reduce((s,f)=>s+f.pow,0),dmg=0,gain=0;
+ att.forEach(f=>{if(!f.vig)G.cards[f.iid].tapped=true;});
+ const avail=AI.bf.filter(a=>aIs(a,'Creature')&&!a.tap),used=new Set();
+ for(const f of att){if(f.life)gain+=f.pow;
+  let best=avail.find(a=>!used.has(a)&&canBlk(f,fAI(a))&&kills(fAI(a),f)&&!kills(f,fAI(a)));
+  if(!best&&total>=AI.life)best=avail.filter(a=>!used.has(a)&&canBlk(f,fAI(a))).sort((x,y)=>fAI(x).pow+fAI(x).tou-fAI(y).pow-fAI(y).tou)[0];
+  if(!best){dmg+=f.pow;continue;}
+  used.add(best);total-=f.pow;const b=fAI(best);aiSay(`${b.name} bloqueou ${f.name}`);
+  if(f.trample&&!b.death)dmg+=Math.max(0,f.pow-b.tou);
+  if(kills(f,b))aiDies(best);if(kills(b,f))move(f.iid,'graveyard');}
+ AI.life-=dmg;G.life+=gain;aiSay(`recebeu ${dmg} de dano`);announce(`A IA recebeu ${dmg} de dano`);aiCheck();render();
+}
+function aiZoom(a){const c=a.c,fc=aF(a),u=imgURL(c,0),box=el('div',{class:'zc'});
+ if(u){const im=el('img',{src:u,alt:''});im.onerror=()=>im.replaceWith(txtNode(c,fc));box.append(im);}else box.append(txtNode(c,fc));
+ const l=loc(c,fc);openModal(l.name+' (IA)',el('div',{id:'zoom'},box,el('pre',{},`${l.name}  ${fc.cost||''}\n${l.type}\n\n${l.text||''}${fc.pow!=null&&fc.pow!==''?`\n\n${fc.pow}/${fc.tou}`:''}`)),[el('button',{class:'pri',onclick:closeModal},'Fechar')]);}
+function renderAI(){
+ let z=$('#aizone');
+ if(!AI||!G){if(z)z.remove();const b=$('#batk');if(b)b.remove();return;}
+ if(!z){z=el('div',{id:'aizone'});$('#mid').prepend(z);}
+ if(!$('#batk'))$('#bdice').after(el('button',{id:'batk',class:'pri',onclick:attackModal},'Atacar a IA'));
+ z.textContent='';
+ z.append(el('div',{class:'aih'},el('b',{},'IA'),` vida ${AI.life} · mão ${AI.hand.length} · grimório ${AI.lib.length} · cemitério ${AI.gy.length} · turno ${AI.turn}`+(AI.over?' · fim de jogo':'')));
+ const rows=[AI.bf.filter(a=>aIs(a,'Creature')),AI.bf.filter(a=>!aIs(a,'Creature')&&!aIs(a,'Land')),AI.bf.filter(a=>aIs(a,'Land')),AI.cmd];
+ rows.forEach((r,k)=>{if(!r.length)return;const row=el('div',{class:'air'});
+  r.forEach(a=>{const u=imgURL(a.c,0),n=el('div',{class:'card'+(a.tap?' tapped':''),onclick:()=>aiZoom(a)});
+   if(u){const im=el('img',{src:u,alt:''});im.onerror=()=>im.replaceWith(txtNode(a.c,aF(a)));n.append(im);}else n.append(txtNode(a.c,aF(a)));row.append(n);});
+  if(k===3)row.prepend(el('small',{},'comando'));z.append(row);});
+}
+{const r0=render;render=function(){r0();renderAI();};
+ const n0=nextTurn;nextTurn=function(){if(AI&&!AI.over&&G&&G.phase==='play')aiTurn(()=>n0());else n0();};}
+function aiPickModal(mine){
+ const body=el('div',{});body.append(el('p',{class:'help'},'Escolha o deck da IA. Ela joga sozinha: um terreno por turno, conjura pela curva, ataca e bloqueia. Ela não faz os efeitos das cartas (só destruir/exilar criatura, destruir todas e comprar). Quando você aperta “Próximo turno”, a IA joga o turno dela.'));
+ [...DECKS.values()].forEach(d=>body.append(el('div',{class:'row'},el('button',{style:'width:100%',onclick:()=>{closeModal();aiStart(mine,d);}},d.name+(d===mine?' (espelho)':'')))));
+ openModal('Jogar contra a IA',body,[el('button',{onclick:closeModal},'Cancelar')]);
+}
 
 /* ====================== INÍCIO ====================== */
 (async()=>{

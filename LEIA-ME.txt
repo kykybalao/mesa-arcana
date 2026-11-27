@@ -84,6 +84,24 @@ MULTIJOGADOR (rede local)
   A mao e o grimorio dos outros aparecem so como quantidade de cartas.
 - Fases, turnos e jogadas publicas de cada um aparecem no registro de todos.
 
+CONTRA A IA (partida local para testar o deck)
+- Na tela inicial, escolha o seu deck e clique em "Contra a IA". Depois
+  escolha o deck que a IA vai usar.
+- A mesa da IA aparece em cima do campo (vida, mao, campo, cemiterio).
+- "Proximo turno" passa a vez: a IA joga o turno dela inteiro e volta.
+- Para atacar a IA, use o botao "Atacar a IA" e marque os atacantes.
+- Quando a IA ataca, abre a janela de bloqueio: escolha quem bloqueia
+  cada atacante e confirme.
+- O que a IA faz sozinha: desvira, compra, joga um terreno, conjura o
+  comandante ou a carta mais cara que puder pagar, ataca quando vale a
+  pena e bloqueia trocas boas (ou bloqueia para nao morrer).
+- O que e automatico: o dano do combate entre voce e a IA (inclui
+  atropelar, vinculo com a vida, toque mortifero e vigilancia) ja muda a
+  vida dos dois, e criaturas mortas vao para o cemiterio.
+- A IA e simples: ela le so alguns efeitos (destruir todas as criaturas,
+  destruir/exilar uma criatura, comprar cartas). Os outros efeitos das
+  cartas dela sao ignorados. Serve para treinar o deck, nao para ganhar.
+
 COMBOS
 - Em "Bracket e combos", cada combo completo do deck vem com o passo a passo.
 - Os combos que faltam 1 carta ficam escondidos: botao "Mostrar o que falta 1 carta".

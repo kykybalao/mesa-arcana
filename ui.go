@@ -156,10 +156,59 @@ func (g *Game) playing() bool {
 }
 
 var fotoT0 time.Time
+var iaShot bool
 var fotoStep int
 
 func (g *Game) Update() error {
 	g.frame++
+	if f := os.Getenv("MESA_IA_TESTE"); f != "" { // teste da partida contra a IA: "meu deck|deck da IA|pasta das fotos"
+		parts := strings.Split(f, "|")
+		fr := g.frame
+		switch {
+		case fr == 2:
+			var a, b *Deck
+			for _, d := range g.decks {
+				if d.Name == parts[0] {
+					a = d
+				}
+				if d.Name == parts[1] {
+					b = d
+				}
+			}
+			g.startAI(a, b)
+			g.keep()
+			g.confirmBottom()
+		case fr > 10 && fr%40 == 0 && fr < 40*16:
+			if g.modal != nil && !iaShot { // bloqueios: foto da janela e, na próxima volta, aceita sem bloquear
+				iaShot = true
+				g.shot = filepath.Join(parts[2], fmt.Sprintf("bloqueio-%03d.png", fr/40))
+				break
+			}
+			if g.modal != nil {
+				iaShot = false
+				g.closeModal() // fecha sem bloquear: a janela resolve o combate
+				break
+			}
+			for _, want := range []bool{true, false} { // um terreno e uma mágica por turno
+				for _, id := range g.S.Z["hand"] {
+					if strings.Contains(g.card(g.S.Cards[id]).typeLine(), "Land") == want {
+						g.move(id, "battlefield", moveOpt{})
+						break
+					}
+				}
+			}
+			if ids := g.myCreatures(true); len(ids) > 0 && g.S.Turn > 2 {
+				g.playerAttack(ids)
+			}
+			fmt.Printf("turno %d: minha vida %d, IA %d (mão %d, campo %d)\n", g.S.Turn, g.S.Life, ai.life, len(ai.hand), len(ai.bf))
+			g.drawN(1)
+			g.nextTurn()
+		case fr == 40*16+5:
+			g.shot = filepath.Join(parts[2], "fim.png")
+		case fr == 40*16+10:
+			return ebiten.Termination
+		}
+	}
 	if f := os.Getenv("MESA_FOTO"); f != "" { // só para tirar a foto de divulgação: MESA_FOTO=deck|arquivo.png
 		dn, out, _ := strings.Cut(f, "|")
 		rede := os.Getenv("MESA_FOTO_REDE") // "host:Nome" ou "join:Nome": foto da mesa com vários jogadores

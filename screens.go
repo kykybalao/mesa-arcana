@@ -280,7 +280,8 @@ func (g *Game) drawHome() {
 		cards, cmd := deckCards(d)
 		a := g.cachedAnalysis(cards, cmd)
 		g.button(rx+348, ly+lh-60, 190, 44, "Bracket e combos", 0, func() { g.analysisModal(d.Name, cards, cmd) })
-		g.button(rx+548, ly+lh-60, 0, 44, "PSP", 0, func() { g.pspModal(d) })
+		pw := g.button(rx+548, ly+lh-60, 0, 44, "PSP", 0, func() { g.pspModal(d) })
+		g.button(rx+558+pw, ly+lh-60, 0, 44, "Contra a IA", 0, func() { g.aiModal(d) })
 		bcol := color.Color(cAcc2)
 		if a.Bracket >= 4 {
 			bcol = cBad
@@ -741,6 +742,9 @@ func (g *Game) drawGame() {
 	x += g.button(x, 8, 0, 30, "Desvirar", 0, on(g.untapAll)) + 6
 	x += g.button(x, 8, 0, 30, "Fichas", 0, on(g.tokenModal)) + 6
 	x += g.button(x, 8, 0, 30, "Dado", 0, g.diceModal) + 6
+	if aiActive() {
+		x += g.button(x, 8, 0, 30, "Atacar a IA", 1, on(g.attackModal)) + 6
+	}
 	// lado direito da barra
 	rxb := W - 10
 	rb := func(label string, style int, fn func()) {
@@ -750,10 +754,18 @@ func (g *Game) drawGame() {
 		rxb -= 6
 	}
 	rb("Sair", 2, func() {
-		g.confirm("Sair da partida e voltar para a lista de decks?", func() { g.screen, g.S = "home", nil; g.pv = nil })
+		g.confirm("Sair da partida e voltar para a lista de decks?", func() { aiStop(); g.screen, g.S = "home", nil; g.pv = nil })
 	})
 	rb("Resultado", 0, g.historyModal)
-	rb("Reiniciar", 0, func() { g.confirm("Começar uma partida nova com este deck?", func() { g.startGame(g.deck) }) })
+	rb("Reiniciar", 0, func() {
+		g.confirm("Começar uma partida nova com este deck?", func() {
+			if ai.on {
+				g.startAI(g.deck, ai.deck)
+			} else {
+				g.startGame(g.deck)
+			}
+		})
+	})
 	st := 0
 	if len(g.undo) == 0 {
 		st = 3

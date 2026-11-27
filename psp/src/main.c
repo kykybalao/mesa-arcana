@@ -3,6 +3,7 @@
  * (botão "PSP"): texto das cartas e imagens já reduzidas, na pasta decks/<deck>.
  * O mesmo código compila no PC com SDL2 para teste (teclado no lugar dos botões). */
 #include "base.h"
+#include <ctype.h>
 #include <dirent.h>
 #include <stdarg.h>
 #include <sys/stat.h>
@@ -537,6 +538,11 @@ static void drawCmd(int n) {
     announce(k ? "Comprou %d" : "O grimório acabou", k);
 }
 
+static int aiOn(void);
+static void aiTurn(void);
+static void aiRestart(void);
+static void aiStop(void);
+static void aiStart(const char *dir);
 static time_t gameStart;
 static int gameSaved;
 static void newGame(void) {
@@ -557,6 +563,7 @@ static void newGame(void) {
     for (int k = 0; k < 7; k++) drawOne();
     S.phase = PH_MULL;
     net_log("começou uma partida com %s", deckName);
+    aiRestart(); /* contra a IA: ela também começa de novo */
 }
 
 static void mulligan(void) {
@@ -592,13 +599,20 @@ static void confirmBottom(void) {
 static void untapAll(void) {
     for (int k = 0; k < S.zn[Z_BF]; k++) S.in[S.z[Z_BF][k]].tapped = 0;
 }
-static void nextTurn(void) {
+static void beginTurn(void) {
     snap();
     untapAll();
     S.turn++;
     S.step = 0;
     announce("Turno %d · %s", S.turn, stepNames[0]);
     net_log("turno %d", S.turn);
+}
+/* contra a IA, "próximo turno" passa a vez: ela joga o turno dela e depois começa o meu */
+static void nextTurn(void) {
+    if (aiOn())
+        aiTurn();
+    else
+        beginTurn();
 }
 static void nextStep(void) {
     if (S.phase != PH_PLAY) return;
@@ -927,6 +941,9 @@ static void drawMenu(void) {
     }
     textC(x + w / 2, y + h - 15, m->it[m->cur].adj ? "← → muda · X escolhe · O volta" : "X escolhe · O volta", 9, 0, cMut);
 }
+
+#include "ai.c"
+static int aiOn(void) { return A.on; }
 
 /* ===================== zoom ===================== */
 
@@ -1573,8 +1590,9 @@ static void cQuit(int x) { (void)x; askSure("Sair do Mesa Arcana?", "Sim, sair",
 static void mainMenu(void) {
     Menu *m = openMenu("Mesa Arcana");
     m->relabel = relabelMain;
+    if (A.on) mAdd(m, "Atacar a IA", aAttackMenu, 0);
     mAdd(m, "Próxima fase (SELECT)", aNextStep, 0);
-    mAdd(m, "Próximo turno (desvira tudo, não compra)", aNextTurn, 0);
+    mAdd(m, A.on ? "Passar a vez (a IA joga o turno dela)" : "Próximo turno (desvira tudo, não compra)", aNextTurn, 0);
     mAdd(m, "Comprar 1 (□)", aDraw, 1);
     mAdd(m, "Desvirar tudo", aUntap, 0);
     mAdd(m, "Criar ficha", aTokens, 0);
@@ -1617,6 +1635,7 @@ static const HelpPage helpPages[] = {
         "R + SELECT|esta lista de atalhos",
         "R + SQ|esconde/mostra o painel da carta (à esquerda)",
         "ANALOG|rola o texto do painel da carta",
+        "START|contra a IA: \"Atacar a IA\" e \"Passar a vez\" (R + L mostra a mesa dela)",
     }},
     {"Pilhas", "Pilhas (coluna da direita)", {
         "X|grimório: compra 1",
@@ -1660,6 +1679,7 @@ static const HelpPage helpPages[] = {
     {"Decks", "Lista de decks", {
         "↑ ↓|escolhe o deck",
         "X|joga",
+        "SQ|marca o deck da IA (depois escolha o seu e aperte X)",
         "START|menu da rede",
         "SELECT|sai do programa",
     }},
@@ -2281,6 +2301,7 @@ static void drawLogo(int x, int y, int s) {
 }
 
 static int screen; /* 0 decks, 1 mesa */
+static int aiDeck = -1; /* deck marcado com □ para a IA */
 static int helpPageFor(void) {
     if (screen == 0) return 7;
     if (zoom.on) return 3;
@@ -2311,11 +2332,13 @@ static void drawDecks(void) {
             fill(12, y - 2, 3, 20, cAcc);
         }
         char b[120];
-        fit(b, sizeof b, deckTitles[k], 13, k == deckCur, SW - 50);
+        fit(b, sizeof b, deckTitles[k], 13, k == deckCur, SW - 110);
         text(22, y, b, 13, k == deckCur, k == deckCur ? cTxt : cMut);
+        if (k == aiDeck) badge(SW - 70, y + 1, "deck da IA", cBad, cTxt);
     }
     if (*netMsg) text(16, SH - 34, netMsg, 10, 0, cAcc2);
-    textC(SW / 2, SH - 16, ndecks ? "X joga · START rede · R+SELECT atalhos · SELECT sai" : "SELECT sai", 9, 0, cMut);
+    if (aiDeck >= 0) textC(SW / 2, SH - 30, "Contra a IA: escolha o SEU deck e aperte X (□ de novo desmarca)", 9, 0, cAcc2);
+    textC(SW / 2, SH - 16, ndecks ? "X joga · □ marca o deck da IA · START rede · R+SELECT atalhos · SELECT sai" : "SELECT sai", 9, 0, cMut);
 }
 
 static int decksInput(void) {
@@ -2323,11 +2346,15 @@ static int decksInput(void) {
     if (pressed[B_DOWN] && deckCur < ndecks - 1) deckCur++;
     if (pressed[B_SELECT]) running = 0;
     if (pressed[B_START]) net_menu();
+    if (pressed[B_SQ] && ndecks) aiDeck = aiDeck == deckCur ? -1 : deckCur;
     if (pressed[B_X] && ndecks) {
         if (loadDeck(deckDirs[deckCur])) {
             snprintf(lastDeck, sizeof lastDeck, "%s", deckDirs[deckCur]);
             cfgSave();
+            aiStop();
             newGame();
+            if (aiDeck >= 0) aiStart(deckDirs[aiDeck]);
+            aiDeck = -1;
             selKind = 0, selX = 200, selY = 230;
             return 1;
         }
@@ -2397,8 +2424,10 @@ int main(int argc, char *argv[]) {
         readInput();
         if (stickScrolls && (stickY > 6000 || stickY < -6000)) infoScroll += stickY / 5000; /* quanto mais empurra, mais rápido */
         net_tick();
+        aiTick();
         if (wantDecks) {
             wantDecks = 0;
+            aiStop();
             closeMenus();
             screen = 0;
             scanDecks();

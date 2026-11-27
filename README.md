@@ -18,6 +18,7 @@ Simulador offline manual de Commander (Magic: The Gathering) para testar decks s
 - **Aparência**: playmat padrão, 5 playmats de cor e 10 de duas cores desenhados pelo programa, sleeves prontas e as suas próprias (pastas `playmats` e `sleeves`). As cartas na mesa podem aparecer como imagem oficial, moldura + ilustração, arte estendida, arte inteira ou proxy simples (tecla E).
 - **Busca no grimório** com filtros de tipo, custo de mana e cor.
 - **Atalhos trocáveis** (F1), mover a carta com o mouse em cima (G, X, H, B), menu da pilha inteira no cemitério e no exílio, e **histórico de partidas** com taxa de vitória por deck (botão "Resultado").
+- **Partida contra a IA** (Windows, celular e PSP): escolha o deck da IA e treine o seu. A IA joga terrenos, conjura o que puder pagar, ataca e bloqueia; o dano do combate é aplicado sozinho. Ela é simples e lê só alguns efeitos (remoções e compra).
 - **Versão para PSP** (veja abaixo).
 - **Criador de cartas** próprias, que entram nos decks pelo nome.
 - **Fazedor de proxies**: qualquer carta (ou as suas) no formato de carta de Magic, em três estilos (moldura, arte estendida e arte inteira), baixando só a ilustração. Grava PNG no tamanho de impressão ou folhas A4 com 9 cartas. Moldura e símbolos são desenhados pelo programa e toda carta sai marcada como proxy.
@@ -61,7 +62,7 @@ Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go
 
 **[Baixar o MesaArcana-Android.apk](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Android.apk)** (13 MB). Abra o arquivo no celular e permita "instalar apps desconhecidos" quando o Android pedir.
 
-Já vem com os 5 decks de Commander de Foundations. Feito para toque: toque vira/desvira, toque duplo na mão joga a carta, arrastar move, **segurar** a carta abre o menu (com "Ampliar carta"). O texto das cartas funciona sem internet; as imagens vêm do Scryfall quando há conexão.
+Já vem com os 5 decks de Commander de Foundations. Feito para toque: toque vira/desvira, toque duplo na mão joga a carta, arrastar move, **segurar** a carta abre o menu (com "Ampliar carta"). O botão **Contra a IA** em cada deck começa uma partida contra a IA. O texto das cartas funciona sem internet; as imagens vêm do Scryfall quando há conexão.
 
 <img src="docs/celular.png" width="260" alt="Mesa Arcana no celular">
 

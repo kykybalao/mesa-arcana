@@ -82,6 +82,11 @@ extern int nOpen;
 
 /* rede (net.c) */
 void net_init(void);
+void net_ai_begin(const char *name);
+void net_ai_end(void);
+void net_ai_say(const char *s);
+void net_ai_card(int k, const char *name, const char *pt, int tapped, int row);
+void net_ai_stats(int life, int turn, int hand, int lib, int gy, int ex, int ncard);
 void net_menu(void);
 void net_tick(void);
 extern int net_dirty;
