@@ -37,9 +37,14 @@ O jeito de jogar e os atalhos estão no [LEIA-ME.txt](LEIA-ME.txt).
 
 ### Baixar pronto (Windows)
 
-**[Baixar o MesaArcana-Windows.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Windows.zip)** (19 MB). Extraia a pasta onde quiser (pode ser no pendrive) e abra o `MesaArcana.exe`. Não precisa instalar nada. Já vem com decks prontos para jogar: o Gabranth e os 5 decks de Commander de Foundations (Calling All Angels (Giada, branco), Keen Engineering (Sai, azul), Wretched Ranks (Ghoulcaller Gisa, preto), Reign of Dragons (Lathliss, vermelho) e Tramplesaurus Rex (Ghalta, verde)).
+**[Baixar o MesaArcana-Windows.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Windows.zip)** (42 MB). Extraia a pasta onde quiser (pode ser no pendrive) e abra o `MesaArcana.exe`. Não precisa instalar nada. Já vem com decks prontos para jogar: o Gabranth e os 5 decks de Commander de Foundations (Calling All Angels (Giada, branco), Keen Engineering (Sai, azul), Wretched Ranks (Ghoulcaller Gisa, preto), Reign of Dragons (Lathliss, vermelho) e Tramplesaurus Rex (Ghalta, verde)).
 
 Na primeira vez o Windows pode mostrar o aviso "O Windows protegeu o computador", porque o programa não é assinado. Clique em "Mais informações" e depois em "Executar assim mesmo".
+
+As cartas dos decks de Foundations já vêm com as ilustrações baixadas (`dados/artes`), desenhadas na moldura do Mesa Arcana, então funcionam sem internet.
+
+| ![Reign of Dragons no PC](docs/foundations-dragons.png) | ![Calling All Angels no PC](docs/foundations-angels.png) |
+|---|---|
 
 ### Compilar o programa (Windows)
 
@@ -55,9 +60,9 @@ Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go
 
 ### PSP
 
-**[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (7 MB). Precisa de um PSP com firmware customizado.
+**[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (10 MB). Precisa de um PSP com firmware customizado.
 
-1. Copie a pasta `PSP` do zip para a raiz do Memory Stick. Já dá para jogar: vem com os 5 decks de Commander de Foundations, com as imagens prontas.
+1. Copie a pasta `PSP` do zip para a raiz do Memory Stick. Já dá para jogar: vem com os 5 decks de Commander de Foundations, já com as cartas ilustradas.
 2. Para jogar com outros decks, no programa do PC escolha o deck e clique em **PSP**. Ele grava `PSP/GAME/MesaArcana/decks/<deck>` ao lado do programa; copie essa pasta para o Memory Stick também.
 3. No PSP, R + SELECT mostra todos os atalhos.
 
@@ -65,7 +70,7 @@ Joga sozinho ou em rede entre até 4 PSPs (Wi-Fi ad hoc). Tem painel da carta co
 
 | Mesa | Atalhos |
 |---|---|
-| ![Mesa no PSP](docs/psp.png) | ![Atalhos no PSP](docs/psp-atalhos.png) |
+| ![Mesa no PSP](docs/foundations-psp.png) | ![Zoom da carta no PSP](docs/foundations-psp-zoom.png) | ![Atalhos no PSP](docs/psp-atalhos.png) |
 
 Para compilar: instale o [pspdev](https://github.com/pspdev/pspdev) (traz SDL2, SDL2_ttf e SDL2_image) e, na pasta `psp`:
 

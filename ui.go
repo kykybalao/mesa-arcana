@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/color"
 	"io/fs"
+	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
@@ -156,7 +157,59 @@ func (g *Game) playing() bool {
 
 func (g *Game) Update() error {
 	g.frame++
+	if f := os.Getenv("MESA_FOTO"); f != "" { // só para tirar a foto de divulgação: MESA_FOTO=deck|arquivo.png
+		dn, out, _ := strings.Cut(f, "|")
+		switch g.frame {
+		case 2:
+			g.reloadDecks(dn)
+			g.startGame(g.decks[g.sel])
+			g.keep()
+			g.confirmBottom()
+			for _, z := range []string{"hand", "hand", "hand", "library", "library", "library", "library"} {
+				for _, id := range g.S.Z[z] {
+					c := g.card(g.S.Cards[id])
+					land := strings.Contains(c.typeLine(), "Land")
+					if (z == "hand") == land || z == "library" {
+						g.move(id, "battlefield", moveOpt{})
+						break
+					}
+				}
+			}
+			if c := g.S.Z["command"]; len(c) > 0 {
+				g.move(c[0], "battlefield", moveOpt{})
+				g.pv = g.card(g.S.Cards[c[0]])
+			}
+			g.nextTurn()
+			g.nextTurn()
+		case 240:
+			for _, id := range g.S.Z["battlefield"] {
+				if g.S.Cards[id].Cmdr {
+					g.pv = g.card(g.S.Cards[id])
+				}
+			}
+		case 245:
+			g.shot = out
+		case 250:
+			return ebiten.Termination
+		}
+	}
 	if os.Getenv("MESA_EXPORTAR") != "" && g.frame == 2 { // só para gerar os decks de exemplo do PSP
+		if os.Getenv("MESA_ARTES") != "" { // baixa as ilustrações (como o botão "Baixar só as ilustrações")
+			cfg.Table = "moldura"
+			saveCfg()
+			cl := &http.Client{Timeout: 25 * time.Second}
+			os.MkdirAll(filepath.Dir(artPath("x:0")), 0o755)
+			for _, d := range g.decks {
+				for _, k := range d.imageKeys() {
+					if !hasArt(k) {
+						if err := fetchArt(cl, k); err != nil {
+							fmt.Println("arte falhou:", k, err)
+						}
+						time.Sleep(100 * time.Millisecond)
+					}
+				}
+			}
+		}
 		for _, d := range g.decks {
 			dir, n, err := g.exportPSP(d)
 			fmt.Println("exportado:", dir, n, err)

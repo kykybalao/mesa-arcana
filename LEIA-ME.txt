@@ -19,6 +19,9 @@ O QUE JA VEM DENTRO
   Calling All Angels (Giada, branco), Keen Engineering (Sai, azul),
   Wretched Ranks (Ghoulcaller Gisa, preto), Reign of Dragons (Lathliss,
   vermelho) e Tramplesaurus Rex (Ghalta, verde).
+  As ilustracoes desses decks ja vem baixadas em dados/artes, entao as
+  cartas aparecem com arte na moldura do Mesa Arcana mesmo sem internet.
+  A tecla E troca o estilo das cartas na mesa.
 
 ADICIONAR OU EDITAR UM DECK
 - Clique em "Novo deck / importar lista". Se voce ja copiou a lista (Ctrl+C),
