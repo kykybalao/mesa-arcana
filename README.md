@@ -33,7 +33,7 @@ Simulador offline manual de Commander (Magic: The Gathering) para testar decks s
 
 ## Como usar
 
-O jeito de jogar e os atalhos estão no [LEIA-ME.txt](LEIA-ME.txt).
+Cada versão tem o seu guia: **[Windows](versoes/Windows.md)**, **[Celular (Android)](versoes/Celular.md)** e **[PSP](versoes/PSP.md)**. O que mudou em cada versão está no **[CHANGELOG](CHANGELOG.md)**. Os atalhos do Windows estão no [LEIA-ME.txt](LEIA-ME.txt).
 
 ### Baixar pronto (Windows)
 
@@ -103,7 +103,9 @@ A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`)
 | `build/` | Scripts que montam esses bancos e os roteiros de teste |
 | `html/` | Versão para navegador |
 | `psp/` | Versão para PSP (C + SDL2) |
-| `download/` | Programas prontos (Windows e PSP) |
+| `download/` | Programas prontos (Windows, Android e PSP) |
+| `versoes/` | Guia de cada versão |
+| `mobile/`, `android/` | Versão de celular (página e app Android) |
 | `decks/` | Decks de exemplo: Gabranth e os 5 decks de Commander de Foundations |
 
 Os scripts de `build/` foram escritos para a máquina onde o projeto nasceu e têm caminhos fixos (`/home/user/mesa`); ajuste antes de rodar.
