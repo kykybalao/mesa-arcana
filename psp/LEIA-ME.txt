@@ -9,10 +9,10 @@ PRECISA de PSP com firmware customizado (CFW), por exemplo PRO ou ARK.
 COMO INSTALAR
 1. Copie a pasta PSP deste zip para a raiz do Memory Stick
    (fica PSP/GAME/MesaArcana/EBOOT.PBP). Pronto: ja da para jogar.
-   O zip traz 5 decks de 40 cartas feitos com os meio-decks do
-   Beginner Box de Foundations (Gatos e Vampiros, Cura e Elfos,
-   Mortos-vivos e Piratas, Magos e Inferno, Goblins e Primal).
-   Deck sem comandante comeca com 20 de vida; com comandante, 40.
+   O zip traz os 5 decks de Commander de Foundations, com as imagens
+   ja prontas: Calling All Angels (Giada), Keen Engineering (Sai),
+   Wretched Ranks (Ghoulcaller Gisa), Reign of Dragons (Lathliss) e
+   Tramplesaurus Rex (Ghalta).
 Para jogar com OUTROS decks (os seus):
 2. No PC, abra o Mesa Arcana, escolha um deck e clique no botao "PSP".
    Ele cria a pasta PSP/GAME/MesaArcana/decks/<nome do deck> ao lado

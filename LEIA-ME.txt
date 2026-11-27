@@ -14,11 +14,11 @@ O QUE JA VEM DENTRO
   sem internet, com as cartas no estilo proxy de playtest (nome, custo, tipo,
   texto e poder/resistencia).
 - decks/Gabranth.txt: o deck do Gabranth, pronto para jogar.
-- decks/Foundations - ....txt: 5 decks prontos de 40 cartas, feitos com os
-  10 meio-decks do Beginner Box de Foundations (cada um junta 2 meio-decks
-  de cores diferentes): Gatos e Vampiros, Cura e Elfos, Mortos-vivos e
-  Piratas, Magos e Inferno, Goblins e Primal. Deck sem comandante comeca com
-  20 de vida; com comandante, 40.
+- decks/Foundations - ....txt: os 5 decks de Commander de Foundations
+  (Foundations Commander), com as 100 cartas da lista oficial:
+  Calling All Angels (Giada, branco), Keen Engineering (Sai, azul),
+  Wretched Ranks (Ghoulcaller Gisa, preto), Reign of Dragons (Lathliss,
+  vermelho) e Tramplesaurus Rex (Ghalta, verde).
 
 ADICIONAR OU EDITAR UM DECK
 - Clique em "Novo deck / importar lista". Se voce ja copiou a lista (Ctrl+C),
