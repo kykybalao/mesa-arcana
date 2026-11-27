@@ -2,9 +2,8 @@
 
 # Mesa Arcana
 
-Projetinho vibecoded, eu não sei programar, ficou meio merda, pedi pra IA deixar bonito pelo menos.
 
-Simulador offline de Commander (Magic: The Gathering) para testar decks sozinho ou em rede local. Roda de um pendrive, sem instalar nada e sem internet: o texto de todas as cartas já vem dentro do programa.
+Simulador offline manual de Commander (Magic: The Gathering) para testar decks sozinho ou em rede local. Roda de um pendrive, sem instalar nada e sem internet: o texto de todas as cartas já vem dentro do programa.
 
 ![Mesa com 4 jogadores em rede, com os decks de Foundations](docs/mesa.png)
 
