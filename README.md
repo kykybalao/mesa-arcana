@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/icone.png" width="120" alt="Ícone do Mesa Arcana"></p>
 
-# Mesa Arcana
+# Mesa Arcana 2.0
 
 
 Simulador offline manual de Commander (Magic: The Gathering) para testar decks sozinho ou em rede local. Roda de um pendrive, sem instalar nada e sem internet: o texto de todas as cartas já vem dentro do programa.

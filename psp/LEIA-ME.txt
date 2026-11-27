@@ -1,4 +1,4 @@
-MESA ARCANA PARA PSP
+MESA ARCANA PARA PSP - versao 2.0
 ====================
 
 O que e: a mesa de teste de Commander, versao PSP. Joga sozinho e

@@ -13,6 +13,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+const versao = "2.0"
+
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.dst = screen
 	g.drawn = true
@@ -64,6 +66,7 @@ func (g *Game) drawHome() {
 	W, H := float64(g.W), float64(g.H)
 	g.logo(28, 24, 30)
 	txt(g.dst, "Mesa Arcana", 68, 20, fBold, 28, cAcc)
+	txt(g.dst, "versão "+versao, 76+tw("Mesa Arcana", fBold, 28), 32, fReg, 14, cMut)
 	txt(g.dst, "Simulador offline de Commander. Tudo roda do pendrive, sem internet.", 30, 62, fReg, 14, cMut)
 
 	{

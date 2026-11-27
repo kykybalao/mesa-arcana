@@ -1,4 +1,4 @@
-MESA ARCANA - simulador offline de Commander (programa para Windows)
+MESA ARCANA - simulador offline de Commander (programa para Windows) - versao 2.0
 ====================================================================
 
 COMO USAR

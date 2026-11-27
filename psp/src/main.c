@@ -2317,6 +2317,7 @@ static void drawDecks(void) {
     fill(0, 0, SW, SH, cBg);
     drawLogo(14, 10, 22);
     text(44, 8, "Mesa Arcana", 20, 1, cAcc);
+    text(50 + textW("Mesa Arcana", 20, 1), 15, "versao 2.0", 11, 0, cMut);
     text(16, 38, "Escolha o deck", 11, 0, cMut);
     drawStatus(SW - 8, 8);
     if (!ndecks) {
