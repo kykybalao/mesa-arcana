@@ -37,7 +37,7 @@ O jeito de jogar e os atalhos estão no [LEIA-ME.txt](LEIA-ME.txt).
 
 ### Baixar pronto (Windows)
 
-**[Baixar o MesaArcana-Windows.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Windows.zip)** (19 MB). Extraia a pasta onde quiser (pode ser no pendrive) e abra o `MesaArcana.exe`. Não precisa instalar nada.
+**[Baixar o MesaArcana-Windows.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-Windows.zip)** (19 MB). Extraia a pasta onde quiser (pode ser no pendrive) e abra o `MesaArcana.exe`. Não precisa instalar nada. Já vem com decks prontos para jogar: o Gabranth (Commander) e 5 decks de 40 cartas feitos com os meio-decks do Beginner Box de Foundations.
 
 Na primeira vez o Windows pode mostrar o aviso "O Windows protegeu o computador", porque o programa não é assinado. Clique em "Mais informações" e depois em "Executar assim mesmo".
 
@@ -55,10 +55,10 @@ Para compilar no Linux para Windows: `GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go
 
 ### PSP
 
-**[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (3 MB). Precisa de um PSP com firmware customizado.
+**[Baixar o MesaArcana-PSP.zip](https://github.com/kykybalao/mesa-arcana/raw/main/download/MesaArcana-PSP.zip)** (8 MB). Precisa de um PSP com firmware customizado.
 
-1. Copie a pasta `PSP` do zip para a raiz do Memory Stick.
-2. No programa do PC, escolha o deck e clique em **PSP**. Ele grava `PSP/GAME/MesaArcana/decks/<deck>` ao lado do programa; copie essa pasta para o Memory Stick também.
+1. Copie a pasta `PSP` do zip para a raiz do Memory Stick. Já dá para jogar: vem com 5 decks de 40 cartas do Beginner Box de Foundations (Gatos e Vampiros, Cura e Elfos, Mortos-vivos e Piratas, Magos e Inferno, Goblins e Primal).
+2. Para jogar com outros decks, no programa do PC escolha o deck e clique em **PSP**. Ele grava `PSP/GAME/MesaArcana/decks/<deck>` ao lado do programa; copie essa pasta para o Memory Stick também.
 3. No PSP, R + SELECT mostra todos os atalhos.
 
 Joga sozinho ou em rede entre até 4 PSPs (Wi-Fi ad hoc). Tem painel da carta com texto grande, nome e custo nas cartas, equipar/prender, mulligan, fichas, marcadores, busca no grimório e histórico de partidas. Mais detalhes no [LEIA-ME do PSP](psp/LEIA-ME.txt).
@@ -89,7 +89,7 @@ A pasta [`html`](html) tem uma versão que abre no navegador (`MesaArcana.html`)
 | `html/` | Versão para navegador |
 | `psp/` | Versão para PSP (C + SDL2) |
 | `download/` | Programas prontos (Windows e PSP) |
-| `decks/` | Deck de exemplo |
+| `decks/` | Decks de exemplo: Gabranth (Commander) e 5 decks de 40 cartas do Beginner Box de Foundations |
 
 Os scripts de `build/` foram escritos para a máquina onde o projeto nasceu e têm caminhos fixos (`/home/user/mesa`); ajuste antes de rodar.
 

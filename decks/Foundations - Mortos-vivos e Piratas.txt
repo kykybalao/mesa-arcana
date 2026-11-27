@@ -1,0 +1,28 @@
+Deck
+7 Swamp
+2 Uncharted Haven
+7 Island
+1 Death Baron
+1 Hungry Ghoul
+1 Diregraf Ghoul
+1 Eaten Alive
+1 Reassembling Skeleton
+1 Cemetery Recruitment
+1 Crow of Dark Tidings
+1 Deadly Plot
+1 Maalfeld Twins
+1 Skeleton Archer
+1 Suspicious Shambler
+1 Undying Malice
+1 Corsair Captain
+1 Bigfin Bouncer
+1 Skyship Buccaneer
+1 Brineborn Cutthroat
+1 Spectral Sailor
+1 Tolarian Terror
+1 Cancel
+1 Eaten by Piranhas
+1 Kitesail Corsair
+1 Opt
+1 Storm Fleet Spy
+1 Pirate's Cutlass

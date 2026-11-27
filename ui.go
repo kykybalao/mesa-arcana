@@ -156,6 +156,13 @@ func (g *Game) playing() bool {
 
 func (g *Game) Update() error {
 	g.frame++
+	if os.Getenv("MESA_EXPORTAR") != "" && g.frame == 2 { // só para gerar os decks de exemplo do PSP
+		for _, d := range g.decks {
+			dir, n, err := g.exportPSP(d)
+			fmt.Println("exportado:", dir, n, err)
+		}
+		return ebiten.Termination
+	}
 	cx, cy := ebiten.CursorPosition()
 	g.mx, g.my = int(float64(cx)/uiS), int(float64(cy)/uiS)
 	lp, ld, rp := inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft), ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft), inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight)

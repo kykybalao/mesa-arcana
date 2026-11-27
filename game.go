@@ -139,6 +139,9 @@ func (g *Game) startGame(d *Deck) {
 	g.showHand = false
 	g.S = &State{Cards: map[int]*Inst{}, Z: map[string][]int{"library": {}, "hand": {}, "battlefield": {}, "graveyard": {}, "exile": {}, "command": {}},
 		Life: 40, Opp: [3]int{40, 40, 40}, Turn: 1, Tax: map[string]int{}, Phase: "mull"}
+	if len(d.Cmd) == 0 { // deck sem comandante (ex.: 40/60 cartas): vida normal de 20
+		g.S.Life, g.S.Opp = 20, [3]int{20, 20, 20}
+	}
 	cmd := map[string]bool{}
 	for _, id := range d.Cmd {
 		cmd[id] = true

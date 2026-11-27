@@ -552,6 +552,7 @@ static void newGame(void) {
             if (defs[d].cmdr && k == 0) S.in[id].cmdr = 1;
         }
     }
+    if (!S.zn[Z_CMD]) S.life = 20; /* deck sem comandante: vida normal de 20 */
     shuffleLib();
     for (int k = 0; k < 7; k++) drawOne();
     S.phase = PH_MULL;
